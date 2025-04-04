@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useState, useEffect } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
@@ -8,6 +9,30 @@ import { motion } from "framer-motion"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Only run client-side effects after component is mounted
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Don't render anything until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative h-9 w-9 rounded-full text-gray-900"
+      >
+        <div className="relative h-full w-full">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Sun className="h-5 w-5 text-amber-500" />
+          </div>
+        </div>
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    )
+  }
 
   return (
     <Button
@@ -26,7 +51,7 @@ export function ThemeToggle() {
           transition={{ duration: 0.2 }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <Sun className="h-5 w-5" />
+          <Sun className="h-5 w-5 text-amber-500" />
         </motion.div>
         <motion.div
           initial={{ scale: 0, rotate: -180 }}

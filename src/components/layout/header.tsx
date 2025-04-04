@@ -29,12 +29,14 @@ const services = [
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
-
+  // Only run client-side effects after component is mounted
   useEffect(() => {
+    setMounted(true);
     const unsubscribe = scrollY.on('change', (latest) => {
       setIsScrolled(latest > 50);
     });
@@ -42,6 +44,8 @@ export function Header() {
   }, [scrollY]);
 
   const getTextColor = () => {
+    if (!mounted) return 'text-gray-900'; // Default for SSR
+    
     if (isScrolled) {
       return isDark ? '!text-white' : 'text-gray-900';
     }
@@ -50,6 +54,8 @@ export function Header() {
   };
 
   const getButtonStyle = () => {
+    if (!mounted) return 'text-gray-900 border-gray-900 hover:bg-gray-900/10'; // Default for SSR
+    
     if (isScrolled) {
       return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
     }
@@ -58,15 +64,34 @@ export function Header() {
       : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
   }
 
+  const getHeaderBg = () => {
+    if (!mounted) return 'bg-transparent'; // Default for SSR
+    
+    if (isScrolled) {
+      return isDark 
+        ? 'bg-gray-900/80 backdrop-blur-md shadow-sm' 
+        : 'bg-white/80 backdrop-blur-md shadow-sm';
+    }
+    return 'bg-transparent';
+  }
+
+  const getLogoTextColor = () => {
+    if (!mounted) return 'text-gray-900'; // Default for SSR
+    
+    return isDark ? 'text-white' : 'text-gray-900';
+  }
+
+  const getDropShadow = () => {
+    if (!mounted) return ''; // Default for SSR
+    
+    return !isScrolled && isDark ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : '';
+  }
+
   return (
     <motion.header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled 
-          ? isDark 
-            ? 'bg-gray-900/80 backdrop-blur-md shadow-sm' 
-            : 'bg-white/80 backdrop-blur-md shadow-sm'
-          : 'bg-transparent'
+        getHeaderBg()
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -77,10 +102,8 @@ export function Header() {
           <Link href="/" className="font-bold text-2xl bg-white/40 rounded-full px-2">
             <span className={cn(
               'transition-colors duration-300',
-              isDark 
-                ? 'text-white' 
-                : 'text-gray-900',
-              !isScrolled && isDark && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+              getLogoTextColor(),
+              getDropShadow()
             )}>
               Goglanco
             </span>
@@ -92,7 +115,7 @@ export function Header() {
                 <NavigationMenuTrigger className={cn(
                   'text-base',
                   getTextColor(),
-                  !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                  getDropShadow()
                 )}>
                   Services
                 </NavigationMenuTrigger>
@@ -119,7 +142,7 @@ export function Header() {
                     navigationMenuTriggerStyle(),
                     'text-base',
                     getTextColor(),
-                    !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                    getDropShadow()
                   )}>
                     Portfolio
                   </NavigationMenuLink>
@@ -131,7 +154,7 @@ export function Header() {
                     navigationMenuTriggerStyle(),
                     'text-base',
                     getTextColor(),
-                    !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                    getDropShadow()
                   )}>
                     About
                   </NavigationMenuLink>
@@ -143,7 +166,7 @@ export function Header() {
                     navigationMenuTriggerStyle(),
                     'text-base',
                     getTextColor(),
-                    !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                    getDropShadow()
                   )}>
                     Contact
                   </NavigationMenuLink>
@@ -158,13 +181,13 @@ export function Header() {
               className={cn(
                 'hidden md:inline-flex',
                 getButtonStyle(),
-                !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                getDropShadow()
               )}
             >
               Get Free Estimate
             </Button>
             <div className={cn(
-              !isScrolled && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+              getDropShadow()
             )}>
               <ThemeToggle />
             </div>

@@ -1,9 +1,12 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useTheme } from 'next-themes';
+import { cn } from '@/lib/utils';
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -26,13 +29,33 @@ const services = [
 ];
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getButtonStyle = () => {
+    if (!mounted) return 'text-gray-900 border-gray-900 hover:bg-gray-900/10'; // Default for SSR
+    
+    if (!isScrolled) {
+      return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+    }
+    return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant={isScrolled ? "outline" : "outline"}
+          variant="outline"
           size="icon"
-          className={`md:hidden ${!isScrolled && 'text-white border-white hover:bg-white/10'}`}
+          className={cn(
+            'md:hidden',
+            getButtonStyle()
+          )}
         >
           <MenuIcon className="h-6 w-6" />
         </Button>
