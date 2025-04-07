@@ -1,21 +1,37 @@
-import { ReactNode } from 'react';
-import { AdminSidebar } from '@/components/admin/AdminSidebar';
-import { AdminHeader } from '@/components/admin/AdminHeader';
+'use client';
 
-interface AdminLayoutProps {
-  children: ReactNode;
-}
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import '../globals.css';
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+const inter = Inter({ subsets: ['latin'] });
+
+// Metadata can't be used in client components, so we need to remove it
+// export const metadata = {
+//   title: "Admin Dashboard | Goglanco",
+//   description: "Admin dashboard for Goglanco website management",
+// };
+
+// This ensures admin layout is completely separate from main layout
+export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <AdminHeader />
-      <div className="flex">
-        <AdminSidebar />
-        <main className="flex-1 p-6">
-          {children}
-        </main>
-      </div>
-    </div>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} min-h-screen`} suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <div className="min-h-screen">
+            {children}
+            <Toaster />
+          </div>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 } 

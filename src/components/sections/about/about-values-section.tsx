@@ -115,34 +115,34 @@ export function AboutValuesSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-[150vh] bg-background overflow-hidden"
+      className="relative min-h-[40vh] bg-background overflow-hidden"
     >
       {/* Background with parallax effect */}
       <div className="values-bg absolute inset-0 bg-gradient-to-b from-primary/5 to-background z-0"></div>
       
       <div 
         ref={stickyContainerRef}
-        className="container mx-auto px-4 py-20 relative z-10"
+        className="container mx-auto px-4 py-10 relative z-10"
       >
         <h2 
           ref={headingRef}
-          className="text-3xl md:text-4xl font-bold text-center mb-16"
+          className="text-3xl md:text-4xl font-bold text-center mb-8"
         >
           Our Core <span className="text-primary">Values</span>
         </h2>
         
         <div 
           ref={valuesRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           {values.map((value, index) => (
             <div 
               key={index}
-              className="value-card bg-card rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center"
+              className="value-card bg-card rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center"
             >
-              <div className="mb-4">{value.icon}</div>
-              <h3 className="text-xl font-semibold mb-3">{value.title}</h3>
-              <p className="text-muted-foreground">{value.description}</p>
+              <div className="mb-3">{value.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
+              <p className="text-muted-foreground text-sm">{value.description}</p>
             </div>
           ))}
         </div>

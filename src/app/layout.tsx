@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { Toaster } from "@/components/ui/sonner";
+import { LayoutProvider } from "@/components/layout/layout-provider";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Goglanco | Professional Rug Repair & Restoration Services",
@@ -19,18 +26,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="min-h-screen flex flex-col">
+      <body className={`${inter.className} min-h-screen flex flex-col`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-grow">
+          <LayoutProvider>
             {children}
-          </main>
-          <Footer />
+          </LayoutProvider>
           <Toaster />
         </ThemeProvider>
       </body>
