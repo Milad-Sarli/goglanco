@@ -8,17 +8,62 @@ import { BoxReveal } from "@/components/magicui/box-reveal";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { images } from "@/config/images";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import heroService, { HeroData } from "@/services/heroService";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HeroSection() {
   const [isImageError, setIsImageError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const data = await heroService.getHeroData();
+        setHeroData(data);
+      } catch (error) {
+        console.error('Failed to load hero data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="relative flex items-center justify-center min-h-screen overflow-hidden bg-gray-900">
+        <div className="container relative z-10 mx-auto px-4 pt-16 pb-24">
+          <div className="max-w-4xl mx-auto text-center">
+            <Skeleton className="h-20 w-3/4 mx-auto mb-8" />
+            <Skeleton className="h-8 w-2/3 mx-auto mb-12" />
+            <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
+              <Skeleton className="h-14 w-40 mx-auto" />
+              <Skeleton className="h-14 w-40 mx-auto" />
+              <Skeleton className="h-14 w-40 mx-auto" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-3xl mx-auto">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!heroData) {
+    return null;
+  }
 
   return (
     <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
       <div className="absolute inset-0 z-0 bg-gray-900">
         <Image
-          src={images.hero.main}
+          src={heroData.mainImage}
           alt="Beautiful Persian Rug"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
@@ -26,6 +71,7 @@ export function HeroSection() {
           priority
           unoptimized
           style={{ minHeight: '100vh' }}
+          onError={() => setIsImageError(true)}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
         <BlurFade className="absolute inset-0">
@@ -41,10 +87,10 @@ export function HeroSection() {
       >
         <div className="max-w-4xl mx-auto text-center">
           <TextShimmerWave className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            Revive Your Precious Rugs
+            {heroData.title}
           </TextShimmerWave>
           <TextRoll className="text-xl md:text-2xl text-gray-100 mb-12 font-medium">
-            Expert restoration services for all types of rugs and carpets
+            {heroData.subtitle}
           </TextRoll>
           <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
             <BoxReveal duration={0.5}>
@@ -71,15 +117,15 @@ export function HeroSection() {
             className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-3xl mx-auto"
           >
             <div className="text-center">
-              <div className="text-5xl font-bold text-white mb-3">500+</div>
+              <div className="text-5xl font-bold text-white mb-3">{heroData.stats.rugsRestored}+</div>
               <div className="text-gray-200 text-lg font-medium">Rugs Restored</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-white mb-3">15+</div>
+              <div className="text-5xl font-bold text-white mb-3">{heroData.stats.yearsExperience}+</div>
               <div className="text-gray-200 text-lg font-medium">Years Experience</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-white mb-3">100%</div>
+              <div className="text-5xl font-bold text-white mb-3">{heroData.stats.satisfactionRate}%</div>
               <div className="text-gray-200 text-lg font-medium">Satisfaction Rate</div>
             </div>
           </motion.div>
