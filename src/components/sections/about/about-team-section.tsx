@@ -7,34 +7,18 @@ import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const teamMembers = [
-  {
-    name: "John Smith",
-    role: "Founder & Master Restorer",
-    bio: "With over 30 years of experience in textile conservation, John brings unparalleled expertise to every project.",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000"
-  },
-  {
-    name: "Sarah Johnson",
-    role: "Senior Artisan",
-    bio: "Specializing in Persian and Oriental rugs, Sarah's attention to detail ensures the highest quality restoration.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000"
-  },
-  {
-    name: "Michael Chen",
-    role: "Technical Director",
-    bio: "Michael leads our innovation efforts, developing new techniques for challenging restoration projects.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000"
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "Customer Relations",
-    bio: "Emily ensures every client receives personalized attention and expert guidance throughout their project.",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000"
-  }
-];
+interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  image: string;
+}
 
-export function AboutTeamSection() {
+interface AboutTeamSectionProps {
+  team: TeamMember[];
+}
+
+export function AboutTeamSection({ team = [] }: AboutTeamSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const teamRef = useRef<HTMLDivElement>(null);
@@ -155,7 +139,7 @@ export function AboutTeamSection() {
           ref={teamRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {teamMembers.map((member, index) => (
+          {team.map((member, index) => (
             <div 
               key={index}
               className="team-member bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"

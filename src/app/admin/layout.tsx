@@ -23,15 +23,13 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen`} suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <div className="min-h-screen">
-            {children}
-            <Toaster />
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <div className={`${inter.className} min-h-screen`}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <div className="min-h-screen">
+          {children}
+          <Toaster />
+        </div>
+      </ThemeProvider>
+    </div>
   );
 } 

@@ -131,8 +131,8 @@ export function PortfolioGallerySection() {
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto"
         >
           {galleryItems.map((item, index) => (
-            <Tilt key={item.id} className="gallery-item">
               <motion.div
+              key={item.id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -185,7 +185,6 @@ export function PortfolioGallerySection() {
                   </Button>
                 </div>
               </motion.div>
-            </Tilt>
           ))}
         </div>
         

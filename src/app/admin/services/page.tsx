@@ -153,7 +153,6 @@ export default function ServicesAdmin() {
     setServices(items);
 
     try {
-      // Use actual service IDs instead of array indices
       const serviceIds = items.map(item => item.id).filter((id): id is number => id !== undefined);
       await servicesService.reorderServices(serviceIds);
       toast.success("Order updated", {
@@ -168,211 +167,186 @@ export default function ServicesAdmin() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Toaster position="top-center" />
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className="flex h-screen overflow-hidden"
-      >
-        <Sidebar />
-        <motion.div 
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden ml-64"
-        >
-          <main className="flex-1 p-6">
-            <motion.div 
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-6"
-            >
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Services Management</h1>
-              <p className="text-gray-500 dark:text-gray-400">Manage your website's services section</p>
-            </motion.div>
+      <Sidebar />
+      <div className="md:pl-[280px]">
+        <main className="container mx-auto p-4 md:p-6 lg:p-8 pt-20 md:pt-8">
+          <div className="mb-6 space-y-2">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Services Management
+            </h1>
+            <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+              Manage your website's services section
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Add New Service</CardTitle>
-                    <CardDescription>Create a new service to display on your website</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={editingService.title}
-                        onChange={(e) => setEditingService({ ...editingService, title: e.target.value })}
-                        placeholder="Enter service title"
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Add New Service</CardTitle>
+                <CardDescription>Create a new service to display on your website</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={editingService.title}
+                    onChange={(e) => setEditingService({ ...editingService, title: e.target.value })}
+                    placeholder="Enter service title"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={editingService.description}
+                    onChange={(e) => setEditingService({ ...editingService, description: e.target.value })}
+                    placeholder="Enter service description"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="icon">Icon (emoji)</Label>
+                  <Input
+                    id="icon"
+                    value={editingService.icon}
+                    onChange={(e) => setEditingService({ ...editingService, icon: e.target.value })}
+                    placeholder="Enter emoji icon (e.g., 🛠️)"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="image-upload">Service Image</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="image-upload"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      className="flex-1"
+                    />
+                    {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  </div>
+                  {editingService.image && (
+                    <div className="relative h-40 mt-2 rounded-md overflow-hidden">
+                      <Image
+                        src={editingService.image}
+                        alt="Service preview"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     </div>
+                  )}
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={editingService.description}
-                        onChange={(e) => setEditingService({ ...editingService, description: e.target.value })}
-                        placeholder="Enter service description"
-                        rows={3}
-                      />
-                    </div>
+                <Button 
+                  onClick={handleSave} 
+                  disabled={saving || !editingService.title || !editingService.description}
+                  className="w-full"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Service
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="icon">Icon (emoji)</Label>
-                      <Input
-                        id="icon"
-                        value={editingService.icon}
-                        onChange={(e) => setEditingService({ ...editingService, icon: e.target.value })}
-                        placeholder="Enter emoji icon (e.g., 🛠️)"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="image-upload">Service Image</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="image-upload"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={handleImageUpload}
-                          disabled={uploading}
-                          className="flex-1"
-                        />
-                        {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
-                      </div>
-                      {editingService.image && (
-                        <div className="relative h-40 mt-2 rounded-md overflow-hidden">
-                          <Image
-                            src={editingService.image}
-                            alt="Service preview"
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
+            <Card>
+              <CardHeader>
+                <CardTitle>Existing Services</CardTitle>
+                <CardDescription>Manage and reorder your services</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, index) => (
+                      <Card key={index}>
+                        <CardContent className="p-4">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                              <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse" />
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="services">
+                      {(provided) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                          {services.map((service, index) => (
+                            <Draggable key={index} draggableId={`service-${index}`} index={index}>
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                >
+                                  <Card>
+                                    <CardContent className="p-4">
+                                      <div className="flex items-start space-x-4">
+                                        <div {...provided.dragHandleProps} className="cursor-move">
+                                          <GripVertical className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                                          <Image
+                                            src={service.image}
+                                            alt={service.title}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                          />
+                                        </div>
+                                        <div className="flex-1">
+                                          <h4 className="font-semibold">
+                                            <span className="mr-2">{service.icon}</span>
+                                            {service.title}
+                                          </h4>
+                                          <p className="text-sm text-gray-500">{service.description}</p>
+                                        </div>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="text-red-500 hover:text-red-700 hover:bg-red-100/20"
+                                          onClick={() => handleDelete(index)}
+                                        >
+                                          <Trash className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
                         </div>
                       )}
-                    </div>
-
-                    <Button 
-                      onClick={handleSave} 
-                      disabled={saving || !editingService.title || !editingService.description}
-                      className="w-full"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Saving
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="mr-2 h-4 w-4" />
-                          Add Service
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Existing Services</CardTitle>
-                    <CardDescription>Manage and reorder your services</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {loading ? (
-                      <div className="space-y-4">
-                        {[...Array(3)].map((_, index) => (
-                          <Card key={index}>
-                            <CardContent className="p-4">
-                              <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse" />
-                                <div className="flex-1 space-y-2">
-                                  <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                                  <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse" />
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    ) : (
-                      <DragDropContext onDragEnd={handleDragEnd}>
-                        <Droppable droppableId="services">
-                          {(provided) => (
-                            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-                              {services.map((service, index) => (
-                                <Draggable key={index} draggableId={`service-${index}`} index={index}>
-                                  {(provided) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                    >
-                                      <Card>
-                                        <CardContent className="p-4">
-                                          <div className="flex items-start space-x-4">
-                                            <div {...provided.dragHandleProps} className="cursor-move">
-                                              <GripVertical className="h-5 w-5 text-gray-400" />
-                                            </div>
-                                            <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                                              <Image
-                                                src={service.image}
-                                                alt={service.title}
-                                                fill
-                                                className="object-cover"
-                                                unoptimized
-                                              />
-                                            </div>
-                                            <div className="flex-1">
-                                              <h4 className="font-semibold">
-                                                <span className="mr-2">{service.icon}</span>
-                                                {service.title}
-                                              </h4>
-                                              <p className="text-sm text-gray-500">{service.description}</p>
-                                            </div>
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              className="text-red-500 hover:text-red-700 hover:bg-red-100/20"
-                                              onClick={() => handleDelete(index)}
-                                            >
-                                              <Trash className="h-4 w-4" />
-                                            </Button>
-                                          </div>
-                                        </CardContent>
-                                      </Card>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </div>
-                          )}
-                        </Droppable>
-                      </DragDropContext>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </div>
-          </main>
-        </motion.div>
-      </motion.div>
-    </>
+                    </Droppable>
+                  </DragDropContext>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 } 

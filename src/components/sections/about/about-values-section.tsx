@@ -4,52 +4,34 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Heart, Shield, Award, Users } from "lucide-react";
+import { TextShimmerWave } from "@/components/ui/text-shimmer-wave";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const values = [
-  {
-    icon: <Heart className="w-12 h-12 text-primary" />,
-    title: "Passion",
-    description: "We approach each restoration project with genuine passion and dedication to preserving the beauty of fine rugs."
-  },
-  {
-    icon: <Shield className="w-12 h-12 text-primary" />,
-    title: "Integrity",
-    description: "Honesty and transparency guide our business practices, ensuring trust with every client interaction."
-  },
-  {
-    icon: <Award className="w-12 h-12 text-primary" />,
-    title: "Excellence",
-    description: "We strive for excellence in every detail, from the initial assessment to the final delivery of restored pieces."
-  },
-  {
-    icon: <Users className="w-12 h-12 text-primary" />,
-    title: "Community",
-    description: "We value our role in the community and actively support local artisans and cultural preservation efforts."
-  }
-];
+interface ValueItem {
+  title: string;
+  description: string;
+  icon: string;
+}
 
-export function AboutValuesSection() {
+interface AboutValuesSectionProps {
+  values: ValueItem[];
+}
+
+const iconMap = {
+  heart: <Heart className="w-16 h-16 text-primary" />,
+  shield: <Shield className="w-16 h-16 text-primary" />,
+  award: <Award className="w-16 h-16 text-primary" />,
+  users: <Users className="w-16 h-16 text-primary" />,
+};
+
+export function AboutValuesSection({ values = [] }: AboutValuesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const stickyContainerRef = useRef<HTMLDivElement>(null);
-  const valuesRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const valuesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Super-charged sticky effect
-      gsap.to(stickyContainerRef.current, {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          pin: true,
-          pinSpacing: true,
-          scrub: 1,
-        },
-      });
-
       // Animate heading
       gsap.fromTo(
         headingRef.current,
@@ -70,7 +52,7 @@ export function AboutValuesSection() {
         }
       );
 
-      // Animate value cards with stagger effect
+      // Animate value cards with stagger and scale effect
       const valueCards = valuesRef.current?.querySelectorAll(".value-card");
       if (valueCards) {
         gsap.fromTo(
@@ -86,6 +68,7 @@ export function AboutValuesSection() {
             scale: 1,
             duration: 0.8,
             stagger: 0.2,
+            ease: "power3.out",
             scrollTrigger: {
               trigger: valuesRef.current,
               start: "top 70%",
@@ -96,14 +79,14 @@ export function AboutValuesSection() {
         );
       }
 
-      // Create a parallax effect for the background
-      gsap.to(".values-bg", {
+      // Create a parallax effect for the background pattern
+      gsap.to(".values-pattern", {
         y: 100,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
+          start: "top bottom",
+          end: "bottom top",
           scrub: 1,
         },
       });
@@ -115,34 +98,39 @@ export function AboutValuesSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-[40vh] bg-background overflow-hidden"
+      className="relative py-24 overflow-hidden"
     >
-      {/* Background with parallax effect */}
-      <div className="values-bg absolute inset-0 bg-gradient-to-b from-primary/5 to-background z-0"></div>
+      {/* Background Pattern */}
+      <div className="values-pattern absolute inset-0 opacity-5">
+        <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-repeat" />
+      </div>
       
-      <div 
-        ref={stickyContainerRef}
-        className="container mx-auto px-4 py-10 relative z-10"
-      >
+      <div className="container mx-auto px-4 relative z-10">
         <h2 
           ref={headingRef}
-          className="text-3xl md:text-4xl font-bold text-center mb-8"
+          className="text-3xl md:text-4xl font-bold text-center mb-16"
         >
-          Our Core <span className="text-primary">Values</span>
+          Our Core <TextShimmerWave>Values</TextShimmerWave>
         </h2>
         
         <div 
           ref={valuesRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {values.map((value, index) => (
             <div 
               key={index}
-              className="value-card bg-card rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center"
+              className="value-card group"
             >
-              <div className="mb-3">{value.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
-              <p className="text-muted-foreground text-sm">{value.description}</p>
+              <div className="bg-card hover:bg-card/80 rounded-lg p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  <div className="transform transition-transform duration-300 group-hover:scale-110">
+                    {iconMap[value.icon as keyof typeof iconMap] || <Heart className="w-16 h-16 text-primary" />}
+                  </div>
+                  <h3 className="text-2xl font-semibold">{value.title}</h3>
+                  <p className="text-muted-foreground">{value.description}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>

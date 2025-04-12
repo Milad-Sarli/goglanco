@@ -6,40 +6,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const timelineEvents = [
-  {
-    year: "2000",
-    title: "The Beginning",
-    description: "Goglanco was founded with a small workshop and a big vision to preserve the artistry of fine rugs."
-  },
-  {
-    year: "2005",
-    title: "Expansion",
-    description: "Expanded our services to include specialized restoration for antique Persian and Oriental rugs."
-  },
-  {
-    year: "2010",
-    title: "Innovation",
-    description: "Introduced advanced cleaning and restoration techniques, setting new industry standards."
-  },
-  {
-    year: "2015",
-    title: "National Recognition",
-    description: "Received the National Heritage Preservation Award for our contributions to textile conservation."
-  },
-  {
-    year: "2020",
-    title: "Digital Transformation",
-    description: "Launched our online consultation platform, making our expertise accessible to clients nationwide."
-  },
-  {
-    year: "2023",
-    title: "Today",
-    description: "Continuing to grow and innovate, with a team of expert artisans and a commitment to excellence."
-  }
-];
+interface TimelineEvent {
+  year: string;
+  title: string;
+  description: string;
+}
 
-export function AboutTimelineSection() {
+interface AboutTimelineSectionProps {
+  timeline: TimelineEvent[];
+}
+
+export function AboutTimelineSection({ timeline = [] }: AboutTimelineSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -137,7 +114,7 @@ export function AboutTimelineSection() {
           
           {/* Timeline events */}
           <div className="space-y-16">
-            {timelineEvents.map((event, index) => (
+            {timeline.map((event, index) => (
               <div 
                 key={index}
                 className={`timeline-event relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}

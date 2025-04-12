@@ -7,7 +7,7 @@ const axios = Axios.create({
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
-  withCredentials: true,
+  withCredentials: true
 });
 
 // Add an interceptor to dynamically set the Authorization header

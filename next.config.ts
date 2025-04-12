@@ -1,7 +1,9 @@
+import type { NextConfig } from 'next'
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const config: NextConfig = {
   images: {
-    domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com'],
+    domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -20,4 +22,4 @@ const nextConfig = {
   }
 };
 
-export default nextConfig;
+export default config;
