@@ -34,7 +34,7 @@ const formatImageUrl = (url: string): string => {
   const cleanPath = url.startsWith('/') ? url.slice(1) : url;
   
   // Join with API base URL, ensuring no double slashes
-  return `${API_BASE_URL.replace(/\/$/, '')}/${cleanPath}`;
+  return `${API_BASE_URL.replace(/\/$/, '')}/storage/${cleanPath}`;
 };
 
 export const servicesService = {

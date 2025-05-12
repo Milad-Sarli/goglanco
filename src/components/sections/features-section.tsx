@@ -9,37 +9,37 @@ const features = [
     icon: "✓",
     title: "Expert Craftsmen",
     description: "Our team consists of highly skilled artisans with decades of experience in rug repair and restoration.",
-    image: "https://images.unsplash.com/photo-1600166898405-da9535204843?w=800&auto=format&fit=crop"
+    image: "/features/young-man-holding-camera-while-standing-against-wall_1048944-16315124.jpg"
   },
   {
     icon: "★",
     title: "Premium Quality",
     description: "We use only the finest materials and traditional techniques combined with modern technology for lasting results.",
-    image: "https://images.unsplash.com/photo-1600166898405-da9535204843?w=800&auto=format&fit=crop"
+    image: "/features/premium-quality-golden-stamp-seal-vector-template_917138-5121.jpg"
   },
   {
     icon: "⚡",
     title: "Quick Turnaround",
     description: "Fast and efficient service without compromising on quality. Most repairs completed within 7-10 days.",
-    image: "https://images.unsplash.com/photo-1600166898405-da9535204843?w=800&auto=format&fit=crop"
+    image: "/features/happy-male-carrying-carpet-new-home_329181-12615.jpg"
   },
   {
     icon: "💯",
     title: "Satisfaction Guaranteed",
     description: "We're not happy until you're completely satisfied with our work. 100% satisfaction guarantee on all services.",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop"
+    image: "/features/standard-quality-control-collage_23-2149631009.jpg"
   },
   {
-    icon: "🏆",
-    title: "Award-Winning Service",
-    description: "Recognized as a leading rug repair service provider with multiple industry awards.",
-    image: "https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&auto=format&fit=crop"
+    icon: "🧵",
+    title: "Custom Stitching & Color Matching",
+    description: "We expertly match original colors and patterns, ensuring seamless repairs that preserve your rug's unique character.",
+    image: "/features/476f1896-9593-4a4a-8b68-7b5e6b55e8fb.jpg"
   },
   {
     icon: "🌿",
-    title: "Eco-Friendly Methods",
+    title: "Eco-Friendly Methods",  
     description: "We use environmentally friendly cleaning products and sustainable restoration methods.",
-    image: "https://images.unsplash.com/photo-1604762524889-3e2fcc145683?w=800&auto=format&fit=crop"
+    image: "/features/e1510230-60ed-47d2-9c8a-f420e6261080.jpg"
   }
 ];
 
@@ -64,8 +64,7 @@ export function FeaturesSection() {
             viewport={{ once: true }}
             className="text-gray-600 text-lg"
           >
-            Experience the perfect blend of traditional craftsmanship and modern technology
-          </motion.p>
+Experience world-class rug care with a perfect blend of traditional artistry, global sourcing, and modern restoration techniques.          </motion.p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -144,10 +143,10 @@ export function FeaturesSection() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: "500+", label: "Rugs Restored" },
-              { value: "15+", label: "Years Experience" },
+              { value: "5000+", label: "Rugs Restored" },
+              { value: "30+", label: "Years Experience" },
               { value: "100%", label: "Satisfaction Rate" },
-              { value: "50+", label: "Expert Artisans" }
+              { value: "5+", label: "Expert Artisans" }
             ].map((stat, index) => (
               <motion.div
                 key={index}

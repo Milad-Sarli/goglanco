@@ -13,7 +13,6 @@ import heroService, { HeroData } from "@/services/heroService";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HeroSection() {
-  const [isImageError, setIsImageError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState<HeroData | null>(null);
 
@@ -63,7 +62,7 @@ export function HeroSection() {
     <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
       <div className="absolute inset-0 z-0 bg-gray-900">
         <Image
-          src={heroData.mainImage}
+          src={`${heroData.mainImage}`}
           alt="Beautiful Persian Rug"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
@@ -71,7 +70,6 @@ export function HeroSection() {
           priority
           unoptimized
           style={{ minHeight: '100vh' }}
-          onError={() => setIsImageError(true)}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
         <BlurFade className="absolute inset-0">
@@ -134,7 +132,7 @@ export function HeroSection() {
 
       <div className="absolute bottom-0 left-0 right-0 z-10">
         <VelocityScroll className="text-white/90 py-6 text-lg font-medium bg-gradient-to-t from-black/90 to-transparent">
-          EXPERT RUG REPAIR • PROFESSIONAL RESTORATION • TRUSTED SERVICE • SINCE 2009
+          EXPERT RUG REPAIR • IN RUGS RESTORATION • TRUSTED SERVICE • SINCE 1996
         </VelocityScroll>
       </div>
     </section>

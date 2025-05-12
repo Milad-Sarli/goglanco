@@ -115,7 +115,7 @@ export function ServicesSection() {
                 <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                      src={service.image}
+                      src={`${service.image}`}
                       alt={service.title}
                       fill
                       unoptimized

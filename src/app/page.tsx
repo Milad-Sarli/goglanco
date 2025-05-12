@@ -4,7 +4,6 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { FeaturesSection } from "@/components/sections/features-section";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { ContactSection } from "@/components/sections/contact-section";
-import { TestImage } from "@/components/TestImage";
 
 export const metadata: Metadata = {
   title: "Goglanco.com | Professional Rug Repair & Restoration Services",

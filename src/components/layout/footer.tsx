@@ -5,8 +5,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "motion/react";
 import { Facebook, Instagram, Twitter, Youtube, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../lib/axios';
+
+// ContactInfo interface (reuse from contact-section)
+interface ContactInfo {
+  address: string;
+  phone: string;
+  email: string;
+  business_hours_monday_saturday: string;
+  business_hours_sunday: string;
+}
 
 export function Footer() {
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [isLoadingContactInfo, setIsLoadingContactInfo] = useState(true);
+  const [contactInfoError, setContactInfoError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchContactInfo() {
+      setIsLoadingContactInfo(true);
+      setContactInfoError(null);
+      try {
+        const response = await axiosInstance.get<ContactInfo>('/api/contact-information');
+        setContactInfo(response.data);
+      } catch {
+        setContactInfoError('Could not load contact information.');
+      } finally {
+        setIsLoadingContactInfo(false);
+      }
+    }
+    fetchContactInfo();
+  }, []);
+
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-4">
@@ -128,26 +159,29 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
             <ul className="space-y-4">
-              <li className="flex gap-3">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span>123 Rug Street, Carpet City, ST 12345</span>
-              </li>
-              <li className="flex gap-3">
-                <Phone className="w-5 h-5 text-primary" />
-                <span>(555) 123-4567</span>
-              </li>
-              <li className="flex gap-3">
-                <Mail className="w-5 h-5 text-primary" />
-                <span>info@goglanco.com</span>
-              </li>
-              <li className="flex gap-3">
-                <Clock className="w-5 h-5 text-primary" />
-                <div>
-                  <div>Mon - Fri: 9:00 AM - 6:00 PM</div>
-                  <div>Sat: 10:00 AM - 4:00 PM</div>
-                  <div>Sun: Closed</div>
-                </div>
-              </li>
+              {isLoadingContactInfo && <li>Loading contact information...</li>}
+              {contactInfoError && <li className="text-red-400">{contactInfoError}</li>}
+              {contactInfo && !isLoadingContactInfo && !contactInfoError && <>
+                <li className="flex gap-3">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <span>{contactInfo.address}</span>
+                </li>
+                <li className="flex gap-3">
+                  <Phone className="w-5 h-5 text-primary" />
+                  <span>{contactInfo.phone}</span>
+                </li>
+                <li className="flex gap-3">
+                  <Mail className="w-5 h-5 text-primary" />
+                  <span>{contactInfo.email}</span>
+                </li>
+                <li className="flex gap-3">
+                  <Clock className="w-5 h-5 text-primary" />
+                  <div>
+                    <div>{contactInfo.business_hours_monday_saturday}</div>
+                    <div>{contactInfo.business_hours_sunday}</div>
+                  </div>
+                </li>
+              </>}
             </ul>
           </div>
         </div>
