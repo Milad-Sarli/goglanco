@@ -21,7 +21,6 @@ export function ContactMapSection() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   
   // Use our custom hook to load Google Maps
   const { isLoaded, error } = useGoogleMaps();

@@ -1,11 +1,29 @@
 import axios from "@/lib/axios";
-import { AxiosError } from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://admin.goglanco.com/";
 
+// Minimal AxiosError shape for type guard
+interface MinimalAxiosError {
+  isAxiosError?: boolean;
+  response?: {
+    data?: { message?: string };
+    statusText?: string;
+  };
+}
+
+// Utility type guard to check if error is an AxiosError
+function isAxiosError(error: unknown): error is MinimalAxiosError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "isAxiosError" in error &&
+    (error as MinimalAxiosError).isAxiosError === true
+  );
+}
+
 // Utility function to get error message from server response
-const getErrorMessage = (error: any): string => {
-  if (error instanceof AxiosError) {
+const getErrorMessage = (error: unknown): string => {
+  if (isAxiosError(error)) {
     // Get the error message from the response if it exists
     const serverMessage = error.response?.data?.message;
     if (serverMessage) return serverMessage;
@@ -17,7 +35,10 @@ const getErrorMessage = (error: any): string => {
   }
   
   // Fallback error message
-  return error?.message || "An unexpected error occurred";
+  if (typeof error === "object" && error !== null && "message" in error && typeof (error as { message?: unknown }).message === "string") {
+    return (error as { message: string }).message;
+  }
+  return "An unexpected error occurred";
 };
 
 // Utility function to ensure URL has correct domain
@@ -54,10 +75,7 @@ interface ApiResponse<T> {
   status: number;
 }
 
-interface ApiError {
-  message: string;
-  errors?: Record<string, string[]>;
-}
+
 
 interface UploadResponse {
   url: string;

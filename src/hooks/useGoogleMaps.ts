@@ -48,7 +48,7 @@ export function useGoogleMaps() {
         resolve();
       };
       
-      script.onerror = (e) => {
+      script.onerror = () => {
         const error = new Error("Failed to load Google Maps API");
         reject(error);
       };
@@ -69,4 +69,4 @@ export function useGoogleMaps() {
   }, []);
 
   return { isLoaded, error };
-} 
+}

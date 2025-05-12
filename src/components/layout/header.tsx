@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { MobileMenu } from "./mobile-menu";
 import { cn } from '@/lib/utils';
-import { useTheme } from 'next-themes';
 
 const services = [
   { title: 'Rug Repair', href: '/services/repair' },
@@ -31,8 +30,6 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
-  const { theme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
 
   // Only run client-side effects after component is mounted
   useEffect(() => {
@@ -47,30 +44,26 @@ export function Header() {
     if (!mounted) return 'text-gray-900'; // Default for SSR
     
     if (isScrolled) {
-      return isDark ? '!text-white' : 'text-gray-900';
+      return 'text-gray-900';
     }
     // When not scrolled, use white text for dark mode and dark text for light mode
-    return isDark ? 'text-white' : 'text-gray-900';
+    return 'text-gray-900';
   };
 
   const getButtonStyle = () => {
     if (!mounted) return 'text-gray-900 border-gray-900 hover:bg-gray-900/10'; // Default for SSR
     
     if (isScrolled) {
-      return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+      return 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
     }
-    return isDark 
-      ? 'text-white border-white hover:bg-white/10' 
-      : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+    return 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
   }
 
   const getHeaderBg = () => {
     if (!mounted) return 'bg-transparent'; // Default for SSR
     
     if (isScrolled) {
-      return isDark 
-        ? 'bg-gray-900/80 backdrop-blur-md shadow-sm' 
-        : 'bg-white/80 backdrop-blur-md shadow-sm';
+      return 'bg-white/80 backdrop-blur-md shadow-sm';
     }
     return 'bg-transparent';
   }
@@ -78,13 +71,13 @@ export function Header() {
   const getLogoTextColor = () => {
     if (!mounted) return 'text-gray-900'; // Default for SSR
     
-    return isDark ? 'text-white' : 'text-gray-900';
+    return 'text-gray-900';
   }
 
   const getDropShadow = () => {
     if (!mounted) return ''; // Default for SSR
     
-    return !isScrolled && isDark ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : '';
+    return !isScrolled ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : '';
   }
 
   return (
@@ -196,26 +189,5 @@ export function Header() {
         </div>
       </div>
     </motion.header>
-  );
-}
-
-function MenuIcon(props: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
   );
 } 

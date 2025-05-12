@@ -35,8 +35,7 @@ export function ContactFormSection() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
-    setValue
+    formState: { errors }
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -97,7 +96,7 @@ export function ContactFormSection() {
   }, []);
 
   // Handle form submission
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async () => {
     setIsSubmitting(true);
     setSubmitError(null);
     
@@ -138,7 +137,7 @@ export function ContactFormSection() {
         <div className="max-w-3xl mx-auto">
           {submitSuccess && (
             <div className="mb-8 p-4 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-lg">
-              Thank you for your message! We'll get back to you as soon as possible.
+              Thank you for your message! We&apos;ll get back to you as soon as possible.
             </div>
           )}
           

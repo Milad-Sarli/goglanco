@@ -25,7 +25,6 @@ import * as z from "zod";
 import { PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { type AxiosError, isAxiosError } from 'axios';
 import { 
   Dialog,
   DialogContent,
@@ -66,6 +65,30 @@ interface ContactInfo {
   email: string;
   business_hours_monday_saturday: string;
   business_hours_sunday: string;
+}
+
+// Minimal AxiosError type for local use
+type LocalAxiosError<T = unknown> = Error & {
+  config?: unknown;
+  code?: string;
+  request?: unknown;
+  response?: {
+    data?: T;
+    status?: number;
+    headers?: unknown;
+  };
+  isAxiosError?: boolean;
+  toJSON?: () => object;
+};
+
+// Local type guard for AxiosError
+function isAxiosError(error: unknown): error is { isAxiosError: boolean } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'isAxiosError' in error &&
+    (error as Record<string, unknown>).isAxiosError === true
+  );
 }
 
 export function ContactSection() {
@@ -124,7 +147,7 @@ export function ContactSection() {
       console.error('Error sending message:', error);
       let errorMessage = 'An unexpected error occurred.';
       if (isAxiosError(error)) {
-        const err = error as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+        const err = error as LocalAxiosError<{ message?: string; errors?: Record<string, string[]> }>;
         errorMessage = err.response?.data?.message || err.message;
         if (err.response?.data?.errors) {
           Object.entries(err.response.data.errors).forEach(([fieldName, fieldMessages]) => {
@@ -168,7 +191,7 @@ export function ContactSection() {
       console.error('Error submitting consultation request:', error);
       let errorMessage = 'An unexpected error occurred.';
       if (isAxiosError(error)) {
-        const err = error as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+        const err = error as LocalAxiosError<{ message?: string; errors?: Record<string, string[]> }>;
         errorMessage = err.response?.data?.message || err.message;
         if (err.response?.data?.errors) {
           Object.entries(err.response.data.errors).forEach(([fieldName, fieldMessages]) => {
@@ -198,7 +221,7 @@ export function ContactSection() {
       } catch (error: unknown) {
         console.error('Error fetching contact info:', error);
         if (isAxiosError(error)) {
-          const err = error as AxiosError<{ message?: string }>;
+          const err = error as LocalAxiosError<{ message?: string }>;
           const serverMessage = err.response?.data?.message;
           setContactInfoError(serverMessage || err.message || 'An unexpected error occurred while fetching contact information.');
         } else if (error instanceof Error) {

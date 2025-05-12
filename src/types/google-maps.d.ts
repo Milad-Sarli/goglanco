@@ -40,7 +40,7 @@ declare namespace google.maps {
 
   class Marker {
     constructor(options: MarkerOptions);
-    addListener(eventName: string, handler: Function): void;
+    addListener(eventName: string, handler: (event: google.maps.MapMouseEvent) => void): void;
   }
 
   interface MarkerOptions {

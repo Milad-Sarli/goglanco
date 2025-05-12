@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import { ImageComparison, ImageComparisonImage, ImageComparisonSlider } from "@/components/motion-primitives/image-comparison";
-import { Tilt } from "@/components/motion-primitives/tilt";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 

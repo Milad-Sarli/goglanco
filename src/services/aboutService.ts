@@ -42,7 +42,6 @@ interface UploadResponse {
   filename: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://admin.goglanco.com/";
 
 // Utility function to ensure URL has correct domain
 const formatImageUrl = (url: string): string => {

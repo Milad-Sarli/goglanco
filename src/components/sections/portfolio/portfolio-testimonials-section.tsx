@@ -17,7 +17,7 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Homeowner",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000",
-    content: "The restoration of our family's Persian rug was nothing short of miraculous. The team at Goglanco brought back the vibrant colors and intricate patterns that had faded over decades. We couldn't be happier with the results!",
+    content: "The restoration of our family&apos;s Persian rug was nothing short of miraculous. The team at Goglanco brought back the vibrant colors and intricate patterns that had faded over decades. We couldn't be happier with the results!",
     rating: 5,
     project: "Persian Tabriz Restoration"
   },
@@ -26,7 +26,7 @@ const testimonials = [
     name: "Michael Chen",
     role: "Interior Designer",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000",
-    content: "As an interior designer, I've worked with many rug restoration services, but Goglanco stands out for their attention to detail and commitment to preserving the original character of each piece. Their work is consistently exceptional.",
+    content: "As an interior designer, I&apos;ve worked with many rug restoration services, but Goglanco stands out for their attention to detail and commitment to preserving the original character of each piece. Their work is consistently exceptional.",
     rating: 5,
     project: "Oriental Silk Rug Repair"
   },
@@ -150,7 +150,7 @@ export function PortfolioTestimonialsSection() {
                       <Star key={i} className="w-4 h-4 fill-primary text-primary" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-6 italic">"{testimonial.content}"</p>
+                  <p className="text-muted-foreground mb-6 italic">{testimonial.content}</p>
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={testimonial.avatar} alt={testimonial.name} />

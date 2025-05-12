@@ -93,7 +93,7 @@ export function ContactHeroSection() {
             ref={textRef}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl"
           >
-            Have a rug that needs restoration? We're here to help. Contact us today to discuss your project, request a quote, or schedule a consultation with our experts.
+            Have a rug that needs restoration? We&apos;re here to help. Contact us today to discuss your project, request a quote, or schedule a consultation with our experts.
           </p>
         </div>
         <div 

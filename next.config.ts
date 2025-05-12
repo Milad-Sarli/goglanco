@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 
 /** @type {import('next').NextConfig} */
 const config: NextConfig = {
+  output: "standalone",
   images: {
     domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com'],
     remotePatterns: [

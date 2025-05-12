@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -192,7 +192,8 @@ export function PortfolioCategoriesSection() {
                     <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow duration-300">
                       <CardContent className="p-0">
                         <div className="relative h-48 overflow-hidden group">
-                          <img
+                          <Image
+                          fill
                             src={item.beforeImage}
                             alt={`Before: ${item.title}`}
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
