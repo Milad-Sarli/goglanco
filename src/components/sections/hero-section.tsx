@@ -84,7 +84,7 @@ export function HeroSection() {
         className="container relative z-10 mx-auto px-4 pt-16 pb-24"
       >
         <div className="max-w-4xl mx-auto text-center">
-          <TextShimmerWave className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+          <TextShimmerWave className="text-5xl lg:text-5xl font-bold text-white mb-8 leading-tight">
             {heroData.title}
           </TextShimmerWave>
           <TextRoll className="text-xl md:text-2xl text-gray-100 mb-12 font-medium">
