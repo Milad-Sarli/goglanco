@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
@@ -10,11 +10,22 @@ import { Star } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Sample testimonials data
-const testimonials = [
+// Define an interface for Testimonial data
+interface Testimonial {
+  id: number | string;
+  name: string;
+  role: string;
+  avatar?: string; // Optional, as API might not always provide it
+  content: string;
+  rating: number;
+  project?: string; // Optional
+}
+
+// Sample testimonials data (fallback)
+const defaultTestimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Sarah Johnson - Default",
     role: "Homeowner",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000",
     content: "The restoration of our family&apos;s Persian rug was nothing short of miraculous. The team at Goglanco brought back the vibrant colors and intricate patterns that had faded over decades. We couldn't be happier with the results!",
@@ -23,39 +34,45 @@ const testimonials = [
   },
   {
     id: 2,
-    name: "Michael Chen",
+    name: "Michael Chen - Default",
     role: "Interior Designer",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000",
     content: "As an interior designer, I&apos;ve worked with many rug restoration services, but Goglanco stands out for their attention to detail and commitment to preserving the original character of each piece. Their work is consistently exceptional.",
     rating: 5,
     project: "Oriental Silk Rug Repair"
   },
-  {
-    id: 3,
-    name: "Emily Rodriguez",
-    role: "Antique Collector",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000",
-    content: "I entrusted my 19th century Turkish Kilim to Goglanco for restoration, and they exceeded my expectations. Their expertise in preserving historical textiles is unmatched. The rug now looks as beautiful as it must have when it was first created.",
-    rating: 5,
-    project: "Antique Turkish Kilim Restoration"
-  },
-  {
-    id: 4,
-    name: "David Thompson",
-    role: "Gallery Owner",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000",
-    content: "Our gallery has collaborated with Goglanco on several restoration projects for our clients. Their work is consistently of the highest quality, and they have a deep understanding of the historical and artistic value of each piece.",
-    rating: 5,
-    project: "Modern Abstract Rug Cleaning"
-  }
+  // Add more default items if needed, or keep it short for brevity
 ];
 
 export function PortfolioTestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const testimonialsRef = useRef<HTMLDivElement>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/testimonials`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Testimonial[] = await response.json();
+        setTestimonials(data.length > 0 ? data : defaultTestimonials);
+      } catch (e: unknown) {
+        console.error("Failed to fetch testimonials:", e);
+        if (e instanceof Error) {
+            setError(e.message);
+        } else {
+            setError("An unknown error occurred while fetching testimonials.");
+        }
+        setTestimonials(defaultTestimonials); // Fallback to default
+      }
+    }
+
+    fetchTestimonials();
+
     const ctx = gsap.context(() => {
       // Animate heading
       gsap.fromTo(
@@ -124,6 +141,8 @@ export function PortfolioTestimonialsSection() {
         <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-16">
           Hear what our clients have to say about their experience with our restoration services.
         </p>
+        
+        {error && <p className="text-red-500 text-center mb-4">Error loading testimonials: {error}. Displaying default testimonials.</p>}
         
         <div 
           ref={testimonialsRef}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
@@ -10,43 +10,30 @@ import { Badge } from "@/components/ui/badge";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Sample gallery items with before/after images
-const galleryItems = [
+// Define an interface for Gallery Item data
+interface PortfolioGalleryItem {
+  id: number | string;
+  title: string;
+  category: string;
+  before_image: string;
+  after_image: string;
+}
+
+// Default gallery items as a fallback
+const defaultGalleryItems: PortfolioGalleryItem[] = [
   {
     id: 1,
-    title: "Persian Tabriz Restoration",
-    category: "Persian",
-    beforeImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    afterImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    description: "Complete restoration of a 19th century Persian Tabriz rug with extensive color repair and fringe restoration.",
-    tags: ["restoration", "color repair", "fringe repair"]
+    title: "Persian Tabriz Restoration - Default",
+    category: "persian",
+    before_image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
+    after_image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
   },
   {
     id: 2,
-    title: "Oriental Silk Rug Repair",
-    category: "Oriental",
-    beforeImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    afterImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    description: "Delicate repair of a damaged silk Oriental rug, preserving its intricate patterns and vibrant colors.",
-    tags: ["repair", "silk", "delicate"]
-  },
-  {
-    id: 3,
-    title: "Modern Abstract Rug Cleaning",
-    category: "Modern",
-    beforeImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    afterImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    description: "Deep cleaning and stain removal from a modern abstract rug, restoring its original vibrancy.",
-    tags: ["cleaning", "stain removal", "modern"]
-  },
-  {
-    id: 4,
-    title: "Antique Turkish Kilim Restoration",
-    category: "Antique",
-    beforeImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    afterImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
-    description: "Structural repair and restoration of an antique Turkish Kilim, preserving its historical value.",
-    tags: ["antique", "kilim", "structural repair"]
+    title: "Oriental Silk Rug Repair - Default",
+    category: "oriental",
+    before_image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
+    after_image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000",
   }
 ];
 
@@ -54,6 +41,31 @@ export function PortfolioGallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const [allItems, setAllItems] = useState<PortfolioGalleryItem[]>(defaultGalleryItems);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchGalleryItems() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/gallery`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        const data: PortfolioGalleryItem[] = responseData.data;
+        setAllItems(data);
+      } catch (e: unknown) {
+        console.error("Failed to fetch gallery items:", e);
+        if (e instanceof Error) {
+            setError(e.message);
+        } else {
+            setError("An unknown error occurred while fetching gallery items.");
+        }
+        setAllItems(defaultGalleryItems); // Fallback to default
+      }
+    }
+    fetchGalleryItems();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -78,10 +90,10 @@ export function PortfolioGallerySection() {
       );
 
       // Animate gallery items with stagger effect
-      const galleryItems = galleryRef.current?.querySelectorAll(".gallery-item");
-      if (galleryItems) {
+      const galleryElements = galleryRef.current?.querySelectorAll(".gallery-item-motion"); 
+      if (galleryElements && galleryElements.length > 0) {
         gsap.fromTo(
-          galleryItems,
+          galleryElements,
           { 
             y: 100, 
             opacity: 0,
@@ -124,14 +136,15 @@ export function PortfolioGallerySection() {
         <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-16">
           See the transformative power of our restoration services. Each project represents our commitment to excellence in rug restoration.
         </p>
-        
+        {error && <p className="text-red-500 text-center mb-4">Error loading gallery: {error}. Displaying default items.</p>}
         <div 
           ref={galleryRef}
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto"
         >
-          {galleryItems.map((item, index) => (
+          {allItems.map((item, index) => (
               <motion.div
-              key={item.id}
+                key={item.id}
+                className="gallery-item-motion bg-card rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -141,17 +154,16 @@ export function PortfolioGallerySection() {
                   type: "spring",
                   stiffness: 100
                 }}
-                className="bg-card rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <div className="relative h-[400px]">
                   <ImageComparison className="h-full" enableHover>
                     <ImageComparisonImage 
-                      src={item.beforeImage} 
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${item.before_image}`} 
                       alt={`Before: ${item.title}`} 
                       position="left" 
                     />
                     <ImageComparisonImage 
-                      src={item.afterImage} 
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${item.after_image}`} 
                       alt={`After: ${item.title}`} 
                       position="right" 
                     />
@@ -171,14 +183,6 @@ export function PortfolioGallerySection() {
                       {item.category}
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground mb-4">{item.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {item.tags.map((tag, tagIndex) => (
-                      <Badge key={tagIndex} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
                   <Button variant="outline" className="w-full">
                     View Project Details
                   </Button>
@@ -195,4 +199,4 @@ export function PortfolioGallerySection() {
       </div>
     </section>
   );
-} 
+}

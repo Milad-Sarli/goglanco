@@ -1,9 +1,6 @@
 import { Metadata } from "next";
 import { AboutHeroSection } from "@/components/sections/about/about-hero-section";
-import { AboutStorySection } from "@/components/sections/about/about-story-section";
-import { AboutTeamSection } from "@/components/sections/about/about-team-section";
 import { AboutValuesSection } from "@/components/sections/about/about-values-section";
-import { AboutTimelineSection } from "@/components/sections/about/about-timeline-section";
 import { aboutService } from "@/services/aboutService";
 
 export const metadata: Metadata = {
@@ -55,10 +52,10 @@ export default async function AboutPage() {
         subtitle={data.hero.subtitle}
         image={data.hero.image}
       />
-      <AboutStorySection items={data.story.items} />
+      {/* <AboutStorySection items={data.story.items} /> */}
       <AboutValuesSection values={data.values} />
-      <AboutTimelineSection timeline={data.timeline} />
-      <AboutTeamSection team={data.team} />
+      {/* <AboutTimelineSection timeline={data.timeline} /> */}
+      {/* <AboutTeamSection team={data.team} /> */}
     </main>
   );
 } 

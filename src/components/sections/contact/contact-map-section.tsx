@@ -10,9 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Map location configuration
 const MAP_LOCATION = {
-  lat: 40.7128,
-  lng: -74.0060,
-  zoom: 15
+  lat: 37.3192311,
+  lng: -121.9837819,
+  zoom: 16
 };
 
 export function ContactMapSection() {
@@ -21,6 +21,7 @@ export function ContactMapSection() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   
   // Use our custom hook to load Google Maps
   const { isLoaded, error } = useGoogleMaps();
@@ -64,7 +65,7 @@ export function ContactMapSection() {
         infoWindow.open(newMap, newMarker);
       });
     }
-  }, [isLoaded, map, resolvedTheme]);
+  }, [isLoaded, map, resolvedTheme, marker]);
 
   // Update map style when theme changes
   useEffect(() => {
@@ -135,7 +136,7 @@ export function ContactMapSection() {
           Find Us on the <span className="text-primary">Map</span>
         </h2>
         
-        <div className="max-w-4xl mx-auto">
+        <div>
           {error && (
             <div className="bg-destructive/10 text-destructive p-4 rounded-md mb-6">
               <p>Failed to load Google Maps. Please try again later.</p>
@@ -144,7 +145,8 @@ export function ContactMapSection() {
           
           <div 
             ref={mapContainerRef}
-            className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg"
+            className="fixed left-0 right-0 w-full h-[400px] rounded-none overflow-hidden shadow-lg z-10"
+            style={{ position: 'relative', left: 0, right: 0, width: '100vw', marginLeft: 'calc(50% - 50vw)' }}
           >
             {!isLoaded && (
               <div className="w-full h-full flex items-center justify-center bg-muted">

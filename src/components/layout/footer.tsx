@@ -73,7 +73,8 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Goglanco</h4>
             <p className="mb-4">
-              Expert rug repair and restoration services, bringing new life to your precious rugs since 2009.
+            Weaving Trust, Restoring Elegance
+            Expert Rug Restoration Rooted in Craft, Care, and Cultural Heritage Since 1996
             </p>
             <div className="flex gap-4">
               <Link href="#" className="hover:text-white transition-colors">
@@ -95,11 +96,11 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li>
+              {/* <li>
                 <Link href="/services" className="hover:text-white transition-colors">
                   Our Services
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/portfolio" className="hover:text-white transition-colors">
                   Portfolio
@@ -160,28 +161,42 @@ export function Footer() {
             <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
             <ul className="space-y-4">
               {isLoadingContactInfo && <li>Loading contact information...</li>}
-              {contactInfoError && <li className="text-red-400">{contactInfoError}</li>}
-              {contactInfo && !isLoadingContactInfo && !contactInfoError && <>
-                <li className="flex gap-3">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  <span>{contactInfo.address}</span>
-                </li>
-                <li className="flex gap-3">
-                  <Phone className="w-5 h-5 text-primary" />
-                  <span>{contactInfo.phone}</span>
-                </li>
-                <li className="flex gap-3">
-                  <Mail className="w-5 h-5 text-primary" />
-                  <span>{contactInfo.email}</span>
-                </li>
-                <li className="flex gap-3">
-                  <Clock className="w-5 h-5 text-primary" />
-                  <div>
-                    <div>{contactInfo.business_hours_monday_saturday}</div>
-                    <div>{contactInfo.business_hours_sunday}</div>
-                  </div>
-                </li>
-              </>}
+              {contactInfoError && <li className="text-red-400">Error: {contactInfoError}</li>}
+              {contactInfo && !isLoadingContactInfo && !contactInfoError && (
+                <>
+                  <li className="flex gap-3 items-start">
+                    <MapPin className="w-5 h-5 text-primary mt-1" />
+                    <div>
+                      <div className="font-semibold">Address</div>
+                      <div className="text-gray-300">{contactInfo.address}</div>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <Phone className="w-5 h-5 text-primary mt-1" />
+                    <div>
+                      <div className="font-semibold">Phone</div>
+                      <div className="text-gray-300">{contactInfo.phone}</div>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <Mail className="w-5 h-5 text-primary mt-1" />
+                    <div>
+                      <div className="font-semibold">Email</div>
+                      <div className="text-gray-300">{contactInfo.email}</div>
+                    </div>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <Clock className="w-5 h-5 text-primary mt-1" />
+                    <div>
+                      <div className="font-semibold">Business Hours</div>
+                      <div className="text-gray-300">
+                        {contactInfo.business_hours_monday_saturday}<br />
+                        {contactInfo.business_hours_sunday}
+                      </div>
+                    </div>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

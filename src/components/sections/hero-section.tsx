@@ -85,12 +85,12 @@ export function HeroSection() {
       >
         <div className="max-w-4xl mx-auto text-center">
           <TextShimmerWave className="text-5xl lg:text-5xl font-bold text-white mb-8 leading-tight">
-            {heroData.title}
+            {heroData.title} 
           </TextShimmerWave>
-          <TextRoll className="text-xl md:text-2xl text-gray-100 mb-12 font-medium">
+          <TextRoll className="block text-xl md:text-2xl text-gray-100 mb-12 font-medium">
             {heroData.subtitle}
           </TextRoll>
-          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
+          <div className="flex flex-col items-center sm:flex-row justify-center gap-6 mb-20">
             <BoxReveal duration={0.5}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-lg font-semibold px-8 py-6">
                 Get Free Estimate

@@ -1,9 +1,5 @@
 import { Metadata } from "next";
-import { PortfolioHeroSection } from "@/components/sections/portfolio/portfolio-hero-section";
-import { PortfolioGallerySection } from "@/components/sections/portfolio/portfolio-gallery-section";
-import { PortfolioCategoriesSection } from "@/components/sections/portfolio/portfolio-categories-section";
-import { PortfolioTestimonialsSection } from "@/components/sections/portfolio/portfolio-testimonials-section";
-import { PortfolioCTASection } from "@/components/sections/portfolio/portfolio-cta-section";
+import { PortfolioView } from "@/components/page-views/portfolio-view";
 
 export const metadata: Metadata = {
   title: "Portfolio | Goglanco.com | Rug Restoration Projects",
@@ -17,13 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
-  return (
-    <main className="min-h-screen">
-      <PortfolioHeroSection />
-      <PortfolioCategoriesSection />
-      <PortfolioGallerySection />
-      <PortfolioTestimonialsSection />
-      <PortfolioCTASection />
-    </main>
-  );
+  return <PortfolioView />;
 }

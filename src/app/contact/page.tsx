@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { ContactHeroSection } from "@/components/sections/contact/contact-hero-section";
-import { ContactFormSection } from "@/components/sections/contact/contact-form-section";
 import { ContactMapSection } from "@/components/sections/contact/contact-map-section";
-import { ContactInfoSection } from "@/components/sections/contact/contact-info-section";
+import { ContactSection } from "@/components/sections/contact-section";
 
 export const metadata: Metadata = {
   title: "Contact Us | Goglanco.com",
@@ -19,8 +18,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen">
       <ContactHeroSection />
-      <ContactInfoSection />
-      <ContactFormSection />
+      <ContactSection />
       <ContactMapSection />
     </main>
   );

@@ -7,24 +7,22 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { MobileMenu } from "./mobile-menu";
 import { cn } from '@/lib/utils';
 
-const services = [
-  { title: 'Rug Repair', href: '/services/repair' },
-  { title: 'Deep Cleaning', href: '/services/cleaning' },
-  { title: 'Restoration', href: '/services/restoration' },
-  { title: 'Color Restoration', href: '/services/color-restoration' },
-  { title: 'Fringe Repair', href: '/services/fringe-repair' },
-  { title: 'Custom Rugs', href: '/services/custom' },
-];
+// const services = [
+//   { title: 'Rug Repair', href: '/services/repair' },
+//   { title: 'Deep Cleaning', href: '/services/cleaning' },
+//   { title: 'Restoration', href: '/services/restoration' },
+//   { title: 'Color Restoration', href: '/services/color-restoration' },
+//   { title: 'Fringe Repair', href: '/services/fringe-repair' },
+//   { title: 'Custom Rugs', href: '/services/custom' },
+// ];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -104,7 +102,7 @@ export function Header() {
 
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <NavigationMenuTrigger className={cn(
                   'text-base',
                   getTextColor(),
@@ -128,7 +126,7 @@ export function Header() {
                     ))}
                   </ul>
                 </NavigationMenuContent>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
               <NavigationMenuItem>
                 <Link href="/portfolio" legacyBehavior passHref>
                   <NavigationMenuLink className={cn(

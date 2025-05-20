@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -8,16 +8,68 @@ import { TextShimmerWave } from "@/components/motion-primitives/text-shimmer-wav
 import { TextRoll } from "@/components/motion-primitives/text-roll";
 import { BoxReveal } from "@/components/magicui/box-reveal";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Define an interface for the Hero Section data
+interface HeroData {
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  buttonText?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
+}
 
 export function PortfolioHeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const DEFAULT_FALLBACK_IMAGE_URL = "/portfolio.jpg";
 
   useEffect(() => {
+    async function fetchHeroData() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/hero`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        // Ensure that responseData.data exists and matches the HeroData interface
+        if (responseData && responseData.data) {
+          setHeroData(responseData.data);
+        } else {
+          // Handle cases where the structure is not as expected, or log an error
+          console.error("API response did not contain expected 'data' field or was null");
+          // Fallback to static content if data is not in the expected format
+          throw new Error("Invalid data structure from API");
+        }
+      } catch (e: unknown) {
+        console.error("Failed to fetch hero data:", e);
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+        // Keep existing static content as fallback
+        setHeroData({
+          title: "Our Portfolio of Rug Restoration",
+          subtitle: "Explore our gallery of before and after transformations. Each project showcases our commitment to preserving the beauty and value of fine rugs and carpets.",
+          imageUrl: DEFAULT_FALLBACK_IMAGE_URL,
+          buttonText: "View Gallery",
+          secondaryButtonText: "Get a Quote",
+          secondaryButtonLink: "/contact",
+        });
+      }
+    }
+
+    fetchHeroData();
+
     const ctx = gsap.context(() => {
       // Initial animation for the hero section
       gsap.fromTo(
@@ -80,6 +132,13 @@ export function PortfolioHeroSection() {
     return () => ctx.revert();
   }, []);
 
+  const handleViewGalleryClick = () => {
+    const gallerySection = document.getElementById("portfolio-gallery");
+    if (gallerySection) {
+      gallerySection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section 
       ref={sectionRef} 
@@ -91,26 +150,47 @@ export function PortfolioHeroSection() {
             ref={headingRef}
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
           >
-            <TextShimmerWave className="text-primary">Our Portfolio</TextShimmerWave> of Rug Restoration
+            {heroData && heroData.title ? (
+              <>
+                <TextShimmerWave className="text-primary">
+                  {heroData.title.includes(" of ") ? heroData.title.split(" of ")[0] : heroData.title}
+                </TextShimmerWave>
+                {heroData.title.includes(" of ") && (
+                  <>{heroData.title.substring(heroData.title.indexOf(" of "))}</>
+                )}
+              </>
+            ) : (
+              <>
+                <TextShimmerWave className="text-primary">Our Portfolio</TextShimmerWave> 
+                <span> of Rug Restoration</span>
+              </>
+            )}
           </h1>
           <p 
             ref={textRef}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl"
           >
             <TextRoll>
-              Explore our gallery of before and after transformations. Each project showcases our commitment to preserving the beauty and value of fine rugs and carpets.
+              {heroData ? heroData.subtitle : "Explore our gallery of before and after transformations. Each project showcases our commitment to preserving the beauty and value of fine rugs and carpets."}
             </TextRoll>
           </p>
+          {error && <p className="text-red-500">Error loading hero content: {error}. Displaying default content.</p>}
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <BoxReveal duration={0.5}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6">
-                View Gallery
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6"
+                onClick={handleViewGalleryClick}
+              >
+                {heroData?.buttonText || "View Gallery"}
               </Button>
             </BoxReveal>
             <BoxReveal duration={0.5} boxColor="#4338ca">
-              <Button size="lg" variant="outline" className="border-2 hover:bg-accent text-lg font-semibold px-8 py-6">
-                Get a Quote
-              </Button>
+              <Link href={heroData?.secondaryButtonLink || "/contact"} passHref>
+                <Button size="lg" variant="outline" className="border-2 hover:bg-accent text-lg font-semibold px-8 py-6">
+                  {heroData?.secondaryButtonText || "Get a Quote"}
+                </Button>
+              </Link>
             </BoxReveal>
           </div>
         </div>
@@ -119,7 +199,7 @@ export function PortfolioHeroSection() {
           className="relative h-[400px] lg:h-[500px] rounded-lg overflow-hidden shadow-2xl"
         >
           <Image
-            src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000"
+            src={(heroData && heroData.imageUrl) ? heroData.imageUrl : DEFAULT_FALLBACK_IMAGE_URL}
             alt="Rug restoration portfolio showcase"
             fill
             className="object-cover"

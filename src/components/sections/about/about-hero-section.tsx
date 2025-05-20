@@ -12,13 +12,11 @@ import { BoxReveal } from "@/components/ui/box-reveal";
 gsap.registerPlugin(ScrollTrigger);
 
 interface AboutHeroSectionProps {
-  title: string;
   subtitle: string;
   image: string;
 }
 
 export function AboutHeroSection({ 
-  title = "Crafting Beauty, Restoring Heritage", 
   subtitle = "For over two decades, we've been dedicated to preserving the artistry and value of fine rugs through expert restoration.",
   image = "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000"
 }: AboutHeroSectionProps) {
@@ -121,7 +119,7 @@ export function AboutHeroSection({
       <div className="absolute inset-0 z-0">
         <div ref={imageRef} className="relative w-full h-full">
           <Image
-            src={image}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${image}`}
             alt="About us hero image"
             fill
             unoptimized
@@ -141,7 +139,10 @@ export function AboutHeroSection({
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
           >
             <TextShimmerWave>
-              {title}
+              <span className="hidden md:inline">Weaving Trust, Restoring Elegance</span>
+              <span className="inline md:hidden">
+                Weaving Trust,<br />Restoring Elegance
+              </span>
             </TextShimmerWave>
           </h1>
           
@@ -172,15 +173,15 @@ export function AboutHeroSection({
             className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-3xl mx-auto pt-16"
           >
             <div className="stat-item text-center">
-              <div className="text-5xl font-bold text-primary mb-3">2K+</div>
+              <div className="text-5xl font-bold text-primary mb-3">5K+</div>
               <div className="text-muted-foreground text-lg font-medium">Rugs Restored</div>
             </div>
             <div className="stat-item text-center">
-              <div className="text-5xl font-bold text-primary mb-3">20+</div>
+              <div className="text-5xl font-bold text-primary mb-3">30+</div>
               <div className="text-muted-foreground text-lg font-medium">Years Experience</div>
             </div>
             <div className="stat-item text-center">
-              <div className="text-5xl font-bold text-primary mb-3">99%</div>
+              <div className="text-5xl font-bold text-primary mb-3">100%</div>
               <div className="text-muted-foreground text-lg font-medium">Client Satisfaction</div>
             </div>
           </div>
