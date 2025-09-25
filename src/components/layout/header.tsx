@@ -170,9 +170,9 @@ export function Header() {
             <Button
               variant="outline"
               className={cn(
-                'hidden md:inline-flex',
+                'hidden md:inline-flex hover:text-background',
                 getButtonStyle(),
-                getDropShadow()
+                getDropShadow() 
               )}
             >
               Get Free Estimate

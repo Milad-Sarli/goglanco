@@ -92,18 +92,18 @@ export function HeroSection() {
           </TextRoll>
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-16">
             <BoxReveal duration={0.5}>
-              <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
+              <Button size="lg" className="w-full sm:w-auto bg-primary cursor-pointer hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
                 Get Free Estimate
               </Button>
-            </BoxReveal>
+            </BoxReveal> 
             <BoxReveal duration={0.5} boxColor="#4338ca">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto dark:text-white border-2 border-white dark:border-white hover:bg-white/10 dark:hover:bg-white/10 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
-                Our Services
+              <Button size="lg" variant="outline" className="w-full cursor-pointer sm:w-auto dark:text-white border-2 border-white dark:border-white hover:bg-white/10 dark:hover:bg-white/10 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6" asChild>
+                <a href="/services">Our Services</a>
               </Button>
             </BoxReveal>
             <BoxReveal duration={0.5} boxColor="#312e81">
-              <Button size="lg" variant="ghost" className="w-full sm:w-auto text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
-                View Portfolio
+              <Button size="lg" variant="ghost" className="w-full sm:w-auto cursor-pointer text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/10 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
+             <a href="/portfolio"> View Portfolio </a>
               </Button>
             </BoxReveal>
           </div>

@@ -67,7 +67,7 @@ export function ServicesSection() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
+            </div> 
           </div>
         </div>
       </section>

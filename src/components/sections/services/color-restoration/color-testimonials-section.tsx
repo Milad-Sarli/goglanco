@@ -29,31 +29,18 @@ export function ColorTestimonialsSection() {
   ];
 
   return (
-    <section className="py-16 bg-muted/30 p-4">
+    <section className="py-16 bg-muted/30 p-4"> 
       <div className="container">
         <div className="text-center mb-12">
-          <BoxReveal>
-            <h2 className="text-3xl font-bold mb-4">
-              <TextRoll>What Our Clients Say</TextRoll>
-            </h2>
-          </BoxReveal>
-          <TextRoll delay={0.3}>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Hear from our satisfied clients about their experience with our color restoration services.
-            </p>
-          </TextRoll>
+          <h2 className="text-3xl font-bold mb-4">What Our Clients Say</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Hear from our satisfied clients about their experience with our custom rug services.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <Card className="border-none shadow-md">
+            <Card key={index} className="border-none shadow-md">
               <CardContent className="pt-6">
                 <div className="flex mb-4">
                   {[...Array(5)].map((_, i) => (
@@ -73,11 +60,10 @@ export function ColorTestimonialsSection() {
                 <p className="font-semibold">{testimonial.author}</p>
                 <p className="text-sm text-muted-foreground">{testimonial.role}</p>
               </CardFooter>
-              </Card>
-            </motion.div>
-            ))}
-          </div>
+            </Card>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
     );
   }

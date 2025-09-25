@@ -66,10 +66,10 @@ export function CustomProcessSection() {
       <div className="container">
         <div className="text-center mb-12">
           <BoxReveal>
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-3xl font-bold mb-4 flex justify-center items-center w-full">
               Our <TextRoll>Custom Process</TextRoll>
             </h2>
-          </BoxReveal>
+          </BoxReveal> 
           <p className="text-muted-foreground max-w-2xl mx-auto">
             We follow a collaborative process to ensure your custom rug meets your exact specifications and exceeds your expectations.
           </p>

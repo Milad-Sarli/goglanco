@@ -29,45 +29,38 @@ export function RepairTestimonialsSection() {
   ];
 
   return (
-    <section className="py-20 bg-muted/50 p-4">
+    <section className="py-16 bg-muted/30 p-4"> 
       <div className="container">
         <div className="text-center mb-12">
-          <BoxReveal>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
-          </BoxReveal>
-          <TextRoll> 
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Don't just take our word for it. Here's what our satisfied customers have to say about our repair services.
-            </p>
-          </TextRoll>
+          <h2 className="text-3xl font-bold mb-4">What Our Clients Say</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Hear from our satisfied clients about their experience with our custom rug services.
+          </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="border bg-card">
-                <CardContent className="pt-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
-                    ))}
-                  </div>
-                  <p className="mb-6 text-muted-foreground">{testimonial.content}</p>
-                </CardContent>
-                <CardFooter className="border-t pt-4">
-                  <div>
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </CardFooter>
-              </Card>
-            </motion.div>
+            <Card key={index} className="border-none shadow-md">
+              <CardContent className="pt-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < testimonial.rating
+                          ? "text-yellow-500 fill-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="mb-4">{testimonial.content}</p>
+              </CardContent>
+              <CardFooter className="border-t pt-4 flex flex-col items-start">
+                <p className="font-semibold">{testimonial.name}</p>
+                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </div>

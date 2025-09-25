@@ -116,11 +116,11 @@ export function Footer() {
                   Contact
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blog" className="hover:text-white dark:hover:text-white transition-colors">
                   Blog
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
