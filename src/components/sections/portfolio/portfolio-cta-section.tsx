@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { BoxReveal } from "@/components/magicui/box-reveal";
 import { TextShimmerWave } from "@/components/motion-primitives/text-shimmer-wave";
 import { TextRoll } from "@/components/motion-primitives/text-roll";
 import axiosInstance from "@/lib/axios";

@@ -93,14 +93,14 @@ export function ColorTestimonialsSection() {
               viewport={{ once: true }}
               whileHover={{ 
                 scale: 1.03, 
-                boxShadow: "0 10px 25px rgba(0,0,0,0.1)" 
+                boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                transition: { type: "spring", stiffness: 400 }
               }}
-              transition={{ type: "spring", stiffness: 400 }}
             >
               <Card className="border-none shadow-md h-full">
                 <CardContent className="pt-6">
                   <motion.div 
-                    className="flex mb-4"
+                    className="flex mb-4" 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
