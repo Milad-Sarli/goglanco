@@ -53,8 +53,8 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           variant="outline"
           size="icon"
           className={cn(
-            'md:hidden',
-            getButtonStyle()
+            'md:hidden z-50',
+            getButtonStyle() 
           )}
         >
           <MenuIcon className="h-6 w-6" />
@@ -142,4 +142,4 @@ function MenuIcon(props: React.ComponentProps<'svg'>) {
       <line x1="4" x2="20" y1="18" y2="18" />
     </svg>
   );
-} 
+}
