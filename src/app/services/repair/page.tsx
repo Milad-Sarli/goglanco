@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { RepairServiceView } from "@/components/page-views/repair-service-view";
-import { Main } from "next/document";
 
 export const metadata: Metadata = {
   title: "Rug Repair Services | Goglanco.com | Expert Restoration",

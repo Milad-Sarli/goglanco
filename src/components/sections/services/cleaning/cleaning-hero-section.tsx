@@ -58,7 +58,7 @@ export function CleaningHeroSection() {
             </BoxReveal>
             
             <p ref={textRef} className="text-xl mb-8 text-muted-foreground">
-              Revitalize your rugs with our thorough deep cleaning process that removes dirt, stains, and allergens while preserving your rug's beauty.
+              Revitalize your rugs with our thorough deep cleaning process that removes dirt, stains, and allergens while preserving your rug&apos;s beauty.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">

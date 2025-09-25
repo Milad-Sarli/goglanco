@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { TextRoll } from "@/components/animations/text-roll";
-import { BoxReveal } from "@/components/animations/box-reveal";
 
 export function ColorProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,13 +67,11 @@ export function ColorProcessSection() {
     <section ref={sectionRef} id="process" className="py-16 bg-muted/30 p-4">
       <div className="container">
         <div className="text-center mb-12">
-          <BoxReveal>
             <h2 className="text-3xl font-bold mb-4">
-              <TextRoll>Our Color Restoration Process</TextRoll>
+              Our Color Restoration Process
             </h2>
-          </BoxReveal>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We follow a meticulous process to ensure your rug's colors are restored to their original vibrant state.
+            We follow a meticulous process to ensure your rug&apos;s colors are restored to their original vibrant state.
           </p>
         </div>
 

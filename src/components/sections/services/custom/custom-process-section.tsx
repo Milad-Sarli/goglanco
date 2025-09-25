@@ -4,8 +4,6 @@ import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BoxReveal } from "@/components/magicui/box-reveal";
-import { TextRoll } from "@/components/motion-primitives/text-roll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,11 +63,9 @@ export function CustomProcessSection() {
     <section ref={sectionRef} id="custom-process" className="py-16 bg-muted/50 p-4">
       <div className="container">
         <div className="text-center mb-12">
-          <BoxReveal>
             <h2 className="text-3xl font-bold mb-4 flex justify-center items-center w-full">
-              Our <TextRoll>Custom Process</TextRoll>
-            </h2>
-          </BoxReveal> 
+              Our Custom Process
+            </h2> 
           <p className="text-muted-foreground max-w-2xl mx-auto">
             We follow a collaborative process to ensure your custom rug meets your exact specifications and exceeds your expectations.
           </p>

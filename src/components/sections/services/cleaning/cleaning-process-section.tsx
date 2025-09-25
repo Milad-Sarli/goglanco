@@ -4,8 +4,6 @@ import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BoxReveal } from "@/components/magicui/box-reveal";
-import { TextRoll } from "@/components/motion-primitives/text-roll";
 
 gsap.registerPlugin(ScrollTrigger);
  
@@ -65,11 +63,9 @@ export function CleaningProcessSection() {
     <section ref={sectionRef} id="cleaning-process" className="py-20 bg-muted/50 p-4">
       <div className="container">
         <div className="text-center mb-12">
-          <BoxReveal>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our <TextRoll>Cleaning Process</TextRoll>
+            <h2 className="text-3xl text-center md:text-4xl font-bold mb-4">
+              Our Cleaning Process
             </h2>
-          </BoxReveal>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             We follow a meticulous process to ensure your rug is thoroughly cleaned while preserving its integrity.
           </p>

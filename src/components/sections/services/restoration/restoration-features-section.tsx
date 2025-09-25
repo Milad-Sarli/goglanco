@@ -86,7 +86,7 @@ export function RestorationFeaturesSection() {
 
   return (
     <section ref={sectionRef} className="py-16">
-      <div className="container p-4">
+      <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div ref={imageRef} className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden">
             <Image

@@ -34,7 +34,7 @@ export function RestorationHeroSection() {
                   <Link href="/contact">Get a Free Quote</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link href="#repair-process">Learn Our Process</Link>
+                  <Link href="/services/restoration#restoration-process">Learn Our Process</Link>
                 </Button>
               </div>
             </TextRoll>

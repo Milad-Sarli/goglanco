@@ -120,14 +120,25 @@ export function PortfolioCTASection() {
   }, []);
 
   return (
-    <section 
+    <motion.section 
       ref={sectionRef} 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
       className="py-20 bg-gradient-to-b from-background to-muted/30"
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 
+          <motion.h2 
             ref={headingRef}
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ 
+              duration: 0.8, 
+              type: "spring",
+              stiffness: 100
+            }}
+            viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
           >
             {ctaData && ctaData.title ? (
@@ -153,10 +164,14 @@ export function PortfolioCTASection() {
                 Ready to <TextShimmerWave className="text-primary">Restore</TextShimmerWave> Your Rug?
               </>
             )}
-          </h2>
+          </motion.h2>
           
-          <p 
+          <motion.p 
             ref={textRef}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
             className="text-lg md:text-xl text-muted-foreground mb-10"
           >
             <TextRoll>
@@ -164,22 +179,49 @@ export function PortfolioCTASection() {
                 ? "Contact us today for a free consultation and estimate. Our experts will assess your rug and provide a detailed restoration plan tailored to your needs."
                 : ctaData?.description || "Contact us today for a free consultation and estimate. Our experts will assess your rug and provide a detailed restoration plan tailored to your needs."}
             </TextRoll>
-          </p>
+          </motion.p>
           {error && <p className="text-red-500 text-center mb-4">Error: {error}. Displaying default content.</p>}
-          <div 
+          <motion.div 
             ref={buttonsRef}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
             className="flex flex-col sm:flex-row justify-center gap-6"
           >
-            <BoxReveal duration={0.5}>
-              <Link href="/contact">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button 
+                size="lg" 
+                asChild
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6"
+              >
+                <Link href="/contact">
                   {ctaData && ctaData.title === ctaData.description && ctaData.title === ctaData.buttonText
                     ? "Get Free Estimate"
                     : ctaData?.buttonText || "Get Free Estimate"}
-                </Button>
-              </Link>
-            </BoxReveal>
-          </div>
+                </Link>
+              </Button>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button 
+                size="lg" 
+                variant="outline" 
+                asChild
+                className="w-full sm:w-auto"
+              >
+                <Link href="/services">
+                  Explore Services
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
           
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -192,6 +234,6 @@ export function PortfolioCTASection() {
           </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
-} 
+}

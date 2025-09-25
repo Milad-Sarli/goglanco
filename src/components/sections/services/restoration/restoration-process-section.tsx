@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { TextRoll } from "@/components/animations/text-roll";
-import { BoxReveal } from "@/components/animations/box-reveal";
 
 export function RestorationProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,11 +67,9 @@ export function RestorationProcessSection() {
     <section ref={sectionRef} id="process" className="py-16 bg-muted/30">
       <div className="container">
         <div className="text-center mx-auto mb-12 p-4">
-          <BoxReveal>
             <h2 className="text-3xl text-center mx-auto font-bold mb-4 flex justify-center items-center">
-              <TextRoll>Our Restoration Process</TextRoll>
+              Our Restoration Process
             </h2> 
-          </BoxReveal>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             We follow a meticulous process to ensure your rug is restored to its original beauty and integrity.
           </p>

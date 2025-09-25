@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBolt, FaWater, FaTools, FaPalette, FaPencilRuler } from 'react-icons/fa';
+import { FaBolt, FaWater, FaPalette, FaPencilRuler } from 'react-icons/fa';
 import { Card, CardContent } from '@/components/ui/card';
 import { Spotlight } from '@/components/motion-primitives/spotlight';
 

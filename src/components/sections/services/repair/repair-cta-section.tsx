@@ -2,24 +2,50 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { TextRoll } from "@/components/animations/text-roll";
-import { BoxReveal } from "@/components/animations/box-reveal";
+import { motion } from "framer-motion";
+import { TextShimmerWave } from "@/components/motion-primitives/text-shimmer-wave";
 
 export function RepairCTASection() {
   return ( 
-   <section className="py-16 bg-primary/5 p-4">
+   <motion.section 
+     initial={{ opacity: 0 }}
+     whileInView={{ opacity: 1 }}
+     transition={{ duration: 0.8 }}
+     viewport={{ once: true }}
+     className="py-16 bg-primary/5 p-4"
+   >
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Restore Your Valuable Rugs?</h2>
-          <p className="text-muted-foreground mb-8">
+          <motion.h2 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold mb-4"
+          >
+            Ready to <TextShimmerWave className="text-primary">Restore</TextShimmerWave> Your Valuable Rugs?
+          </motion.h2>
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-muted-foreground mb-8"
+          >
              Contact us today for a free consultation and quote. Our expert team is ready to bring new life to your treasured rugs.
-          </p>
-          <Button size="lg" asChild>
-            <Link href="/contact">Get Started</Link>
-          </Button>
+          </motion.p>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Button size="lg" asChild>
+              <Link href="/contact">Get Started</Link>
+            </Button>
+          </motion.div>
         </div>
       </div> 
-    </section>
+    </motion.section>
   );
 }
