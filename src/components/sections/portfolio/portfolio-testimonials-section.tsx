@@ -128,7 +128,7 @@ export function PortfolioTestimonialsSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="py-20 bg-background"
+      className="py-0 bg-background"
     >
       <div className="container mx-auto px-4">
         <h2 

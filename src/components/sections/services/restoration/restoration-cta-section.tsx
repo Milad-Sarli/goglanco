@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export function RestorationCtaSection() {
   return (
-    <section className="py-16 bg-primary/5">
+    <section className="py-16 bg-primary/5 p-4">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Restore Your Rug?</h2>

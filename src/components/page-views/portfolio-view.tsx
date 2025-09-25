@@ -6,6 +6,7 @@ import { PortfolioHeroSection } from "@/components/sections/portfolio/portfolio-
 import { PortfolioCategoriesSection } from "@/components/sections/portfolio/portfolio-categories-section";
 import { PortfolioTestimonialsSection } from "../sections/portfolio/portfolio-testimonials-section";
 import { PortfolioCTASection } from "../sections/portfolio/portfolio-cta-section";
+import { PortfolioGallerySection } from "../sections/portfolio/portfolio-gallery-section";
 // import { PortfolioTestimonialsSection } from "@/components/sections/portfolio/portfolio-testimonials-section";
 // import { PortfolioCTASection } from "@/components/sections/portfolio/portfolio-cta-section";
 
@@ -24,11 +25,11 @@ export function PortfolioView() {
         onCategoryChange={handleCategoryChange} 
         initialCategory={activeCategory} 
       />
-      {/* <div id="portfolio-gallery">
+      <div id="portfolio-gallery">
         <PortfolioGallerySection />
-      </div> */}
+      </div>
       <PortfolioTestimonialsSection />
       <PortfolioCTASection />
     </main>
   );
-} 
+}

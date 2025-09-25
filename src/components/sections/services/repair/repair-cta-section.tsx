@@ -8,7 +8,7 @@ import { BoxReveal } from "@/components/animations/box-reveal";
 
 export function RepairCTASection() {
   return ( 
-    <section className="py-16 bg-primary/5">
+    <section className="py-16 bg-primary/5 p-4">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
           <BoxReveal>

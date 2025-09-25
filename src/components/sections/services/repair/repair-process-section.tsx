@@ -62,7 +62,7 @@ export function RepairProcessSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="repair-process" className="py-20 bg-muted/50">
+    <section ref={sectionRef} id="repair-process" className="py-20 bg-muted/50 p-4">
       <div className="container">
         <div className="text-center mb-12">
           <BoxReveal>

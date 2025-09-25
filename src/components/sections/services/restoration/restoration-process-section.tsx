@@ -68,18 +68,18 @@ export function RestorationProcessSection() {
   return (
     <section ref={sectionRef} id="process" className="py-16 bg-muted/30">
       <div className="container">
-        <div className="text-center mb-12">
+        <div className="text-center mx-auto mb-12 p-4">
           <BoxReveal>
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-3xl text-center mx-auto font-bold mb-4 flex justify-center items-center">
               <TextRoll>Our Restoration Process</TextRoll>
-            </h2>
+            </h2> 
           </BoxReveal>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             We follow a meticulous process to ensure your rug is restored to its original beauty and integrity.
           </p>
-        </div>
+        </div> 
 
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div ref={cardsRef} className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {processSteps.map((step, index) => (
             <div key={index} className="process-card bg-background p-6 rounded-lg shadow-md">
               <div className="text-4xl font-bold text-primary/20 mb-4">{step.number}</div>

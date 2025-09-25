@@ -30,7 +30,7 @@ export function ColorFeaturesSection() {
   ];
 
   return (
-    <section ref={sectionRef} className="py-16">
+    <section ref={sectionRef} className="py-16 p-4">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <motion.div 

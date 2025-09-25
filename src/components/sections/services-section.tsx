@@ -75,16 +75,16 @@ export function ServicesSection() {
   }
 
   return (
-    <section className="py-20 bg-gray-50 overflow-hidden">
+    <section className="py-20 bg-background dark:bg-slate-900 overflow-hidden">
       <div className="container mx-auto px-4 relative">
-        <Spotlight className="z-0" />
+        <Spotlight className="z-0" /> 
         <div className="relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-3xl font-bold mb-4"
+              className="text-3xl font-bold mb-4 text-foreground dark:text-white"
             >
               Expert Rug Care Services
             </motion.h2>
@@ -93,7 +93,7 @@ export function ServicesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-gray-600 text-lg"
+              className="text-muted-foreground dark:text-slate-300 text-lg"
             >
               We specialize in professional rug cleaning, restoration, and maintenance services, ensuring your valuable rugs receive the highest quality care and attention they deserve.
             </motion.p>
@@ -112,7 +112,7 @@ export function ServicesSection() {
                 variants={item}
                 className="w-full"
               >
-                <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+                <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden bg-card dark:bg-slate-800">
                   <div className="relative h-48 overflow-hidden">
                     <Image
                       src={`${service.image}`}
@@ -124,10 +124,10 @@ export function ServicesSection() {
                   </div>
                   <CardHeader className="flex flex-row items-center gap-2 pt-6">
                     <span className="text-2xl">{service.icon}</span>
-                    <h3 className="text-xl font-semibold">{service.title}</h3>
+                    <h3 className="text-xl font-semibold text-foreground dark:text-white">{service.title}</h3>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600">{service.description}</p>
+                    <p className="text-muted-foreground dark:text-slate-300">{service.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -137,4 +137,4 @@ export function ServicesSection() {
       </div>
     </section>
   );
-} 
+}

@@ -244,7 +244,7 @@ export function PortfolioCategoriesSection({
                 <TabsTrigger 
                   key={category.id} 
                   value={category.id}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-auto min-h-[2.5rem] whitespace-normal py-2"
                 >
                   {category.label}
                 </TabsTrigger>
@@ -256,7 +256,7 @@ export function PortfolioCategoriesSection({
         {/* Gallery Section - error message for gallery items is now part of the general 'error' state */}
         <div 
           ref={galleryRef}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto"
+          className="mt-24 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto"
         >
           {filteredItems.length === 0 && !error && ( // Show 'no projects' only if no general error
             <p className="col-span-full text-center text-lg text-muted-foreground py-8">
@@ -306,13 +306,13 @@ export function PortfolioCategoriesSection({
                     <Badge variant="outline" className="text-xs">
                       {/* Find category label from main categories state using item.category (which is parent cat ID) */}
                       {categories.find(cat => cat.id === item.category)?.label || item.category}
-                    </Badge>
+                    </Badge> 
                   </div>
                 </div>
               </motion.div>
           ))}
         </div>
-      </div>
+      </div> 
     </section>
   );
-} 
+}

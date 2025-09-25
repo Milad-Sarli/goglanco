@@ -52,20 +52,27 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-muted dark:bg-slate-900">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, type: "spring" }}
             viewport={{ once: true }}
-            className="text-3xl font-bold mb-4"
+            className="text-3xl font-bold mb-4 text-foreground dark:text-white"
           >
             What Our Clients Say
           </motion.h2>
-          <p className="text-gray-600 text-lg">
-            Don&apos;t just take our word for it - hear from our satisfied customers
-          </p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-muted-foreground dark:text-slate-300 text-lg"
+          >
+            Discover why our clients trust us with their most precious rugs and textiles
+          </motion.p>
         </div>
 
         <Carousel
@@ -79,13 +86,13 @@ export function TestimonialsSection() {
             {testimonials.map((testimonial, index) => (
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="p-1"
                 >
-                  <Card>
+                  <Card className="bg-card dark:bg-slate-800">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4 mb-4">
                         <Avatar>
@@ -93,8 +100,8 @@ export function TestimonialsSection() {
                           <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-semibold">{testimonial.name}</div>
-                          <div className="text-sm text-gray-500">{testimonial.role}</div>
+                          <div className="font-semibold text-foreground dark:text-white">{testimonial.name}</div>
+                          <div className="text-sm text-muted-foreground dark:text-slate-400">{testimonial.role}</div>
                         </div>
                       </div>
                       <div className="flex gap-0.5 mb-4">
@@ -102,7 +109,7 @@ export function TestimonialsSection() {
                           <StarIcon key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
-                      <p className="text-gray-600">{testimonial.content}</p>
+                      <p className="text-muted-foreground dark:text-slate-300">{testimonial.content}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -115,4 +122,4 @@ export function TestimonialsSection() {
       </div>
     </section>
   );
-} 
+}

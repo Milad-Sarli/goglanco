@@ -86,11 +86,11 @@ export function RestorationFeaturesSection() {
 
   return (
     <section ref={sectionRef} className="py-16">
-      <div className="container">
+      <div className="container p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div ref={imageRef} className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden">
             <Image
-              src="/images/restoration-features.jpg"
+              src="/photo_rug_reweaving.jpg"
               alt="Rug restoration features"
               fill
               className="object-cover"

@@ -39,17 +39,17 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 dark:text-slate-400">
       <div className="container mx-auto px-4">
         {/* Newsletter Section */}
-        <div className="py-12 border-b border-gray-800">
+        <div className="py-12 border-b border-slate-800 dark:border-slate-800">
           <div className="max-w-xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-semibold text-white mb-4">
+              <h3 className="text-2xl font-semibold text-white dark:text-white mb-4">
                 Subscribe to Our Newsletter
               </h3>
               <p className="mb-6">
@@ -59,7 +59,7 @@ export function Footer() {
                 <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="bg-gray-800 border-gray-700"
+                  className="bg-slate-800 dark:bg-slate-800 border-slate-700 dark:border-slate-700"
                 />
                 <Button>Subscribe</Button>
               </div>
@@ -71,22 +71,22 @@ export function Footer() {
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Goglanco</h4>
+            <h4 className="text-lg font-semibold text-white dark:text-white mb-4">Goglanco</h4>
             <p className="mb-4">
             Weaving Trust, Restoring Elegance
             Expert Rug Restoration Rooted in Craft, Care, and Cultural Heritage Since 1996
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Facebook size={20} />
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Instagram size={20} />
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Twitter size={20} />
               </Link>
-              <Link href="#" className="hover:text-white transition-colors">
+              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Youtube size={20} />
               </Link>
             </div>
@@ -94,30 +94,30 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-white dark:text-white mb-4">Quick Links</h4>
             <ul className="space-y-2">
               {/* <li>
-                <Link href="/services" className="hover:text-white transition-colors">
+                <Link href="/services" className="hover:text-white dark:hover:text-white transition-colors">
                   Our Services
                 </Link>
               </li> */}
               <li>
-                <Link href="/portfolio" className="hover:text-white transition-colors">
+                <Link href="/portfolio" className="hover:text-white dark:hover:text-white transition-colors">
                   Portfolio
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-white transition-colors">
+                <Link href="/about" className="hover:text-white dark:hover:text-white transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href="/contact" className="hover:text-white dark:hover:text-white transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:text-white transition-colors">
+                <Link href="/blog" className="hover:text-white dark:hover:text-white transition-colors">
                   Blog
                 </Link>
               </li>
@@ -126,30 +126,30 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Our Services</h4>
+            <h4 className="text-lg font-semibold text-white dark:text-white mb-4">Our Services</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/services/repair" className="hover:text-white transition-colors">
+                <Link href="/services/repair" className="hover:text-white dark:hover:text-white transition-colors">
                   Rug Repair
                 </Link>
               </li>
               <li>
-                <Link href="/services/cleaning" className="hover:text-white transition-colors">
+                <Link href="/services/cleaning" className="hover:text-white dark:hover:text-white transition-colors">
                   Deep Cleaning
                 </Link>
               </li>
               <li>
-                <Link href="/services/restoration" className="hover:text-white transition-colors">
+                <Link href="/services/restoration" className="hover:text-white dark:hover:text-white transition-colors">
                   Restoration
                 </Link>
               </li>
               <li>
-                <Link href="/services/color-restoration" className="hover:text-white transition-colors">
+                <Link href="/services/color-restoration" className="hover:text-white dark:hover:text-white transition-colors">
                   Color Restoration
                 </Link>
               </li>
               <li>
-                <Link href="/services/custom" className="hover:text-white transition-colors">
+                <Link href="/services/custom" className="hover:text-white dark:hover:text-white transition-colors">
                   Custom Rugs
                 </Link>
               </li>
@@ -158,38 +158,38 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
+            <h4 className="text-lg font-semibold text-white dark:text-white mb-4">Contact Info</h4>
             <ul className="space-y-4">
               {isLoadingContactInfo && <li>Loading contact information...</li>}
               {contactInfoError && <li className="text-red-400">Error: {contactInfoError}</li>}
               {contactInfo && !isLoadingContactInfo && !contactInfoError && (
                 <>
                   <li className="flex gap-3 items-start">
-                    <MapPin className="w-5 h-5 text-primary mt-1" />
+                    <MapPin className="w-5 h-5 text-white mt-1" />
                     <div>
-                      <div className="font-semibold">Address</div>
-                      <div className="text-gray-300">{contactInfo.address}</div>
+                      <div className="font-semibold text-white dark:text-white">Address</div>
+                      <div>{contactInfo.address}</div>
                     </div>
                   </li>
                   <li className="flex gap-3 items-start">
-                    <Phone className="w-5 h-5 text-primary mt-1" />
+                    <Phone className="w-5 h-5 text-white mt-1" />
                     <div>
-                      <div className="font-semibold">Phone</div>
-                      <div className="text-gray-300">{contactInfo.phone}</div>
+                      <div className="font-semibold text-white dark:text-white">Phone</div>
+                      <div>{contactInfo.phone}</div>
                     </div>
                   </li>
                   <li className="flex gap-3 items-start">
-                    <Mail className="w-5 h-5 text-primary mt-1" />
+                    <Mail className="w-5 h-5 text-white mt-1" />
                     <div>
-                      <div className="font-semibold">Email</div>
-                      <div className="text-gray-300">{contactInfo.email}</div>
+                      <div className="font-semibold text-white dark:text-white">Email</div>
+                      <div>{contactInfo.email}</div>
                     </div>
                   </li>
                   <li className="flex gap-3 items-start">
-                    <Clock className="w-5 h-5 text-primary mt-1" />
+                    <Clock className="w-5 h-5 text-white mt-1" />
                     <div>
-                      <div className="font-semibold">Business Hours</div>
-                      <div className="text-gray-300">
+                      <div className="font-semibold text-white dark:text-white">Business Hours</div>
+                      <div>
                         {contactInfo.business_hours_monday_saturday}<br />
                         {contactInfo.business_hours_sunday}
                       </div>
@@ -202,19 +202,19 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-6 border-t border-gray-800 text-sm">
+        <div className="py-6 border-t border-slate-800 dark:border-slate-800 text-sm">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
               © {new Date().getFullYear()} Goglanco. All rights reserved.
             </div>
             <div className="flex gap-6">
-              <Link href="/privacy" className="hover:text-white transition-colors">
+              <Link href="/privacy" className="hover:text-white dark:hover:text-white transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
+              <Link href="/terms" className="hover:text-white dark:hover:text-white transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/sitemap" className="hover:text-white transition-colors">
+              <Link href="/sitemap" className="hover:text-white dark:hover:text-white transition-colors">
                 Sitemap
               </Link>
             </div>
@@ -223,4 +223,4 @@ export function Footer() {
       </div>
     </footer>
   );
-} 
+}

@@ -8,7 +8,7 @@ import { BoxReveal } from "@/components/animations/box-reveal";
 
 export function ColorCtaSection() {
   return (
-    <section className="py-16 bg-primary/5">
+    <section className="py-16 bg-primary/5 p-4">
       <div className="container">
         <motion.div 
           className="max-w-3xl mx-auto text-center"

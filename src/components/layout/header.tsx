@@ -39,37 +39,37 @@ export function Header() {
   }, [scrollY]);
 
   const getTextColor = () => {
-    if (!mounted) return 'text-gray-900'; // Default for SSR
+    if (!mounted) return 'text-foreground'; // Default for SSR
     
     if (isScrolled) {
-      return 'text-gray-900';
+      return 'text-foreground';
     }
     // When not scrolled, use white text for dark mode and dark text for light mode
-    return 'text-gray-900';
+    return 'text-foreground';
   };
 
   const getButtonStyle = () => {
-    if (!mounted) return 'text-gray-900 border-gray-900 hover:bg-gray-900/10'; // Default for SSR
+    if (!mounted) return 'text-foreground border-foreground hover:bg-foreground/10'; // Default for SSR
     
     if (isScrolled) {
-      return 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+      return 'text-foreground border-foreground hover:bg-foreground/10';
     }
-    return 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+    return 'text-foreground border-foreground hover:bg-foreground/10';
   }
 
   const getHeaderBg = () => {
     if (!mounted) return 'bg-transparent'; // Default for SSR
     
     if (isScrolled) {
-      return 'bg-white/80 backdrop-blur-md shadow-sm';
+      return 'bg-background/80 backdrop-blur-md shadow-sm';
     }
     return 'bg-transparent';
   }
 
   const getLogoTextColor = () => {
-    if (!mounted) return 'text-gray-900'; // Default for SSR
+    if (!mounted) return 'text-foreground'; // Default for SSR
     
-    return 'text-gray-900';
+    return 'text-foreground';
   }
 
   const getDropShadow = () => {
@@ -90,14 +90,14 @@ export function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" className="font-bold text-2xl bg-white/40 rounded-full px-2">
+          <Link href="/" className="font-bold text-2xl bg-background/40 rounded-full px-2">
             <span className={cn(
               'transition-colors duration-300',
               getLogoTextColor(),
               getDropShadow()
             )}>
               Goglanco
-            </span>
+            </span> 
           </Link>
 
           <NavigationMenu className="hidden md:flex">
@@ -182,10 +182,12 @@ export function Header() {
             )}>
               <ThemeToggle />
             </div>
-            <MobileMenu isScrolled={isScrolled} />
-          </div>
+            <div className="relative right-5">
+              <MobileMenu isScrolled={isScrolled} />
+            </div>
+          </div> 
         </div>
       </div>
     </motion.header>
   );
-} 
+}

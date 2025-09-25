@@ -35,7 +35,7 @@ export function RestorationTestimonialsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="border-none shadow-md">
               <CardContent className="pt-6">

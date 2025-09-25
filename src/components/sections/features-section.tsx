@@ -45,7 +45,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 bg-white overflow-hidden">
+    <section className="py-20 bg-background dark:bg-slate-900 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.h2
@@ -53,7 +53,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
             viewport={{ once: true }}
-            className="text-3xl font-bold mb-4"
+            className="text-3xl font-bold mb-4 text-foreground dark:text-white"
           >
             Why Choose Goglanco
           </motion.h2>
@@ -62,7 +62,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-gray-600 text-lg"
+            className="text-muted-foreground dark:text-slate-300 text-lg"
           >
 Experience world-class rug care with a perfect blend of traditional artistry, global sourcing, and modern restoration techniques.          </motion.p>
         </div>
@@ -84,7 +84,7 @@ Experience world-class rug care with a perfect blend of traditional artistry, gl
                   scale: 1.03,
                   transition: { duration: 0.2 }
                 }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-card dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <div className="relative h-48 group">
                   <Image
@@ -127,7 +127,7 @@ Experience world-class rug care with a perfect blend of traditional artistry, gl
                   transition={{ delay: 0.2 + index * 0.1 }}
                   className="p-6"
                 >
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-muted-foreground dark:text-slate-300">{feature.description}</p>
                 </motion.div>
               </motion.div>
             </Tilt>
@@ -162,17 +162,17 @@ Experience world-class rug care with a perfect blend of traditional artistry, gl
                   scale: 1.05,
                   transition: { duration: 0.2 }
                 }}
-                className="p-6 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                className="p-6 rounded-lg bg-card/50 dark:bg-slate-800/50 hover:bg-card hover:dark:bg-slate-800 transition-colors duration-300"
               >
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
-                  className="text-4xl font-bold text-primary mb-2"
+                  className="text-4xl font-bold text-foreground dark:text-white mb-2"
                 >
                   {stat.value}
                 </motion.div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-foreground dark:text-white">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -180,4 +180,4 @@ Experience world-class rug care with a perfect blend of traditional artistry, gl
       </div>
     </section>
   );
-} 
+}

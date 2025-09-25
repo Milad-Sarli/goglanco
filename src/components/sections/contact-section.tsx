@@ -246,18 +246,18 @@ export function ContactSection() {
   }, [isConsultationModalOpen]);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-background dark:bg-slate-900" id="contact">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl font-bold mb-4"
+            className="text-3xl text-foreground dark:text-white font-bold mb-4"
           >
             Get in Touch
           </motion.h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-muted-foreground dark:text-slate-300 text-lg">
             Contact us for a free consultation and estimate
           </p>
         </div>
@@ -553,4 +553,4 @@ export function ContactSection() {
 }
 
 // TODO: Implement WeekendConsultationModal component
-// const WeekendConsultationModal = ({ isOpen, onClose, onSubmit }) => { ... } 
+// const WeekendConsultationModal = ({ isOpen, onClose, onSubmit }) => { ... }
