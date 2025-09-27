@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
-import { submitEstimate, ValidationError } from '@/services/estimateService';
+import { submitEstimate } from '@/services/estimateService';
 
 interface EstimateFormModalProps {
   trigger?: React.ReactNode;
@@ -27,9 +27,9 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-
+  useTheme(); // استفاده از useTheme بدون دریافت مقدار
+  const [apiError, setApiError] = useState<string | null>(null);
+ 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -64,10 +64,8 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
     return Object.keys(newErrors).length === 0;
   };
 
-  const [apiError, setApiError] = useState<string | null>(null);
-
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     
     if (!validateForm()) {
       return;
@@ -97,24 +95,24 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
           setIsSubmitted(false);
         }, 300);
       }, 2000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       
       // مدیریت خطاهای اعتبارسنجی از سمت سرور
-      if (error.errors) {
+      if (error && typeof error === 'object' && 'errors' in error) {
         const serverErrors: Record<string, string> = {};
         
         // تبدیل خطاهای سرور به فرمت مورد نیاز کامپوننت
-        Object.entries(error.errors).forEach(([field, messages]: [string, any]) => {
+        Object.entries((error as {errors: Record<string, string[]>}).errors).forEach(([field, messages]) => {
           if (Array.isArray(messages) && messages.length > 0) {
             serverErrors[field] = messages[0];
           }
         });
         
         setErrors(serverErrors);
-      } else if (error.message) {
+      } else if (error && typeof error === 'object' && 'message' in error) {
         // نمایش پیام خطای عمومی
-        setApiError(error.message);
+        setApiError((error as {message: string}).message);
       } else {
         // اگر هیچ پیام خطایی وجود نداشت
         setApiError('خطا در ارتباط با سرور. لطفاً بعداً دوباره امتحان کنید.');
@@ -141,7 +139,7 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
         <DialogHeader className="p-6 pb-2">
           <DialogTitle className="text-2xl font-bold text-center">Request a Free Estimate</DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">
-            Fill out the form below and we'll get back to you as soon as possible.
+            Fill out the form below and we&apos;ll get back to you as soon as possible.
           </DialogDescription>
         </DialogHeader>
         
@@ -155,15 +153,15 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
               </div>
               <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
               <p className="text-muted-foreground">
-                Your estimate request has been submitted successfully. We'll contact you shortly.
-              </p>
+                 Your estimate request has been submitted successfully. We&apos;ll contact you shortly.
+               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="fullname">Full Name</Label>
                 <Input
-                  id="fullname"
+                  id="fullname" 
                   name="fullname"
                   value={formData.fullname}
                   onChange={handleChange}
@@ -180,10 +178,10 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={errors.phone ? 'border-red-500' : ''}
-                  placeholder="+1 (555) 123-4567"
+                  className={cn(errors.phone ? 'border-red-500' : '')}
+                  placeholder="Enter your phone number"
                 />
-                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
               </div>
               
               <div className="space-y-2">
@@ -220,8 +218,8 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Please describe what type of rug service you need..."
-                  rows={4}
+                  className="min-h-[100px]"
+                  placeholder="Tell us about your project"
                 />
               </div>
               

@@ -49,14 +49,7 @@ export function Header() {
     return 'text-foreground';
   };
 
-  const getButtonStyle = () => {
-    if (!mounted) return 'text-foreground border-foreground hover:bg-foreground/10'; // Default for SSR
-    
-    if (isScrolled) {
-      return 'text-foreground border-foreground hover:bg-foreground/10';
-    }
-    return 'text-foreground border-foreground hover:bg-foreground/10';
-  }
+  // تابع getButtonStyle حذف شد چون استفاده نمی‌شود
 
   const getHeaderBg = () => {
     if (!mounted) return 'bg-transparent'; // Default for SSR

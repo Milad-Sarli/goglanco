@@ -44,19 +44,19 @@ export async function submitEstimate(estimateData: EstimateData): Promise<Estima
 
     console.log('Response received:', response.data);
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error details:', error);
 
-    if (error.response) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error('Response error:', error.response.status, error.response.data);
       throw error.response.data || { message: `Error ${error.response.status}: Server error` };
     }
 
-    if (error.request) {
+    if (axios.isAxiosError(error) && error.request) {
       console.error('Request error - no response received');
       throw { message: 'No response from server. Please check your connection.' };
     }
 
-    throw { message: error.message || 'خطا در ارسال درخواست' };
+    throw { message: error instanceof Error ? error.message : 'خطا در ارسال درخواست' };
   }
 }
