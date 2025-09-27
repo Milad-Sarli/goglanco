@@ -11,6 +11,7 @@ import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import heroService, { HeroData } from "@/services/heroService";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EstimateFormModal } from "@/components/estimate-form-modal";
 
 export function HeroSection() {
   const [loading, setLoading] = useState(true);
@@ -92,11 +93,13 @@ export function HeroSection() {
           </TextRoll>
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-16">
             <BoxReveal duration={0.5}>
-              <Button size="lg" className="w-full sm:w-auto bg-primary cursor-pointer hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
-                Get Free Estimate
-              </Button>
+              <EstimateFormModal>
+                <Button size="lg" className="w-full sm:w-auto bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">
+                  Get Free Estimate
+                </Button>
+              </EstimateFormModal>
             </BoxReveal> 
-            <BoxReveal duration={0.5} boxColor="#4338ca">
+            <BoxReveal duration={0.5} boxColor="#4338ca"> 
               <Button size="lg" variant="outline" className="w-full cursor-pointer sm:w-auto dark:text-white border-2 border-white dark:border-white hover:bg-white/10 dark:hover:bg-white/10 text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6" asChild>
                 <a href="/services">Our Services</a>
               </Button>

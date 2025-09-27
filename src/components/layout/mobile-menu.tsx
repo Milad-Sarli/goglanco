@@ -7,6 +7,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
+import { EstimateFormModal } from '@/components/estimate-form-modal';
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -121,9 +122,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           </div>
 
           <div className="p-6 border-t">
-            <Button className="w-full" size="lg" onClick={handleLinkClick}>
-              Get Free Estimate
-            </Button>
+            <EstimateFormModal className="w-full" />
           </div>
         </nav>
       </SheetContent>

@@ -1,0 +1,247 @@
+'use client';
+
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogOverlay } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useTheme } from 'next-themes';
+import { cn } from '@/lib/utils';
+import { submitEstimate, ValidationError } from '@/services/estimateService';
+
+interface EstimateFormModalProps {
+  trigger?: React.ReactNode;
+  className?: string;
+}
+
+export function EstimateFormModal({ trigger, className }: EstimateFormModalProps) {
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    fullname: '',
+    phone: '', 
+    email: '',
+    address: '',
+    description: ''
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.fullname.trim()) {
+      newErrors.fullname = 'Full name is required';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^\+?[0-9\s\-()]+$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
+    if (formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); 
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setApiError(null);
+    
+    try {
+      // ارسال داده‌ها به API با استفاده از سرویس
+      console.log('Submitting form data:', formData);
+      await submitEstimate(formData);
+      setIsSubmitted(true);
+      
+      // بازنشانی فرم پس از ارسال موفق
+      setTimeout(() => {
+        setOpen(false);
+        // بازنشانی فرم پس از بسته شدن مودال
+        setTimeout(() => {
+          setFormData({
+            fullname: '',
+            phone: '',
+            email: '',
+            address: '',
+            description: ''
+          });
+          setIsSubmitted(false);
+        }, 300);
+      }, 2000);
+    } catch (error: any) {
+      console.error('Error submitting form:', error);
+      
+      // مدیریت خطاهای اعتبارسنجی از سمت سرور
+      if (error.errors) {
+        const serverErrors: Record<string, string> = {};
+        
+        // تبدیل خطاهای سرور به فرمت مورد نیاز کامپوننت
+        Object.entries(error.errors).forEach(([field, messages]: [string, any]) => {
+          if (Array.isArray(messages) && messages.length > 0) {
+            serverErrors[field] = messages[0];
+          }
+        });
+        
+        setErrors(serverErrors);
+      } else if (error.message) {
+        // نمایش پیام خطای عمومی
+        setApiError(error.message);
+      } else {
+        // اگر هیچ پیام خطایی وجود نداشت
+        setApiError('خطا در ارتباط با سرور. لطفاً بعداً دوباره امتحان کنید.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {trigger || (
+          <Button 
+            className={cn("bg-primary hover:bg-primary/90 text-primary-foreground", className)}
+            size="lg"
+          >
+            Get Free Estimate
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogOverlay className="backdrop-blur-sm" />
+      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-background text-foreground border-border">
+        <DialogHeader className="p-6 pb-2">
+          <DialogTitle className="text-2xl font-bold text-center">Request a Free Estimate</DialogTitle>
+          <DialogDescription className="text-center text-muted-foreground">
+            Fill out the form below and we'll get back to you as soon as possible.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="p-6 pt-2">
+          {isSubmitted ? (
+            <div className="text-center py-8">
+              <div className="mb-4 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
+              <p className="text-muted-foreground">
+                Your estimate request has been submitted successfully. We'll contact you shortly.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullname">Full Name</Label>
+                <Input
+                  id="fullname"
+                  name="fullname"
+                  value={formData.fullname}
+                  onChange={handleChange}
+                  className={errors.fullname ? 'border-red-500' : ''}
+                  placeholder="John Doe"
+                />
+                {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={errors.phone ? 'border-red-500' : ''}
+                  placeholder="+1 (555) 123-4567"
+                />
+                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={errors.email ? 'border-red-500' : ''}
+                  placeholder="john.doe@example.com"
+                />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className={errors.address ? 'border-red-500' : ''}
+                  placeholder="123 Main St, City, State, ZIP"
+                />
+                {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="description">Description of Service Needed</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Please describe what type of rug service you need..."
+                  rows={4}
+                />
+              </div>
+              
+              {apiError && (
+                <div className="p-3 mb-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
+                  {apiError}
+                </div>
+              )}
+              
+              <Button 
+                type="submit" 
+                className="w-full bg-primary hover:bg-primary/90 text-white"
+                disabled={isSubmitting} 
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Request'}
+              </Button>
+            </form>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

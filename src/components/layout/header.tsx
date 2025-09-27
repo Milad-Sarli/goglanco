@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { MobileMenu } from "./mobile-menu";
 import { cn } from '@/lib/utils';
+import { EstimateFormModal } from '@/components/estimate-form-modal';
 
 // const services = [
 //   { title: 'Rug Repair', href: '/services/repair' },
@@ -167,16 +168,17 @@ export function Header() {
           </NavigationMenu>
 
           <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              className={cn(
-                'hidden md:inline-flex hover:text-background',
-                getButtonStyle(),
-                getDropShadow() 
-              )}
-            >
-              Get Free Estimate
-            </Button>
+            <EstimateFormModal>
+              <Button
+                variant="default"
+                className={cn(
+                  'hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground',
+                  getDropShadow() 
+                )}
+              >
+                Get Free Estimate
+              </Button>
+            </EstimateFormModal>
             <div className={cn(
               getDropShadow()
             )}>
