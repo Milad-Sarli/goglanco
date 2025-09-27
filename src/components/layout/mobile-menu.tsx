@@ -30,11 +30,12 @@ const services = [
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); 
   }, []);
 
   const getButtonStyle = () => {
@@ -46,8 +47,12 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
     return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
   };
 
+  const handleLinkClick = () => {
+    setOpen(false);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           variant="outline"
@@ -64,7 +69,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
       <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
         <nav className="flex flex-col h-full">
           <div className="p-6 border-b">
-            <Link href="/" className="font-bold text-2xl">
+            <Link href="/" className="font-bold text-2xl" onClick={handleLinkClick}>
               Goglanco
             </Link>
           </div>
@@ -83,6 +88,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
                     <Link
                       href={item.href}
                       className="block text-lg font-medium hover:text-primary transition-colors"
+                      onClick={handleLinkClick}
                     >
                       {item.title}
                     </Link>
@@ -104,6 +110,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
                     <Link
                       href={service.href}
                       className="block text-lg font-medium hover:text-primary transition-colors"
+                      onClick={handleLinkClick}
                     >
                       {service.title}
                     </Link>
@@ -114,7 +121,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           </div>
 
           <div className="p-6 border-t">
-            <Button className="w-full" size="lg">
+            <Button className="w-full" size="lg" onClick={handleLinkClick}>
               Get Free Estimate
             </Button>
           </div>
