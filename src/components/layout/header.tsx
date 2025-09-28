@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { MobileMenu } from "./mobile-menu";
 import { cn } from '@/lib/utils';
-import { EstimateFormModal } from '@/components/estimate-form-modal';
+import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
 
 // const services = [
 //   { title: 'Rug Repair', href: '/services/repair' },
@@ -161,7 +161,7 @@ export function Header() {
           </NavigationMenu>
 
           <div className="flex items-center gap-4">
-            <EstimateFormModal>
+            <WeekendConsultationModal>
               <Button
                 variant="default"
                 className={cn(
@@ -169,9 +169,9 @@ export function Header() {
                   getDropShadow() 
                 )}
               >
-                Get Free Estimate
+                Get Free Estimate 
               </Button>
-            </EstimateFormModal>
+            </WeekendConsultationModal>
             <div className={cn(
               getDropShadow()
             )}>

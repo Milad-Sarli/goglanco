@@ -7,7 +7,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
-import { EstimateFormModal } from '@/components/estimate-form-modal';
+import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -122,7 +122,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           </div>
 
           <div className="p-6 border-t">
-            <EstimateFormModal className="w-full" />
+            <WeekendConsultationModal className="w-full" />
           </div>
         </nav>
       </SheetContent>
