@@ -92,7 +92,13 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
           : undefined,
       };
 
-      const response = await axiosInstance.post<ConsultationSuccessResponse>('/api/consultation-requests', submissionData);
+      // اضافه کردن پارامتر send_email برای اطمینان از ارسال ایمیل
+      const requestData = {
+        ...submissionData,
+        send_email: true
+      }; 
+      
+      const response = await axiosInstance.post<ConsultationSuccessResponse>('/api/consultation-requests', requestData);
       console.log('Consultation request successful:', response.data);
       setConsultationSubmitStatus({ type: 'success', message: response.data.message || 'Consultation request sent successfully!' });
       consultationForm.reset();

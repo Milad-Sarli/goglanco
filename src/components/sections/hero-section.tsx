@@ -91,7 +91,7 @@ export function HeroSection() {
           <TextRoll className="block text-lg sm:text-xl md:text-2xl text-gray-100 mb-8 sm:mb-12 font-medium">
             {heroData.subtitle}
           </TextRoll>
-          <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-16">
             <BoxReveal duration={0.5}>
               <WeekendConsultationModal>
                 <Button size="lg" className="w-full sm:w-auto bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground text-base sm:text-lg font-semibold px-6 sm:px-8 py-5 sm:py-6">

@@ -10,20 +10,24 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { MobileMenu } from "./mobile-menu";
 import { cn } from '@/lib/utils';
 import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
+import { SigninButton } from '@/components/auth/signin-button';
+import { UserAvatar } from '@/components/auth/user-avatar';
 
-// const services = [
-//   { title: 'Rug Repair', href: '/services/repair' },
-//   { title: 'Deep Cleaning', href: '/services/cleaning' },
-//   { title: 'Restoration', href: '/services/restoration' },
-//   { title: 'Color Restoration', href: '/services/color-restoration' },
-//   { title: 'Fringe Repair', href: '/services/fringe-repair' },
-//   { title: 'Custom Rugs', href: '/services/custom' },
-// ];
+const services = [
+  { title: 'Rug Repair', href: '/services/repair' },
+  { title: 'Deep Cleaning', href: '/services/cleaning' },
+  { title: 'Restoration', href: '/services/restoration' },
+  { title: 'Color Restoration', href: '/services/color-restoration' },
+  { title: 'Fringe Repair', href: '/services/fringe-repair' },
+  { title: 'Custom Rugs', href: '/services/custom' },
+];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -96,14 +100,16 @@ export function Header() {
 
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
-              {/* <NavigationMenuItem>
-                <NavigationMenuTrigger className={cn(
-                  'text-base',
-                  getTextColor(),
-                  getDropShadow()
-                )}>
-                  Services
-                </NavigationMenuTrigger>
+              <NavigationMenuItem>
+                <Link href="/services">
+                  <NavigationMenuTrigger className={cn(
+                    'text-base', 'cursor-pointer' , 
+                    getTextColor(),
+                    getDropShadow()
+                  )}>
+                    Services
+                  </NavigationMenuTrigger>
+                </Link>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                     {services.map((service) => (
@@ -120,7 +126,7 @@ export function Header() {
                     ))}
                   </ul>
                 </NavigationMenuContent>
-              </NavigationMenuItem> */}
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/portfolio" legacyBehavior passHref>
                   <NavigationMenuLink className={cn(
@@ -172,6 +178,28 @@ export function Header() {
                 Get Free Estimate 
               </Button>
             </WeekendConsultationModal>
+            
+            {/* Authentication Components - Both shown for design preview */}
+            <div className="hidden md:flex items-center gap-3">
+              <SigninButton 
+                isScrolled={isScrolled}
+                onClick={() => {
+                  // Temporary demo login
+                  console.log('Sign in clicked');
+                }}
+              />
+              <UserAvatar 
+                isScrolled={isScrolled}
+                user={{
+                  name: "John Doe",
+                  email: "john@example.com"
+                }}
+                onSignOut={() => {
+                  console.log('Sign out clicked');
+                }}
+              />
+            </div>
+            
             <div className={cn(
               getDropShadow()
             )}>
