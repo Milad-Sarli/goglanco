@@ -139,14 +139,6 @@ export function SigninButton({ className, isScrolled, onClick, variant = 'defaul
       <SigninModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
-        onSignIn={(email, password) => {
-          console.log('Sign in with:', email, password);
-          setIsModalOpen(false);
-        }}
-        onSignUp={(email, password) => {
-          console.log('Sign up with:', email, password);
-          setIsModalOpen(false);
-        }}
       />
     </>
   );

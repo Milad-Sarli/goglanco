@@ -16,27 +16,26 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from 'next/link';
+import { useAuth } from './auth-context';
 
 interface UserAvatarProps {
   className?: string;
   isScrolled?: boolean;
-  user?: {
-    name: string;
-    email: string;
-    avatar?: string;
-  };
-  onSignOut?: () => void;
   variant?: 'default' | 'mobile';
 }
 
 export function UserAvatar({ 
   className, 
   isScrolled, 
-  user = { name: "John Doe", email: "john@example.com" },
-  onSignOut,
   variant = 'default'
 }: UserAvatarProps) {
+  const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Don't render if no user
+  if (!user) {
+    return null;
+  }
   const dropdownRef = useRef<HTMLDivElement>(null);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
@@ -226,7 +225,7 @@ export function UserAvatar({
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  onSignOut?.();
+                  signOut();
                 }}
                 className={cn(
                   'w-full flex items-center gap-3 px-3 py-2 rounded-lg',

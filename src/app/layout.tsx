@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Inter } from "next/font/google";
 import { LayoutProvider } from "@/components/layout/layout-provider";
+import { AuthProvider } from "@/components/auth/auth-context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,10 +32,12 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <LayoutProvider>
-            {children}
-          </LayoutProvider>
-          <Toaster />
+          <AuthProvider>
+            <LayoutProvider>
+              {children}
+            </LayoutProvider>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

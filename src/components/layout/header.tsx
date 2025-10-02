@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
 import { SigninButton } from '@/components/auth/signin-button';
 import { UserAvatar } from '@/components/auth/user-avatar';
+import { useAuth } from '@/components/auth/auth-context';
 
 const services = [
   { title: 'Rug Repair', href: '/services/repair' },
@@ -33,6 +34,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
+  const { isLoggedIn } = useAuth();
 
   // Only run client-side effects after component is mounted
   useEffect(() => {
@@ -179,25 +181,13 @@ export function Header() {
               </Button>
             </WeekendConsultationModal>
             
-            {/* Authentication Components - Both shown for design preview */}
+            {/* Authentication Components */}
             <div className="hidden md:flex items-center gap-3">
-              <SigninButton 
-                isScrolled={isScrolled}
-                onClick={() => {
-                  // Temporary demo login
-                  console.log('Sign in clicked');
-                }}
-              />
-              <UserAvatar 
-                isScrolled={isScrolled}
-                user={{
-                  name: "John Doe",
-                  email: "john@example.com"
-                }}
-                onSignOut={() => {
-                  console.log('Sign out clicked');
-                }}
-              />
+              {isLoggedIn ? (
+                <UserAvatar isScrolled={isScrolled} />
+              ) : (
+                <SigninButton isScrolled={isScrolled} />
+              )}
             </div>
             
             <div className={cn(

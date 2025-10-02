@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
 import { SigninButton } from '@/components/auth/signin-button';
 import { UserAvatar } from '@/components/auth/user-avatar';
+import { useAuth } from '@/components/auth/auth-context';
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -32,8 +33,10 @@ const services = [
 ];
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
-  const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { isLoggedIn } = useAuth();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
@@ -82,28 +85,19 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
             <div className="px-6 mb-6">
               <div className="text-sm font-semibold text-gray-500 mb-3">Account</div>
               <div className="space-y-3">
-                <SigninButton 
-                  variant="mobile"
-                  isScrolled={isScrolled}
-                  onClick={() => {
-                    console.log('Mobile sign in clicked');
-                    handleLinkClick();
-                  }}
-                />
-                <div className="flex items-center justify-center">
-                  <UserAvatar 
+                {isLoggedIn ? (
+                  <div className="flex items-center justify-center">
+                    <UserAvatar 
+                      variant="mobile"
+                      isScrolled={isScrolled}
+                    />
+                  </div>
+                ) : (
+                  <SigninButton 
                     variant="mobile"
                     isScrolled={isScrolled}
-                    user={{
-                      name: "John Doe",
-                      email: "john@example.com"
-                    }}
-                    onSignOut={() => {
-                      console.log('Mobile sign out clicked');
-                      handleLinkClick();
-                    }}
                   />
-                </div>
+                )}
               </div>
             </div>
 

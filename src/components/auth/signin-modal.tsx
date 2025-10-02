@@ -7,22 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { X, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+import { useAuth } from './auth-context';
 
 interface SigninModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSignIn?: (email: string, password: string) => void;
-  onSignUp?: (email: string, password: string) => void;
 }
 
-export function SigninModal({ isOpen, onClose, onSignIn, onSignUp }: SigninModalProps) {
+export function SigninModal({ isOpen, onClose }: SigninModalProps) {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, isLoading } = useAuth();
   
   const formRef = useRef<HTMLFormElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -30,10 +32,11 @@ export function SigninModal({ isOpen, onClose, onSignIn, onSignUp }: SigninModal
   // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
+      setName('');
       setEmail('');
       setPassword('');
+      setConfirmPassword('');
       setShowPassword(false);
-      setIsLoading(false);
     }
   }, [isOpen]);
 
@@ -66,27 +69,43 @@ export function SigninModal({ isOpen, onClose, onSignIn, onSignUp }: SigninModal
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
-
-    setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
     
     if (isSignUp) {
-      onSignUp?.(email, password);
+      if (!name || !email || !password || !confirmPassword) return;
+      if (password !== confirmPassword) {
+        // Handle password mismatch
+        return;
+      }
+      
+      try {
+        await signUp({
+          name,
+          email,
+          password,
+          password_confirmation: confirmPassword
+        });
+        onClose();
+      } catch (error) {
+        // Error is handled in the auth context
+      }
     } else {
-      onSignIn?.(email, password);
+      if (!email || !password) return;
+      
+      try {
+        await signIn({ email, password });
+        onClose();
+      } catch (error) {
+        // Error is handled in the auth context
+      }
     }
-    
-    setIsLoading(false);
-    onClose();
   };
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
+    setName('');
     setEmail('');
     setPassword('');
+    setConfirmPassword('');
   };
 
   return (
@@ -99,6 +118,26 @@ export function SigninModal({ isOpen, onClose, onSignIn, onSignUp }: SigninModal
         </DialogHeader>
 
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 mt-4">
+          {isSignUp && (
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Full Name
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-medium">
               Email Address
@@ -142,10 +181,35 @@ export function SigninModal({ isOpen, onClose, onSignIn, onSignUp }: SigninModal
             </div>
           </div>
 
+          {isSignUp && (
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">
+                Confirm Password
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || !email || !password}
+            disabled={
+              isLoading || 
+              !email || 
+              !password || 
+              (isSignUp && (!name || !confirmPassword || password !== confirmPassword))
+            }
           >
             {isLoading ? (
               <div className="flex items-center gap-2">

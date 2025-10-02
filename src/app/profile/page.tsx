@@ -12,10 +12,12 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { 
   User, 
   Settings, 
-  CreditCard, 
+  MessageSquare, 
   Bell, 
   HelpCircle, 
   Camera,
@@ -31,21 +33,59 @@ import {
   Eye,
   Download,
   FileText,
-  DollarSign,
+  Star,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Image,
+  ClipboardList,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getUserProfile, updateUserProfile, changePassword, checkAuth, User as UserType, ChangePasswordData } from '@/services/userService';
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userData, setUserData] = useState<UserType | null>(null);
+  
+  // فرم تغییر رمز عبور
+  const [passwordData, setPasswordData] = useState<ChangePasswordData>({
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  });
 
+  // بررسی احراز هویت کاربر
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const verifyAuth = async () => {
+      try {
+        const isAuthenticated = await checkAuth();
+        if (!isAuthenticated) {
+          router.push('/');
+          return;
+        }
+        
+        // دریافت اطلاعات کاربر
+        const response = await getUserProfile();
+        if (response.success && response.data) {
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        router.push('/');
+      } finally {
+        setIsLoading(false);
+        setMounted(true);
+      }
+    };
+
+    verifyAuth();
+  }, [router]);
 
   useEffect(() => {
     if (mounted && containerRef.current) {
@@ -83,9 +123,64 @@ export default function ProfilePage() {
       cardsRef.current.push(el);
     }
   };
+  
+  // Update user information
+  const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!userData) return;
+    
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const response = await updateUserProfile(formData);
+      
+      if (response.success && response.data) {
+        setUserData(response.data);
+        toast.success('Profile information updated successfully');
+      }
+    } catch (error) {
+      console.error('Update profile error:', error);
+      toast.error('Error updating profile');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  // Change password
+  const handlePasswordChange = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      toast.error('New password and confirmation do not match');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      const response = await changePassword(passwordData);
+      
+      if (response.success) {
+        toast.success('Password changed successfully');
+        setPasswordData({
+          current_password: '',
+          new_password: '',
+          confirm_password: ''
+        });
+      }
+    } catch (error) {
+      console.error('Change password error:', error);
+      toast.error('Error changing password');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (!mounted) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -100,29 +195,29 @@ export default function ProfilePage() {
         >
           <div className="flex items-center gap-4 mb-6">
             <Avatar className="w-20 h-20 border-4 border-primary/20">
-              <AvatarImage src="/placeholder-avatar.jpg" alt="John Doe" />
+              <AvatarImage src={userData?.avatar || "/placeholder-avatar.jpg"} alt={userData?.name || "User"} />
               <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
-                JD
+                {userData?.name ? userData.name.substring(0, 2).toUpperCase() : "U"}
               </AvatarFallback>
             </Avatar>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                John Doe
-              </h1>
-              <p className="text-xl text-muted-foreground">john@example.com</p>
-              <Badge variant="secondary" className="mt-2">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                Verified Account
-              </Badge>
+                 {userData?.name || "User"}
+                </h1>
+                <p className="text-xl text-muted-foreground">{userData?.email || "Email"}</p>
+                <Badge variant="secondary" className="mt-2">
+                 <CheckCircle className="w-3 h-3 mr-1" />
+                 Verified Account
+                </Badge>
             </div>
           </div>
         </motion.div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8 h-auto p-1 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-6 mb-8 h-auto p-1 bg-muted/50">
             <TabsTrigger 
-              value="profile" 
+              value="profile"  
               className={cn(
                 "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
                 "min-h-[3rem] sm:min-h-[2.5rem] p-1 sm:p-3",
@@ -150,7 +245,7 @@ export default function ProfilePage() {
               <span className="hidden xs:block sm:block leading-none">Settings</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="billing" 
+              value="reviews" 
               className={cn(
                 "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
                 "min-h-[3rem] sm:min-h-[2.5rem] p-1 sm:p-3",
@@ -160,8 +255,22 @@ export default function ProfilePage() {
                 "hover:bg-background/50"
               )}
             >
-              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="hidden xs:block sm:block leading-none">Billing</span>
+              <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="hidden xs:block sm:block leading-none">Reviews</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="requests" 
+              className={cn(
+                "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
+                "min-h-[3rem] sm:min-h-[2.5rem] p-1 sm:p-3",
+                "text-[0.65rem] sm:text-sm font-medium",
+                "data-[state=active]:bg-background data-[state=active]:text-foreground",
+                "data-[state=active]:shadow-sm transition-all duration-200",
+                "hover:bg-background/50"
+              )}
+            >
+              <ClipboardList className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="hidden xs:block sm:block leading-none">Requests</span>
             </TabsTrigger>
             <TabsTrigger 
               value="notifications" 
@@ -207,28 +316,56 @@ export default function ProfilePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" defaultValue="John" />
+                  <form onSubmit={handleProfileUpdate}>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Name</Label>
+                        <Input 
+                          id="name" 
+                          name="name" 
+                          defaultValue={userData?.name || ""} 
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                          id="email" 
+                          name="email" 
+                          type="email" 
+                          defaultValue={userData?.email || ""} 
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input 
+                          id="phone" 
+                          name="phone" 
+                          defaultValue={userData?.phone || ""} 
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="avatar">Profile Picture</Label>
+                        <Input 
+                          id="avatar" 
+                          name="avatar" 
+                          type="file" 
+                          className="cursor-pointer" 
+                        />
+                      </div>
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        ) : (
+                          <Camera className="w-4 h-4 ml-2" />
+                        )}
+                        Update Profile
+                      </Button>
                     </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" defaultValue="Doe" />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" defaultValue="john@example.com" />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" defaultValue="+1 (555) 123-4567" />
-                  </div>
-                  <Button className="w-full">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Update Profile
-                  </Button>
+                  </form>
                 </CardContent>
               </Card>
 
@@ -243,24 +380,31 @@ export default function ProfilePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="address">Street Address</Label>
-                    <Input id="address" defaultValue="123 Main Street" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="city">City</Label>
-                      <Input id="city" defaultValue="New York" />
+                  <form onSubmit={handleProfileUpdate}>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="address">Address</Label>
+                        <Input 
+                          id="address" 
+                          name="address" 
+                          defaultValue={userData?.address || ""} 
+                        />
+                      </div>
+                      <Button 
+                        type="submit" 
+                        variant="outline" 
+                        className="w-full"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        ) : (
+                          <MapPin className="w-4 h-4 ml-2" />
+                        )}
+                        Update Address
+                      </Button>
                     </div>
-                    <div>
-                      <Label htmlFor="zip">ZIP Code</Label>
-                      <Input id="zip" defaultValue="10001" />
-                    </div>
-                  </div>
-                  <Button variant="outline" className="w-full">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    Update Address
-                  </Button>
+                  </form>
                 </CardContent>
               </Card>
             </div>
@@ -276,7 +420,7 @@ export default function ProfilePage() {
                     Appearance
                   </CardTitle>
                   <CardDescription>
-                    Customize your interface and theme preferences
+                    Customize UI and theme settings
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -294,7 +438,7 @@ export default function ProfilePage() {
                     <div className="space-y-0.5">
                       <Label>Compact View</Label>
                       <p className="text-sm text-muted-foreground">
-                        Use a more compact interface layout
+                        Use a more compact UI layout
                       </p>
                     </div>
                     <Switch />
@@ -327,86 +471,248 @@ export default function ProfilePage() {
                     <div className="space-y-0.5">
                       <Label>Profile Visibility</Label>
                       <p className="text-sm text-muted-foreground">
-                        Control who can see your profile
+                        Control who can view your profile
                       </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
+                  <form onSubmit={handlePasswordChange} className="space-y-4 mt-4">
+                    <div>
+                      <Label htmlFor="current_password">Current Password</Label>
+                      <Input 
+                        id="current_password" 
+                        type="password" 
+                        value={passwordData.current_password}
+                        onChange={(e) => setPasswordData({...passwordData, current_password: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="new_password">New Password</Label>
+                      <Input 
+                        id="new_password" 
+                        type="password" 
+                        value={passwordData.new_password}
+                        onChange={(e) => setPasswordData({...passwordData, new_password: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="confirm_password">Confirm New Password</Label>
+                      <Input 
+                        id="confirm_password" 
+                        type="password" 
+                        value={passwordData.confirm_password}
+                        onChange={(e) => setPasswordData({...passwordData, confirm_password: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <Button 
+                      type="submit" 
+                      variant="outline" 
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                      ) : (
+                        <Lock className="w-4 h-4 ml-2" />
+                      )}
+                      Change Password
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Reviews Tab */}
+          <TabsContent value="reviews" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5" />
+                    My Reviews
+                  </CardTitle>
+                  <CardDescription>
+                    Reviews and testimonials you've submitted
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-4">
+                    <div className="border rounded-lg p-4 bg-muted/50">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                              ))}
+                            </div>
+                            <span className="text-sm text-muted-foreground">Persian Rug Restoration</span>
+                          </div>
+                          <p className="text-sm">
+                            "Excellent service! My antique Persian rug was restored to perfection. The attention to detail was remarkable."
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 15, 2024</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border rounded-lg p-4 bg-muted/50">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                              ))}
+                            </div>
+                            <span className="text-sm text-muted-foreground">Carpet Cleaning</span>
+                          </div>
+                          <p className="text-sm">
+                            "Professional and reliable service. My carpets look brand new!"
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-2">Submitted on Nov 28, 2024</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <Button variant="outline" className="w-full">
-                    <Lock className="w-4 h-4 mr-2" />
-                    Change Password
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Write New Review
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Image className="w-5 h-5" />
+                    My Previews
+                  </CardTitle>
+                  <CardDescription>
+                    Before and after photos you've shared
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                        <img 
+                          src="/photo_rug_reweaving.jpg" 
+                          alt="Before restoration" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="text-xs text-center text-muted-foreground">Before</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                        <img 
+                          src="/portfolio.jpg" 
+                          alt="After restoration" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="text-xs text-center text-muted-foreground">After</p>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-medium">Persian Rug Restoration</p>
+                    <p className="text-xs text-muted-foreground">Uploaded on Dec 15, 2024</p>
+                  </div>
+                  <Button variant="outline" className="w-full">
+                    <Image className="w-4 h-4 mr-2" />
+                    Upload New Preview
                   </Button>
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
 
-          {/* Billing Tab */}
-          <TabsContent value="billing" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Payment Methods
-                  </CardTitle>
-                  <CardDescription>
-                    Manage your payment methods and billing information
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
+          {/* Requests Tab */}
+          <TabsContent value="requests" className="space-y-6">
+            <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ClipboardList className="w-5 h-5" />
+                  My Service Requests
+                </CardTitle>
+                <CardDescription>
+                  Track your submitted service requests and consultations
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-4">
                   <div className="border rounded-lg p-4 bg-muted/50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CreditCard className="w-8 h-8 text-primary" />
-                        <div>
-                          <p className="font-medium">•••• •••• •••• 4242</p>
-                          <p className="text-sm text-muted-foreground">Expires 12/25</p>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                            Pending
+                          </Badge>
+                          <span className="text-sm font-medium">Weekend Consultation</span>
                         </div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <p><strong>Name:</strong> John Doe</p>
+                          <p><strong>Email:</strong> john@example.com</p>
+                          <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                          <p><strong>Preferred Date:</strong> December 21, 2024</p>
+                          <p><strong>Message:</strong> Need consultation for Persian rug restoration. Available Saturday morning.</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 18, 2024</p>
                       </div>
-                      <Badge>Primary</Badge>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full">
-                    <CreditCard className="w-4 h-4 mr-2" />
-                    Add Payment Method
-                  </Button>
-                </CardContent>
-              </Card>
 
-              <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Billing History
-                  </CardTitle>
-                  <CardDescription>
-                    View and download your billing history
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">Service Invoice #001</p>
-                        <p className="text-sm text-muted-foreground">December 2024</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">$299.00</p>
-                        <Button variant="ghost" size="sm">
-                          <Download className="w-3 h-3 mr-1" />
-                          Download
-                        </Button>
+                  <div className="border rounded-lg p-4 bg-muted/50">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                            Completed
+                          </Badge>
+                          <span className="text-sm font-medium">Free Estimate Request</span>
+                        </div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <p><strong>Service:</strong> Carpet Cleaning</p>
+                          <p><strong>Location:</strong> 123 Main Street, New York</p>
+                          <p><strong>Contact:</strong> john@example.com</p>
+                          <p><strong>Description:</strong> Need professional cleaning for living room carpet, approximately 12x15 feet.</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">Submitted on Nov 25, 2024 • Completed on Nov 28, 2024</p>
                       </div>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full">
-                    <FileText className="w-4 h-4 mr-2" />
-                    View All Invoices
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+
+                  <div className="border rounded-lg p-4 bg-muted/50">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            In Progress
+                          </Badge>
+                          <span className="text-sm font-medium">Rug Restoration Quote</span>
+                        </div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <p><strong>Service:</strong> Persian Rug Restoration</p>
+                          <p><strong>Rug Size:</strong> 8x10 feet</p>
+                          <p><strong>Issue:</strong> Water damage and color fading</p>
+                          <p><strong>Urgency:</strong> Standard (2-3 weeks)</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 10, 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full">
+                  <ClipboardList className="w-4 h-4 mr-2" />
+                  Submit New Request
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Notifications Tab */}
