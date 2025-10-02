@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService, User as AuthUser, RegisterData, LoginData, ApiError } from '@/services/authService';
+import { authService, RegisterData, LoginData, ApiError } from '@/services/authService';
 import { toast } from 'sonner';
 
 interface User {
@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(response.data.user);
         toast.success('Welcome back!');
       }
-    } catch (error: any) {
+    } catch (error) {
       const apiError = error as ApiError;
       
       if (apiError.errors) {
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(response.data.user);
         toast.success('Account created successfully!');
       }
-    } catch (error: any) {
+    } catch (error) {
       const apiError = error as ApiError;
       
       if (apiError.errors) {
@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await authService.logout();
       setUser(null);
       toast.success('Signed out successfully');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Logout error:', error);
       // Even if logout fails on server, clear local state
       setUser(null);

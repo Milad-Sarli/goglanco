@@ -33,7 +33,6 @@ const services = [
 ];
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);

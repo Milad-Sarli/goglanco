@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion } from "motion/react";
 import { gsap } from "gsap";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";

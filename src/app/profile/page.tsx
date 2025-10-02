@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,21 +23,16 @@ import {
   HelpCircle, 
   Camera,
   Mail,
-  Phone,
   MapPin,
-  Calendar,
   Shield,
   Palette,
-  Volume2,
   Globe,
   Lock,
-  Eye,
-  Download,
   FileText,
   Star,
   Clock,
   CheckCircle,
-  Image,
+  ImageIcon,
   ClipboardList,
   Loader2
 } from 'lucide-react';
@@ -49,7 +45,6 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('profile');
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   
@@ -65,7 +60,7 @@ export default function ProfilePage() {
     const verifyAuth = async () => {
       try {
         const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) {
+        if (!isAuthenticated) { 
           router.push('/');
           return;
         }
@@ -79,7 +74,6 @@ export default function ProfilePage() {
         console.error('Authentication error:', error);
         router.push('/');
       } finally {
-        setIsLoading(false);
         setMounted(true);
       }
     };
@@ -536,7 +530,7 @@ export default function ProfilePage() {
                     My Reviews
                   </CardTitle>
                   <CardDescription>
-                    Reviews and testimonials you've submitted
+                    Reviews and testimonials you&apos;ve submitted
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -553,7 +547,7 @@ export default function ProfilePage() {
                             <span className="text-sm text-muted-foreground">Persian Rug Restoration</span>
                           </div>
                           <p className="text-sm">
-                            "Excellent service! My antique Persian rug was restored to perfection. The attention to detail was remarkable."
+                            &quot;Excellent service! My antique Persian rug was restored to perfection. The attention to detail was remarkable.&quot;
                           </p>
                           <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 15, 2024</p>
                         </div>
@@ -572,7 +566,7 @@ export default function ProfilePage() {
                             <span className="text-sm text-muted-foreground">Carpet Cleaning</span>
                           </div>
                           <p className="text-sm">
-                            "Professional and reliable service. My carpets look brand new!"
+                            &quot;Professional and reliable service. My carpets look brand new!&quot;
                           </p>
                           <p className="text-xs text-muted-foreground mt-2">Submitted on Nov 28, 2024</p>
                         </div>
@@ -589,20 +583,22 @@ export default function ProfilePage() {
               <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Image className="w-5 h-5" />
+                    <ImageIcon className="w-5 h-5" />
                     My Previews
                   </CardTitle>
                   <CardDescription>
-                    Before and after photos you've shared
+                    Before and after photos you&apos;ve shared
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
                       <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-                        <img 
+                        <Image 
                           src="/photo_rug_reweaving.jpg" 
                           alt="Before restoration" 
+                          width={200}
+                          height={200}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -610,9 +606,11 @@ export default function ProfilePage() {
                     </div>
                     <div className="space-y-2">
                       <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-                        <img 
+                        <Image 
                           src="/portfolio.jpg" 
                           alt="After restoration" 
+                          width={200}
+                          height={200}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -624,9 +622,9 @@ export default function ProfilePage() {
                     <p className="text-xs text-muted-foreground">Uploaded on Dec 15, 2024</p>
                   </div>
                   <Button variant="outline" className="w-full">
-                    <Image className="w-4 h-4 mr-2" />
-                    Upload New Preview
-                  </Button>
+                     <ImageIcon className="w-4 h-4 mr-2" />
+                     Upload New Preview
+                   </Button>
                 </CardContent>
               </Card>
             </div>

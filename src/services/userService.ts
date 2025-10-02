@@ -21,9 +21,9 @@ export interface ApiResponse<T> {
 // دریافت پروفایل کاربر
 export const getUserProfile = async (): Promise<ApiResponse<User>> => {
   try {
-    const response = await axios.put('/api/profile');
+    const response = await axios.get('/api/profile');
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     throw error;
   }
 };
@@ -37,7 +37,7 @@ export const updateUserProfile = async (userData: FormData): Promise<ApiResponse
       },
     });
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     throw error;
   }
 };
@@ -53,7 +53,7 @@ export const changePassword = async (passwordData: ChangePasswordData): Promise<
   try {
     const response = await axios.post('/api/change-password', passwordData);
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     throw error;
   }
 };
@@ -63,7 +63,7 @@ export const checkAuth = async (): Promise<boolean> => {
   try {
     await axios.get('/api/user');
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

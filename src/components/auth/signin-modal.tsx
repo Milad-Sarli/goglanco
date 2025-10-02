@@ -1,14 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 
 import { useAuth } from './auth-context';
 
@@ -85,7 +83,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
           password_confirmation: confirmPassword
         });
         onClose();
-      } catch (error) {
+      } catch {
         // Error is handled in the auth context
       }
     } else {
@@ -94,7 +92,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
       try {
         await signIn({ email, password });
         onClose();
-      } catch (error) {
+      } catch {
         // Error is handled in the auth context
       }
     }
@@ -230,7 +228,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
               {isSignUp ? (
                 <>Already have an account? <span className="font-medium text-primary">Sign In</span></>
               ) : (
-                <>Don't have an account? <span className="font-medium text-primary">Sign Up</span></>
+                <>Don&apos;t have an account? <span className="font-medium text-primary">Sign Up</span></>
               )}
             </button>
           </div>

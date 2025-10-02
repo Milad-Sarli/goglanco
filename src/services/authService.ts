@@ -88,9 +88,12 @@ class AuthService {
       }
 
       return data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        throw error.response.data as ApiError;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: ApiError } };
+        if (axiosError.response?.data) {
+          throw axiosError.response.data;
+        }
       }
       throw {
         success: false,
@@ -117,9 +120,12 @@ class AuthService {
       }
 
       return data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        throw error.response.data as ApiError;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: ApiError } };
+        if (axiosError.response?.data) {
+          throw axiosError.response.data;
+        }
       }
       throw {
         success: false,
@@ -143,12 +149,15 @@ class AuthService {
       }
 
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Even if the API call fails, remove the token locally
       this.removeToken();
       
-      if (error.response?.data) {
-        throw error.response.data;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: unknown } };
+        if (axiosError.response?.data) {
+          throw axiosError.response.data;
+        }
       }
       throw {
         success: false,
@@ -165,14 +174,17 @@ class AuthService {
       });
 
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        // Token is invalid, remove it
-        this.removeToken();
-      }
-      
-      if (error.response?.data) {
-        throw error.response.data;
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status?: number; data?: unknown } };
+        if (axiosError.response?.status === 401) {
+          // Token is invalid, remove it
+          this.removeToken();
+        }
+        
+        if (axiosError.response?.data) {
+          throw axiosError.response.data;
+        }
       }
       throw {
         success: false,
@@ -197,7 +209,7 @@ class AuthService {
       if (response.success) {
         return response.data.user;
       }
-    } catch (error) {
+    } catch {
       // Token is invalid, remove it
       this.removeToken();
     }

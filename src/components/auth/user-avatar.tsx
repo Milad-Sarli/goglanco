@@ -1,18 +1,16 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { gsap } from "gsap";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { 
   User, 
   Settings, 
   LogOut, 
   CreditCard, 
   Bell,
-  HelpCircle,
-  ChevronDown
+  HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from 'next/link';
@@ -31,52 +29,9 @@ export function UserAvatar({
 }: UserAvatarProps) {
   const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-
-  // Don't render if no user
-  if (!user) {
-    return null;
-  }
   const dropdownRef = useRef<HTMLDivElement>(null);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
-
-  const getDropShadow = () => {
-    if (isScrolled) {
-      return 'shadow-sm';
-    }
-    return 'shadow-none';
-  };
-
-  const getAvatarStyles = () => {
-    const baseStyles = [
-      'relative flex items-center justify-center rounded-full',
-      'border-2 border-border/30 hover:border-primary/50',
-      'transition-all duration-300 ease-in-out',
-      'focus:outline-none focus:ring-2 focus:ring-primary/20',
-      getDropShadow()
-    ];
-
-    if (variant === 'mobile') {
-      return [
-        ...baseStyles,
-        'w-10 h-10 p-0'
-      ];
-    }
-
-    return [
-      ...baseStyles,
-      'w-12 h-12 p-0'
-    ];
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   // GSAP animations for avatar button
   useEffect(() => {
@@ -89,7 +44,7 @@ export function UserAvatar({
         duration: 0.3,
         ease: "power2.out"
       });
-    };
+    }; 
 
     const handleMouseLeave = () => {
       gsap.to(button, {
@@ -142,6 +97,49 @@ export function UserAvatar({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Don't render if no user
+  if (!user) {
+    return null;
+  }
+
+  const getDropShadow = () => {
+    if (isScrolled) {
+      return 'shadow-sm';
+    }
+    return 'shadow-none';
+  };
+
+  const getAvatarStyles = () => {
+    const baseStyles = [
+      'relative flex items-center justify-center rounded-full',
+      'border-2 border-border/30 hover:border-primary/50',
+      'transition-all duration-300 ease-in-out',
+      'focus:outline-none focus:ring-2 focus:ring-primary/20',
+      getDropShadow()
+    ];
+
+    if (variant === 'mobile') {
+      return [
+        ...baseStyles,
+        'w-10 h-10 p-0'
+      ];
+    }
+
+    return [
+      ...baseStyles,
+      'w-12 h-12 p-0'
+    ];
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const menuItems = [
     { icon: User, label: 'Profile', href: '/profile' },
@@ -201,7 +199,7 @@ export function UserAvatar({
 
             {/* Menu Items */}
             <div className="p-2">
-              {menuItems.map((item, index) => (
+              {menuItems.map((item) => (
                 <Link href={item.href} key={item.label}>
                   <button
                     className={cn(
