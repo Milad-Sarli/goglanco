@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
 import Image from 'next/image';
@@ -47,6 +48,7 @@ import { getUserConsultationRequests, ConsultationRequest } from '@/services/con
 import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
 
 export default function ProfilePage() {
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ export default function ProfilePage() {
     confirm_password: ''
   });
 
-  // دریافت اطلاعات کاربر
+  // دریافت اطلاعات کاربر و تنظیم تب از URL
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -87,8 +89,14 @@ export default function ProfilePage() {
       }
     };
 
+    // تنظیم تب فعال از URL parameter
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['profile', 'settings', 'reviews', 'requests', 'notifications', 'support'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+
     loadUserData();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (mounted && containerRef.current) {

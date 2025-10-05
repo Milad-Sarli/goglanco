@@ -64,7 +64,7 @@ export function RestorationProcessSection() {
   ];
 
   return (
-    <section ref={sectionRef} id="process" className="py-16 bg-muted/30">
+    <section ref={sectionRef} id="restoration-process" className="py-16 bg-muted/30">
       <div className="container">
         <div className="text-center mx-auto mb-12 p-4">
             <h2 className="text-3xl text-center mx-auto font-bold mb-4 flex justify-center items-center">

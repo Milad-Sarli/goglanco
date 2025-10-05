@@ -8,9 +8,10 @@ import {
   User, 
   Settings, 
   LogOut, 
-  CreditCard, 
+  MessageSquare, 
   Bell,
-  HelpCircle
+  HelpCircle,
+  ClipboardList
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from 'next/link';
@@ -142,11 +143,12 @@ export function UserAvatar({
   };
 
   const menuItems = [
-    { icon: User, label: 'Profile', href: '/profile' },
-    { icon: Settings, label: 'Settings', href: '/settings' },
-    { icon: CreditCard, label: 'Billing', href: '/billing' },
-    { icon: Bell, label: 'Notifications', href: '/notifications' },
-    { icon: HelpCircle, label: 'Help & Support', href: '/help' },
+    { icon: User, label: 'Profile', href: '/profile?tab=profile' },
+    { icon: Settings, label: 'Settings', href: '/profile?tab=settings' },
+    { icon: MessageSquare, label: 'Reviews', href: '/profile?tab=reviews' },
+    { icon: ClipboardList, label: 'Requests', href: '/profile?tab=requests' },
+    { icon: Bell, label: 'Notifications', href: '/profile?tab=notifications' },
+    { icon: HelpCircle, label: 'Help & Support', href: '/profile?tab=support' },
   ];
 
   return (

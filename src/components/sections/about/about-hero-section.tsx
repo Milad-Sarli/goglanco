@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import Link from "next/link";
 import { TextShimmerWave } from "@/components/ui/text-shimmer-wave";
 import { TextRoll } from "@/components/ui/text-roll";
 import { Button } from "@/components/ui/button";
@@ -12,11 +13,13 @@ import { BoxReveal } from "@/components/ui/box-reveal";
 gsap.registerPlugin(ScrollTrigger);
 
 interface AboutHeroSectionProps {
+  title?: string;
   subtitle: string;
   image: string;
 }
 
 export function AboutHeroSection({ 
+  title,
   subtitle = "For over two decades, we've been dedicated to preserving the artistry and value of fine rugs through expert restoration.",
   image = "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000"
 }: AboutHeroSectionProps) {
@@ -157,14 +160,18 @@ export function AboutHeroSection({
 
           <div className="flex flex-col sm:flex-row justify-center gap-6 pt-8">
             <BoxReveal duration={0.5}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6">
-                Our Services
-              </Button>
+              <Link href="/services">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg font-semibold px-8 py-6">
+                  Our Services
+                </Button>
+              </Link>
             </BoxReveal>
             <BoxReveal duration={0.5} boxColor="#4338ca">
-              <Button size="lg" variant="outline" className="border-2 hover:bg-accent text-lg font-semibold px-8 py-6">
-                Contact Us
-              </Button>
+              <Link href="/contact">
+                <Button size="lg" variant="outline" className="border-2 hover:bg-accent text-lg font-semibold px-8 py-6">
+                  Contact Us
+                </Button>
+              </Link>
             </BoxReveal>
           </div>
 
@@ -192,4 +199,4 @@ export function AboutHeroSection({
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-10" />
     </section>
   );
-} 
+}
