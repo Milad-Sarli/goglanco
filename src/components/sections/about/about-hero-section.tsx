@@ -16,10 +16,9 @@ interface AboutHeroSectionProps {
   title?: string;
   subtitle: string;
   image: string;
-}
+} 
 
 export function AboutHeroSection({ 
-  title,
   subtitle = "For over two decades, we've been dedicated to preserving the artistry and value of fine rugs through expert restoration.",
   image = "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1000"
 }: AboutHeroSectionProps) {

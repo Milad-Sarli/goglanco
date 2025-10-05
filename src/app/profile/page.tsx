@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
@@ -47,7 +47,8 @@ import { getUserProfile, updateUserProfile, changePassword, User as UserType, Ch
 import { getUserConsultationRequests, ConsultationRequest } from '@/services/consultationService';
 import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
 
-export default function ProfilePage() {
+// Component that uses useSearchParams
+function ProfileContent() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
@@ -1052,5 +1053,21 @@ export default function ProfilePage() {
         </Tabs>
       </div>
     </div>
+  );
+}
+
+// Main component wrapped with Suspense
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>Loading profile...</span>
+        </div>
+      </div>
+    }>
+      <ProfileContent />
+    </Suspense>
   );
 }
