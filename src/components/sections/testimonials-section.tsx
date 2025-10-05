@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Carousel,
   CarouselContent,
@@ -21,25 +20,30 @@ import { motion } from "motion/react";
 import { StarIcon, Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getAllTestimonials, createTestimonial, Testimonial, CreateTestimonialData } from "@/services/testimonialsService";
-import { authService } from "@/services/authService";
+import { SigninModal } from "@/components/auth/signin-modal";
+import { useAuth } from "@/components/auth/auth-context";
  
-export function TestimonialsSection() {
-  const router = useRouter();
+export function TestimonialsSection() { 
+  const { isLoggedIn } = useAuth();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showSigninModal, setShowSigninModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pendingReviewModal, setPendingReviewModal] = useState(false);
   const [formData, setFormData] = useState<CreateTestimonialData>({
     name: '',
     text: '',
     rating: 5
   });
 
-  // Check authentication status
+  // Watch for authentication changes to handle post-login review modal
   useEffect(() => {
-    setIsAuthenticated(authService.isAuthenticated());
-  }, []);
+    if (isLoggedIn && pendingReviewModal) {
+      setPendingReviewModal(false);
+      setShowModal(true);
+    }
+  }, [isLoggedIn, pendingReviewModal]);
 
   // Fetch testimonials on component mount
   useEffect(() => {
@@ -64,9 +68,8 @@ export function TestimonialsSection() {
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isAuthenticated) {
+    if (!isLoggedIn) {
       toast.error('Please login to submit a review');
-      router.push('/auth/login');
       return;
     }
 
@@ -92,9 +95,18 @@ export function TestimonialsSection() {
     }
   };
 
-  // Handle login redirect
-  const handleLoginRedirect = () => {
-    router.push('/auth/login');
+  // Handle login button click - open signin modal instead of redirecting
+  const handleLoginClick = () => {
+    setPendingReviewModal(true);
+    setShowSigninModal(true);
+  };
+
+  // Handle signin modal close
+  const handleSigninModalClose = () => {
+    setShowSigninModal(false);
+    if (!isLoggedIn) {
+      setPendingReviewModal(false);
+    }
   };
   return (
     <section className="py-20 bg-muted dark:bg-slate-900">
@@ -127,9 +139,9 @@ export function TestimonialsSection() {
             viewport={{ once: true }}
             className="mt-6"
           >
-            {!isAuthenticated ? (
+            {!isLoggedIn ? (
               <Button
-                onClick={handleLoginRedirect}
+                onClick={handleLoginClick}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -273,6 +285,12 @@ export function TestimonialsSection() {
             <CarouselNext />
           </Carousel>
         )}
+        
+        {/* Signin Modal */}
+        <SigninModal 
+          isOpen={showSigninModal} 
+          onClose={handleSigninModalClose}
+        />
       </div>
     </section>
   );
