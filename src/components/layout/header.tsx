@@ -182,7 +182,7 @@ export function Header() {
             </WeekendConsultationModal>
             
             {/* Authentication Components */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="flex items-center">
               {isLoggedIn ? (
                 <UserAvatar isScrolled={isScrolled} />
               ) : (

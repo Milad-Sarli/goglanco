@@ -8,9 +8,7 @@ import { motion } from "motion/react";
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
-import { SigninButton } from '@/components/auth/signin-button';
-import { UserAvatar } from '@/components/auth/user-avatar';
-import { useAuth } from '@/components/auth/auth-context';
+
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -33,7 +31,7 @@ const services = [
 ];
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
-  const { isLoggedIn } = useAuth();
+
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -80,25 +78,6 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           </div>
           
           <div className="flex-grow overflow-y-auto py-6">
-            {/* Auth Section */}
-            <div className="px-6 mb-6">
-              <div className="text-sm font-semibold text-gray-500 mb-3">Account</div>
-              <div className="space-y-3">
-                {isLoggedIn ? (
-                  <div className="flex items-center justify-center">
-                    <UserAvatar 
-                      variant="mobile"
-                      isScrolled={isScrolled}
-                    />
-                  </div>
-                ) : (
-                  <SigninButton 
-                    variant="mobile"
-                    isScrolled={isScrolled}
-                  />
-                )}
-              </div>
-            </div>
 
             <div className="px-6 mb-6">
               <div className="text-sm font-semibold text-gray-500 mb-2">Main Menu</div>

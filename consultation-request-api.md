@@ -2,7 +2,43 @@
 
 این راهنما نحوه استفاده از API درخواست مشاوره در فرانت‌اند را توضیح می‌دهد.
 
-## دریافت لیست درخواست‌های مشاوره
+## دریافت لیست درخواست‌های مشاوره کاربر
+
+```
+GET /api/user/consultation-requests
+```
+
+### هدرهای مورد نیاز
+```
+Authorization: Bearer {token}
+Accept: application/json 
+```
+
+### پاسخ
+
+```json
+{
+  "message": "User consultation requests retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "fullname": "نام کامل",
+      "email": "email@example.com",
+      "phone": "09123456789",
+      "preferred_date": "2024-06-15",
+      "message": "متن پیام درخواست مشاوره",
+      "status": "pending",
+      "created_at": "2024-06-10T12:00:00.000000Z",
+      "updated_at": "2024-06-10T12:00:00.000000Z"
+    }
+  ]
+}
+```
+
+### نکته
+این API فقط درخواست‌های مشاوره‌ای را برمی‌گرداند که ایمیل آنها با ایمیل کاربر لاگین شده مطابقت داشته باشد.
+
+## دریافت لیست تمام درخواست‌های مشاوره
 
 ```
 GET /api/consultation-requests

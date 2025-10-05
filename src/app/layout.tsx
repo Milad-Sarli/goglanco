@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={`${inter.className} min-h-screen flex flex-col`} suppressHydrationWarning>
+      <body className={`${inter.className} min-h-screen flex flex-col w-full overflow-x-hidden`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

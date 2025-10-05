@@ -11,10 +11,10 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!isAdminPage && <Header />}
-      <main className="flex-grow">
-        {children}
+      <main className="flex-grow w-full">
+        {children} 
       </main>
       {!isAdminPage && <Footer />}
     </>
   );
-} 
+}

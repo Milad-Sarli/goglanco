@@ -24,7 +24,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://admin.goglanco.
 // Utility function to ensure URL has correct domain
 const formatImageUrl = (url: string): string => {
   if (!url) return url;
-  
+
   // If it's already an absolute URL (starts with http:// or https://)
   if (url.match(/^https?:\/\//)) {
     return url;
@@ -32,7 +32,7 @@ const formatImageUrl = (url: string): string => {
 
   // If it starts with a slash, remove it
   const cleanPath = url.startsWith('/') ? url.slice(1) : url;
-  
+
   // Join with API base URL, ensuring no double slashes
   return `${API_BASE_URL.replace(/\/$/, '')}/storage/${cleanPath}`;
 };
@@ -43,7 +43,7 @@ export const servicesService = {
     try {
       const response = await axios.get<ApiResponse<ServiceItem[]>>('/api/services');
       const services = response.data.data;
-      
+
       // Format image URLs
       return services.map(service => ({
         ...service,
@@ -60,7 +60,7 @@ export const servicesService = {
     try {
       const response = await axios.get<ApiResponse<ServiceItem>>(`/api/services/${id}`);
       const service = response.data.data;
-      
+
       return {
         ...service,
         image: formatImageUrl(service.image)
@@ -76,7 +76,7 @@ export const servicesService = {
     try {
       const response = await axios.post<ApiResponse<ServiceItem>>('/api/services', service);
       const newService = response.data.data;
-      
+
       return {
         ...newService,
         image: formatImageUrl(newService.image)
@@ -92,7 +92,7 @@ export const servicesService = {
     try {
       const response = await axios.put<ApiResponse<ServiceItem>>(`/api/services/${id}`, service);
       const updatedService = response.data.data;
-      
+
       return {
         ...updatedService,
         image: formatImageUrl(updatedService.image)
@@ -126,7 +126,7 @@ export const servicesService = {
       });
 
       const uploadResponse = response.data.data;
-      
+
       return {
         ...uploadResponse,
         url: formatImageUrl(uploadResponse.url)

@@ -13,7 +13,8 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useRouter } from 'next/navigation';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { 
   User, 
@@ -34,19 +35,34 @@ import {
   CheckCircle,
   ImageIcon,
   ClipboardList,
-  Loader2
+  Loader2,
+  Phone, 
+  Calendar,
+  Trash2,
+  Plus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getUserProfile, updateUserProfile, changePassword, checkAuth, User as UserType, ChangePasswordData } from '@/services/userService';
+import { getUserProfile, updateUserProfile, changePassword, User as UserType, ChangePasswordData } from '@/services/userService';
+import { getUserConsultationRequests, ConsultationRequest } from '@/services/consultationService';
+import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
 
 export default function ProfilePage() {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userData, setUserData] = useState<UserType | null>(null);
+  const [consultationRequests, setConsultationRequests] = useState<ConsultationRequest[]>([]);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(false);
+  const [userTestimonials, setUserTestimonials] = useState<Testimonial[]>([]);
+  const [isLoadingTestimonials, setIsLoadingTestimonials] = useState(false);
+  const [showTestimonialForm, setShowTestimonialForm] = useState(false);
+  const [testimonialFormData, setTestimonialFormData] = useState<CreateTestimonialData>({
+    name: '',
+    text: '',
+    rating: 5
+  });
   
   // فرم تغییر رمز عبور
   const [passwordData, setPasswordData] = useState<ChangePasswordData>({
@@ -55,31 +71,24 @@ export default function ProfilePage() {
     confirm_password: ''
   });
 
-  // بررسی احراز هویت کاربر
+  // دریافت اطلاعات کاربر
   useEffect(() => {
-    const verifyAuth = async () => {
+    const loadUserData = async () => {
       try {
-        const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) { 
-          router.push('/');
-          return;
-        }
-        
         // دریافت اطلاعات کاربر
         const response = await getUserProfile();
         if (response.success && response.data) {
           setUserData(response.data);
         }
       } catch (error) {
-        console.error('Authentication error:', error);
-        router.push('/');
+        console.error('Error loading user data:', error);
       } finally {
         setMounted(true);
       }
     };
 
-    verifyAuth();
-  }, [router]);
+    loadUserData();
+  }, []);
 
   useEffect(() => {
     if (mounted && containerRef.current) {
@@ -111,6 +120,50 @@ export default function ProfilePage() {
       }, 100);
     }
   }, [mounted, activeTab]);
+
+  // Fetch consultation requests when the requests tab is active
+  useEffect(() => {
+    const fetchConsultationRequests = async () => {
+      if (activeTab === 'requests') {
+        setIsLoadingRequests(true);
+        try {
+          const response = await getUserConsultationRequests();
+          if (response.success && response.data) {
+            setConsultationRequests(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching consultation requests:', error);
+          toast.error('Failed to load consultation requests');
+        } finally {
+          setIsLoadingRequests(false);
+        }
+      }
+    };
+
+    fetchConsultationRequests();
+  }, [activeTab]);
+
+  // Fetch user testimonials when the reviews tab is active
+  useEffect(() => {
+    const fetchUserTestimonials = async () => {
+      if (activeTab === 'reviews') {
+        setIsLoadingTestimonials(true);
+        try {
+          const response = await getUserTestimonials();
+          if (response.data) {
+            setUserTestimonials(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching user testimonials:', error);
+          toast.error('Failed to load testimonials');
+        } finally {
+          setIsLoadingTestimonials(false);
+        }
+      }
+    };
+
+    fetchUserTestimonials();
+  }, [activeTab]);
 
   const addToRefs = (el: HTMLDivElement) => {
     if (el && !cardsRef.current.includes(el)) {
@@ -166,6 +219,49 @@ export default function ProfilePage() {
       toast.error('Error changing password');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Create new testimonial
+  const handleCreateTestimonial = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    setIsSubmitting(true);
+    try {
+      const response = await createTestimonial(testimonialFormData);
+      
+      if (response.success && response.data) {
+        toast.success('Testimonial submitted successfully');
+        setUserTestimonials([response.data, ...userTestimonials]);
+        setShowTestimonialForm(false);
+        setTestimonialFormData({
+          name: '',
+          text: '',
+          rating: 5
+        });
+      }
+    } catch (error) {
+      console.error('Create testimonial error:', error);
+      toast.error('Error submitting testimonial');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Delete testimonial
+  const handleDeleteTestimonial = async (testimonialId: number) => {
+    if (!confirm('Are you sure you want to delete this testimonial?')) return;
+    
+    try {
+      const response = await deleteTestimonial(testimonialId);
+      
+      if (response.success) {
+        toast.success('Testimonial deleted successfully');
+        setUserTestimonials(userTestimonials.filter(t => t.id !== testimonialId));
+      }
+    } catch (error) {
+      console.error('Delete testimonial error:', error);
+      toast.error('Error deleting testimonial');
     }
   };
 
@@ -534,49 +630,170 @@ export default function ProfilePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-4">
-                    <div className="border rounded-lg p-4 bg-muted/50">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="flex">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                              ))}
-                            </div>
-                            <span className="text-sm text-muted-foreground">Persian Rug Restoration</span>
-                          </div>
-                          <p className="text-sm">
-                            &quot;Excellent service! My antique Persian rug was restored to perfection. The attention to detail was remarkable.&quot;
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 15, 2024</p>
-                        </div>
-                      </div>
+                  {isLoadingTestimonials ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary" />
                     </div>
-                    
-                    <div className="border rounded-lg p-4 bg-muted/50">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="flex">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star key={star} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                              ))}
-                            </div>
-                            <span className="text-sm text-muted-foreground">Carpet Cleaning</span>
-                          </div>
-                          <p className="text-sm">
-                            &quot;Professional and reliable service. My carpets look brand new!&quot;
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-2">Submitted on Nov 28, 2024</p>
-                        </div>
-                      </div>
+                  ) : userTestimonials.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>No testimonials found</p>
+                      <p className="text-sm">Share your experience with our services</p>
                     </div>
-                  </div>
-                  <Button variant="outline" className="w-full">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Write New Review
-                  </Button>
+                  ) : (
+                    <div className="space-y-4">
+                      {userTestimonials.map((testimonial) => (
+                        <div key={testimonial.id} className="border rounded-lg p-4 bg-muted/50">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="flex">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star 
+                                      key={star} 
+                                      className={`w-4 h-4 ${
+                                        star <= testimonial.rating 
+                                          ? 'fill-yellow-400 text-yellow-400' 
+                                          : 'text-gray-300'
+                                      }`} 
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-sm text-muted-foreground">{testimonial.name}</span>
+                              </div>
+                              <p className="text-sm">
+                                &quot;{testimonial.text}&quot;
+                              </p>
+                              {testimonial.created_at && (
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Submitted on {new Date(testimonial.created_at).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                  })}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteTestimonial(testimonial.id)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {!showTestimonialForm ? (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => setShowTestimonialForm(true)}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Write New Review
+                    </Button>
+                  ) : (
+                    <div className="border rounded-lg p-4 bg-background">
+                      <h4 className="font-medium mb-4">Write a New Review</h4>
+                      <form onSubmit={handleCreateTestimonial} className="space-y-4">
+                        <div>
+                          <Label htmlFor="testimonial-name">Service Name</Label>
+                          <Input
+                            id="testimonial-name"
+                            value={testimonialFormData.name}
+                            onChange={(e) => setTestimonialFormData({
+                              ...testimonialFormData,
+                              name: e.target.value
+                            })}
+                            placeholder="e.g., Persian Rug Restoration"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="testimonial-text">Your Review</Label>
+                          <Textarea
+                            id="testimonial-text"
+                            value={testimonialFormData.text}
+                            onChange={(e) => setTestimonialFormData({
+                              ...testimonialFormData,
+                              text: e.target.value
+                            })}
+                            placeholder="Share your experience with our service..."
+                            rows={4}
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="testimonial-rating">Rating</Label>
+                          <Select
+                            value={testimonialFormData.rating.toString()}
+                            onValueChange={(value) => setTestimonialFormData({
+                              ...testimonialFormData,
+                              rating: parseInt(value)
+                            })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {[5, 4, 3, 2, 1].map((rating) => (
+                                <SelectItem key={rating} value={rating.toString()}>
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star 
+                                          key={star} 
+                                          className={`w-3 h-3 ${
+                                            star <= rating 
+                                              ? 'fill-yellow-400 text-yellow-400' 
+                                              : 'text-gray-300'
+                                          }`} 
+                                        />
+                                      ))}
+                                    </div>
+                                    <span>{rating} star{rating !== 1 ? 's' : ''}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className="flex-1"
+                          >
+                            {isSubmitting ? (
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : (
+                              <MessageSquare className="w-4 h-4 mr-2" />
+                            )}
+                            Submit Review
+                          </Button>
+                          <Button 
+                            type="button" 
+                            variant="outline"
+                            onClick={() => {
+                              setShowTestimonialForm(false);
+                              setTestimonialFormData({
+                                name: '',
+                                text: '',
+                                rating: 5
+                              });
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -639,76 +856,69 @@ export default function ProfilePage() {
                   My Service Requests
                 </CardTitle>
                 <CardDescription>
-                  Track your submitted service requests and consultations
+                  View and manage your consultation requests
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4 bg-muted/50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                            Pending
-                          </Badge>
-                          <span className="text-sm font-medium">Weekend Consultation</span>
-                        </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <p><strong>Name:</strong> John Doe</p>
-                          <p><strong>Email:</strong> john@example.com</p>
-                          <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                          <p><strong>Preferred Date:</strong> December 21, 2024</p>
-                          <p><strong>Message:</strong> Need consultation for Persian rug restoration. Available Saturday morning.</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 18, 2024</p>
-                      </div>
-                    </div>
+              <CardContent>
+                {isLoadingRequests ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
                   </div>
-
-                  <div className="border rounded-lg p-4 bg-muted/50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                            Completed
-                          </Badge>
-                          <span className="text-sm font-medium">Free Estimate Request</span>
-                        </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <p><strong>Service:</strong> Carpet Cleaning</p>
-                          <p><strong>Location:</strong> 123 Main Street, New York</p>
-                          <p><strong>Contact:</strong> john@example.com</p>
-                          <p><strong>Description:</strong> Need professional cleaning for living room carpet, approximately 12x15 feet.</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">Submitted on Nov 25, 2024 • Completed on Nov 28, 2024</p>
-                      </div>
-                    </div>
+                ) : consultationRequests.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No consultation requests found</p>
                   </div>
-
-                  <div className="border rounded-lg p-4 bg-muted/50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                            In Progress
+                ) : (
+                  <div className="space-y-4">
+                    {consultationRequests.map((request) => (
+                      <div
+                        key={request.id}
+                        className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <p className="font-medium">{request.fullname}</p>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Mail className="w-4 h-4" />
+                              {request.email}
+                            </div>
+                            {request.phone && (
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Phone className="w-4 h-4" />
+                                {request.phone}
+                              </div>
+                            )}
+                          </div>
+                          <Badge
+                            variant={
+                              request.status === 'pending'
+                                ? 'secondary'
+                                : request.status === 'completed'
+                                ? 'default'
+                                : 'outline'
+                            }
+                          >
+                            {request.status}
                           </Badge>
-                          <span className="text-sm font-medium">Rug Restoration Quote</span>
                         </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <p><strong>Service:</strong> Persian Rug Restoration</p>
-                          <p><strong>Rug Size:</strong> 8x10 feet</p>
-                          <p><strong>Issue:</strong> Water damage and color fading</p>
-                          <p><strong>Urgency:</strong> Standard (2-3 weeks)</p>
+                        <div className="mt-2 text-sm">{request.message}</div>
+                        <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {new Date(request.created_at).toLocaleDateString()}
+                          </div>
+                          {request.preferred_date && (
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              Preferred: {new Date(request.preferred_date).toLocaleDateString()}
+                            </div>
+                          )}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2">Submitted on Dec 10, 2024</p>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                </div>
-                <Button variant="outline" className="w-full">
-                  <ClipboardList className="w-4 h-4 mr-2" />
-                  Submit New Request
-                </Button>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

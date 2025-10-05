@@ -21,7 +21,7 @@ export interface ApiResponse<T> {
 // دریافت پروفایل کاربر
 export const getUserProfile = async (): Promise<ApiResponse<User>> => {
   try {
-    const response = await axios.get('/api/profile');
+    const response = await axios.put('/api/profile');
     return response.data;
   } catch (error: unknown) {
     throw error;
