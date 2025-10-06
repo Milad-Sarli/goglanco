@@ -39,8 +39,8 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 dark:text-slate-400">
-      <div className="container mx-auto px-4">
+    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 dark:text-slate-400 w-full overflow-x-hidden">
+      <div className="container mx-auto px-4 max-w-full">
         {/* Newsletter Section */}
         <div className="py-12 border-b border-slate-800 dark:border-slate-800">
           <div className="max-w-xl mx-auto text-center">

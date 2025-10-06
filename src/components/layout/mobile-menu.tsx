@@ -61,15 +61,15 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           variant="outline"
           size="icon"
           className={cn(
-            'md:hidden z-50 relative right-0 mr-0',
+            'md:hidden z-50 relative',
             getButtonStyle() 
           )}
-          style={{ position: 'relative', right: '0px' }}
+          style={{ position: 'relative', left: '23px' }}
         >
           <MenuIcon className="h-6 w-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
+      <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0 max-w-[90vw]">
         <nav className="flex flex-col h-full">
           <div className="p-6 border-b">
             <Link href="/" className="font-bold text-2xl" onClick={handleLinkClick}>

@@ -88,8 +88,8 @@ export function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+      <div className="container mx-auto px-4 max-w-full">
+        <div className="flex items-center justify-between h-20 w-full">
           <Link href="/" className="font-bold text-2xl bg-background/40 rounded-full px-2">
             <span className={cn(
               'transition-colors duration-300',
@@ -113,7 +113,7 @@ export function Header() {
                   </NavigationMenuTrigger>
                 </Link>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-2 lg:w-[500px]">
                     {services.map((service) => (
                       <li key={service.href}>
                         <NavigationMenuLink asChild>
