@@ -223,15 +223,17 @@ function ProfileContent() {
       } else {
         toast.error(response.message || 'Failed to update profile');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Update profile error:', error);
       
       // Handle validation errors
-      if (error.errors) {
-        const errorMessages = Object.values(error.errors).flat();
+      if (error && typeof error === 'object' && 'errors' in error) {
+        const errorMessages = Object.values(error.errors as Record<string, string[]>).flat();
         toast.error(errorMessages.join(', '));
-      } else {
+      } else if (error instanceof Error) {
         toast.error(error.message || 'Error updating profile');
+      } else {
+        toast.error('Error updating profile');
       }
     } finally {
       setIsSubmitting(false);
@@ -269,15 +271,17 @@ function ProfileContent() {
       } else {
         toast.error(response.message || 'Failed to update address');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Update address error:', error);
       
       // Handle validation errors
-      if (error.errors) {
-        const errorMessages = Object.values(error.errors).flat();
+      if (error && typeof error === 'object' && 'errors' in error) {
+        const errorMessages = Object.values(error.errors as Record<string, string[]>).flat();
         toast.error(errorMessages.join(', '));
-      } else {
+      } else if (error instanceof Error) {
         toast.error(error.message || 'Error updating address');
+      } else {
+        toast.error('Error updating address');
       }
     } finally {
       setIsSubmitting(false);
@@ -305,17 +309,19 @@ function ProfileContent() {
           confirm_password: ''
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Change password error:', error);
       
       // Handle specific error cases
-      if (error.message === 'Current password is incorrect') {
+      if (error && typeof error === 'object' && 'message' in error && error.message === 'Current password is incorrect') {
         toast.error('Current password is incorrect');
-      } else if (error.errors) {
-        const errorMessages = Object.values(error.errors).flat();
+      } else if (error && typeof error === 'object' && 'errors' in error) {
+        const errorMessages = Object.values(error.errors as Record<string, string[]>).flat();
         toast.error(errorMessages.join(', '));
-      } else {
+      } else if (error instanceof Error) {
         toast.error(error.message || 'Error changing password');
+      } else {
+        toast.error('Error changing password');
       }
     } finally {
       setIsSubmitting(false);
@@ -340,9 +346,10 @@ function ProfileContent() {
           rating: 5
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Create testimonial error:', error);
-      toast.error('Error submitting testimonial');
+      const errorMessage = error instanceof Error ? error.message : 'Error submitting testimonial';
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -359,9 +366,10 @@ function ProfileContent() {
         toast.success('Testimonial deleted successfully');
         setUserTestimonials(userTestimonials.filter(t => t.id !== testimonialId));
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Delete testimonial error:', error);
-      toast.error('Error deleting testimonial');
+      const errorMessage = error instanceof Error ? error.message : 'Error deleting testimonial';
+      toast.error(errorMessage);
     }
   };
 

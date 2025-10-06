@@ -108,7 +108,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
 
   return ( 
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md max-w-[90vw] w-full mx-4">
+      <DialogContent className="sm:max-w-md max-w-[90vw] w-full mx-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
         <DialogHeader>
           <DialogTitle ref={titleRef} className="text-center text-lg sm:text-xl font-semibold">
             {isSignUp ? 'Create Account' : 'Welcome Back'}

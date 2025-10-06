@@ -26,9 +26,9 @@ export const getUserProfile = async (): Promise<ApiResponse<User>> => {
   try {
     const response: AxiosResponse<ApiResponse<User>> = await axios.get('/api/profile');
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle API error responses
-    if (error.response?.data) {
+    if (error && typeof error === 'object' && 'response' in error && error.response?.data) {
       throw error.response.data;
     }
     throw {
@@ -47,9 +47,9 @@ export const updateUserProfile = async (userData: FormData): Promise<ApiResponse
       },
     });
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle validation errors (422) and other API errors
-    if (error.response?.data) {
+    if (error && typeof error === 'object' && 'response' in error && error.response?.data) {
       throw error.response.data;
     }
     throw {
@@ -70,9 +70,9 @@ export const changePassword = async (passwordData: ChangePasswordData): Promise<
   try {
     const response: AxiosResponse<ApiResponse<null>> = await axios.post('/api/change-password', passwordData);
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle authentication errors (401) and validation errors (422)
-    if (error.response?.data) {
+    if (error && typeof error === 'object' && 'response' in error && error.response?.data) {
       throw error.response.data;
     }
     throw {

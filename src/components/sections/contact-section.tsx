@@ -31,8 +31,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -418,7 +416,7 @@ export function ContactSection() {
 
                 {/* Weekend Consultation Modal */}
                 <Dialog open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen}>
-                  <DialogContent className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-4">
+                  <DialogContent className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
                     <DialogHeader className="pb-1.5 sm:pb-2">
                       <DialogTitle className="text-base sm:text-lg">Schedule Weekend Consultation</DialogTitle>
                       <DialogDescription className="text-xs sm:text-sm">

@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { motion } from "motion/react";
 import { StarIcon, Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -153,9 +153,9 @@ export function TestimonialsSection() {
                   <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Your Review
-                  </Button>
+                  </Button> 
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-4">
+                <DialogContent className="sm:max-w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-auto left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
                   <DialogHeader className="pb-1.5 sm:pb-2">
                     <DialogTitle className="text-center text-base sm:text-lg">Share Your Experience</DialogTitle>
                   </DialogHeader>
