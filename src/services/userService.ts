@@ -1,13 +1,15 @@
 import axios from '@/lib/axios';
+import { AxiosResponse } from 'axios';
 
-// تعریف تایپ‌های مورد نیاز
+// Define required types based on API documentation
 export interface User {
   id: number;
   name: string;
   email: string;
-  phone?: string;
-  address?: string;
-  avatar?: string;
+  phone?: string | null;
+  address?: string | null;
+  avatar?: string | null;
+  email_verified_at?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -16,33 +18,48 @@ export interface ApiResponse<T> {
   success: boolean;
   message?: string;
   data?: T;
+  errors?: Record<string, string[]>;
 }
 
-// دریافت پروفایل کاربر
+// Get user profile
 export const getUserProfile = async (): Promise<ApiResponse<User>> => {
   try {
-    const response = await axios.put('/api/profile');
+    const response: AxiosResponse<ApiResponse<User>> = await axios.get('/api/profile');
     return response.data;
-  } catch (error: unknown) {
-    throw error;
+  } catch (error: any) {
+    // Handle API error responses
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      success: false,
+      message: 'Network error occurred'
+    };
   }
 };
 
-// به‌روزرسانی پروفایل کاربر
+// Update user profile
 export const updateUserProfile = async (userData: FormData): Promise<ApiResponse<User>> => {
   try {
-    const response = await axios.put('/api/profile', userData, {
+    const response: AxiosResponse<ApiResponse<User>> = await axios.put('/api/profile', userData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
-  } catch (error: unknown) {
-    throw error;
+  } catch (error: any) {
+    // Handle validation errors (422) and other API errors
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      success: false,
+      message: 'Network error occurred'
+    };
   }
 };
 
-// تغییر رمز عبور
+// Change password
 export interface ChangePasswordData {
   current_password: string;
   new_password: string;
@@ -51,14 +68,21 @@ export interface ChangePasswordData {
 
 export const changePassword = async (passwordData: ChangePasswordData): Promise<ApiResponse<null>> => {
   try {
-    const response = await axios.post('/api/change-password', passwordData);
+    const response: AxiosResponse<ApiResponse<null>> = await axios.post('/api/change-password', passwordData);
     return response.data;
-  } catch (error: unknown) {
-    throw error;
+  } catch (error: any) {
+    // Handle authentication errors (401) and validation errors (422)
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      success: false,
+      message: 'Network error occurred'
+    };
   }
 };
 
-// بررسی وضعیت احراز هویت کاربر
+// Check authentication status
 export const checkAuth = async (): Promise<boolean> => {
   try {
     await axios.get('/api/user');

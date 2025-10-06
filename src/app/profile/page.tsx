@@ -188,15 +188,97 @@ function ProfileContent() {
     setIsSubmitting(true);
     try {
       const formData = new FormData(e.currentTarget);
-      const response = await updateUserProfile(formData);
+      
+      // Only append fields that have values to avoid sending empty strings
+      const formEntries = Array.from(formData.entries());
+      const cleanFormData = new FormData();
+      
+      formEntries.forEach(([key, value]) => {
+        if (key === 'avatar') {
+          // For file input, only append if a file is selected
+          const fileInput = value as File;
+          if (fileInput && fileInput.size > 0) {
+            cleanFormData.append(key, value);
+          }
+        } else {
+          // For text inputs, only append if value is not empty
+          const stringValue = value as string;
+          if (stringValue && stringValue.trim() !== '') {
+            cleanFormData.append(key, stringValue.trim());
+          }
+        }
+      });
+      
+      // Log form data for debugging
+      console.log('Clean form data entries:');
+      for (const [key, value] of cleanFormData.entries()) {
+        console.log(key, value);
+      }
+      
+      const response = await updateUserProfile(cleanFormData);
       
       if (response.success && response.data) {
         setUserData(response.data);
         toast.success('Profile information updated successfully');
+      } else {
+        toast.error(response.message || 'Failed to update profile');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Update profile error:', error);
-      toast.error('Error updating profile');
+      
+      // Handle validation errors
+      if (error.errors) {
+        const errorMessages = Object.values(error.errors).flat();
+        toast.error(errorMessages.join(', '));
+      } else {
+        toast.error(error.message || 'Error updating profile');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Update address information
+  const handleAddressUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!userData) return;
+    
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      
+      // Only append address if it has a value
+      const address = formData.get('address') as string;
+      const cleanFormData = new FormData();
+      
+      if (address && address.trim() !== '') {
+        cleanFormData.append('address', address.trim());
+      }
+      
+      // Log form data for debugging
+      console.log('Address form data entries:');
+      for (const [key, value] of cleanFormData.entries()) {
+        console.log(key, value);
+      }
+      
+      const response = await updateUserProfile(cleanFormData);
+      
+      if (response.success && response.data) {
+        setUserData(response.data);
+        toast.success('Address updated successfully');
+      } else {
+        toast.error(response.message || 'Failed to update address');
+      }
+    } catch (error: any) {
+      console.error('Update address error:', error);
+      
+      // Handle validation errors
+      if (error.errors) {
+        const errorMessages = Object.values(error.errors).flat();
+        toast.error(errorMessages.join(', '));
+      } else {
+        toast.error(error.message || 'Error updating address');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -223,9 +305,18 @@ function ProfileContent() {
           confirm_password: ''
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Change password error:', error);
-      toast.error('Error changing password');
+      
+      // Handle specific error cases
+      if (error.message === 'Current password is incorrect') {
+        toast.error('Current password is incorrect');
+      } else if (error.errors) {
+        const errorMessages = Object.values(error.errors).flat();
+        toast.error(errorMessages.join(', '));
+      } else {
+        toast.error(error.message || 'Error changing password');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -440,6 +531,7 @@ function ProfileContent() {
                           id="phone" 
                           name="phone" 
                           defaultValue={userData?.phone || ""} 
+                          placeholder="Enter your phone number (optional)"
                         />
                       </div>
                       <div>
@@ -448,8 +540,12 @@ function ProfileContent() {
                           id="avatar" 
                           name="avatar" 
                           type="file" 
+                          accept="image/jpeg,image/png,image/jpg,image/gif"
                           className="cursor-pointer" 
                         />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Supported formats: JPEG, PNG, JPG, GIF (Max: 2MB)
+                        </p>
                       </div>
                       <Button 
                         type="submit" 
@@ -479,7 +575,7 @@ function ProfileContent() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <form onSubmit={handleProfileUpdate}>
+                  <form onSubmit={handleAddressUpdate}>
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="address">Address</Label>
