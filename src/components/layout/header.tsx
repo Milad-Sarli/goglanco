@@ -191,7 +191,8 @@ export function Header() {
             </div>
             
             <div className={cn(
-              getDropShadow()
+              getDropShadow() , 
+              'relative left-4'
             )}>
               <ThemeToggle />
             </div>

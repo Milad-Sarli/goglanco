@@ -61,7 +61,7 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
           variant="outline"
           size="icon"
           className={cn(
-            'md:hidden z-50 relative',
+            'md:hidden z-50',
             getButtonStyle() 
           )}
           style={{ position: 'relative', left: '23px' }}
