@@ -155,29 +155,30 @@ export function TestimonialsSection() {
                     Add Your Review
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-center">Share Your Experience</DialogTitle>
+                <DialogContent className="sm:max-w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-4">
+                  <DialogHeader className="pb-1.5 sm:pb-2">
+                    <DialogTitle className="text-center text-base sm:text-lg">Share Your Experience</DialogTitle>
                   </DialogHeader>
-                  <form onSubmit={handleSubmitReview} className="space-y-4">
+                  <form onSubmit={handleSubmitReview} className="space-y-2.5 sm:space-y-3 py-1 sm:py-2">
                     <div>
-                      <Label htmlFor="name">Your Name</Label>
+                      <Label htmlFor="name" className="text-xs sm:text-sm">Your Name</Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Enter your name"
+                        className="h-8 sm:h-9"
                         required
                       />
                     </div>
                     
                     <div>
-                      <Label htmlFor="rating">Rating</Label>
+                      <Label htmlFor="rating" className="text-xs sm:text-sm">Rating</Label>
                       <Select
                         value={formData.rating.toString()}
                         onValueChange={(value) => setFormData({ ...formData, rating: parseInt(value) })}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 sm:h-9">
                           <SelectValue placeholder="Select rating" />
                         </SelectTrigger>
                         <SelectContent>
@@ -191,42 +192,43 @@ export function TestimonialsSection() {
                     </div>
                     
                     <div>
-                      <Label htmlFor="review">Your Review</Label>
+                      <Label htmlFor="review" className="text-xs sm:text-sm">Your Review</Label>
                       <Textarea
                         id="review"
                         value={formData.text}
                         onChange={(e) => setFormData({ ...formData, text: e.target.value })}
                         placeholder="Share your experience with our services..."
-                        rows={4}
+                        rows={3}
+                        className="min-h-[70px] sm:min-h-[80px] text-xs sm:text-sm resize-none"
                         required
                       />
                     </div>
                     
-                    <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1.5 sm:pt-2">
                       <Button
                         type="button"
                         variant="outline"
                         onClick={() => setShowModal(false)}
                         disabled={isSubmitting}
-                        className="w-full sm:w-auto"
+                        className="w-full sm:w-auto order-2 sm:order-1 h-8 sm:h-9"
                       >
                         Cancel
                       </Button>
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full sm:w-auto"
+                        className="w-full sm:w-auto order-1 sm:order-2 h-8 sm:h-9"
                       >
                         {isSubmitting ? (
                           <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Submitting...
+                            <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin" />
+                            <span className="text-xs sm:text-sm">Submitting...</span>
                           </>
                         ) : (
-                          'Submit Review'
+                          <span className="text-xs sm:text-sm">Submit Review</span>
                         )}
                       </Button>
-                    </DialogFooter>
+                    </div>
                   </form>
                 </DialogContent>
               </Dialog>

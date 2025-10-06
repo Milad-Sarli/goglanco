@@ -418,23 +418,23 @@ export function ContactSection() {
 
                 {/* Weekend Consultation Modal */}
                 <Dialog open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen}>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Schedule Weekend Consultation</DialogTitle>
-                      <DialogDescription>
+                  <DialogContent className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-4">
+                    <DialogHeader className="pb-1.5 sm:pb-2">
+                      <DialogTitle className="text-base sm:text-lg">Schedule Weekend Consultation</DialogTitle>
+                      <DialogDescription className="text-xs sm:text-sm">
                         Fill out the form below to request a consultation. We&apos;ll contact you to confirm.
                       </DialogDescription>
                     </DialogHeader>
                     <Form {...consultationForm}>
-                      <form onSubmit={consultationForm.handleSubmit(onConsultationSubmit)} className="space-y-6 py-4">
+                      <form onSubmit={consultationForm.handleSubmit(onConsultationSubmit)} className="space-y-2.5 sm:space-y-3 py-1 sm:py-2">
                         <FormField
                           control={consultationForm.control}
                           name="fullname"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Fullname</FormLabel>
+                              <FormLabel className="text-xs sm:text-sm">Fullname</FormLabel>
                               <FormControl>
-                                <Input placeholder="Your full name" {...field} />
+                                <Input placeholder="Your full name" className="h-8 sm:h-9" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -445,9 +445,9 @@ export function ContactSection() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel className="text-xs sm:text-sm">Email</FormLabel>
                               <FormControl>
-                                <Input placeholder="Your email address" {...field} />
+                                <Input placeholder="Your email address" className="h-8 sm:h-9" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -458,9 +458,9 @@ export function ContactSection() {
                           name="phone"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Phone (Optional)</FormLabel>
+                              <FormLabel className="text-xs sm:text-sm">Phone (Optional)</FormLabel>
                               <FormControl>
-                                <Input placeholder="Your phone number" {...field} />
+                                <Input placeholder="Your phone number" className="h-8 sm:h-9" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -471,14 +471,14 @@ export function ContactSection() {
                           name="preferred_date"
                           render={({ field }) => (
                             <FormItem className="flex flex-col">
-                              <FormLabel>Preferred Date (Optional)</FormLabel>
+                              <FormLabel className="text-xs sm:text-sm">Preferred Date (Optional)</FormLabel>
                               <Popover>
                                 <PopoverTrigger asChild>
                                   <FormControl>
                                     <Button
                                       variant={"outline"}
                                       className={cn(
-                                        "w-full pl-3 text-left font-normal",
+                                        "w-full pl-3 text-left font-normal h-8 sm:h-9",
                                         !field.value && "text-muted-foreground"
                                       )}
                                     >
@@ -512,11 +512,11 @@ export function ContactSection() {
                           name="message"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Message / Requirements</FormLabel>
+                              <FormLabel className="text-xs sm:text-sm">Message / Requirements</FormLabel>
                               <FormControl>
                                 <Textarea
                                   placeholder="Briefly describe your needs or preferred time slots for Saturday (9 AM - 2 PM)"
-                                  className="min-h-[100px]"
+                                  className="min-h-[70px] sm:min-h-[80px] text-xs sm:text-sm resize-none"
                                   {...field}
                                 />
                               </FormControl>
@@ -525,20 +525,26 @@ export function ContactSection() {
                           )}
                         />
                          {consultationSubmitStatus && (
-                          <div className={`p-3 rounded-md text-sm ${
+                          <div className={`p-2 rounded-md text-xs ${
                             consultationSubmitStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                           }`}>
                             {consultationSubmitStatus.message}
                           </div>
                         )}
-                        <DialogFooter>
-                          <DialogClose asChild>
-                            <Button type="button" variant="outline">Cancel</Button>
-                          </DialogClose>
-                          <Button type="submit" disabled={consultationForm.formState.isSubmitting}>
-                            {consultationForm.formState.isSubmitting ? 'Submitting...' : 'Request Consultation'}
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 pt-1.5 sm:pt-2">
+                          <Button type="button" variant="outline" onClick={() => setIsConsultationModalOpen(false)} className="w-full sm:w-auto order-2 sm:order-1 h-8 sm:h-9">
+                            Cancel
                           </Button>
-                        </DialogFooter>
+                          <Button 
+                            type="submit" 
+                            disabled={consultationForm.formState.isSubmitting}
+                            className="w-full sm:w-auto order-1 sm:order-2 h-8 sm:h-9"
+                          >
+                            <span className="text-xs sm:text-sm">
+                              {consultationForm.formState.isSubmitting ? 'Submitting...' : 'Request Consultation'}
+                            </span>
+                          </Button>
+                        </div>
                       </form>
                     </Form>
                   </DialogContent>

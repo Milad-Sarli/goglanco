@@ -106,19 +106,19 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
     setConfirmPassword('');
   };
 
-  return (
+  return ( 
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-w-[90vw] w-full mx-4">
         <DialogHeader>
-          <DialogTitle ref={titleRef} className="text-center text-xl font-semibold">
+          <DialogTitle ref={titleRef} className="text-center text-lg sm:text-xl font-semibold">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </DialogTitle>
         </DialogHeader>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
           {isSignUp && (
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="name" className="text-xs sm:text-sm font-medium">
                 Full Name
               </Label>
               <div className="relative">
@@ -129,15 +129,15 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                   placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-9 sm:h-10"
                   required
                 />
               </div>
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="email" className="text-xs sm:text-sm font-medium">
               Email Address
             </Label>
             <div className="relative">
@@ -148,14 +148,14 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-9 sm:h-10"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-medium">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="password" className="text-xs sm:text-sm font-medium">
               Password
             </Label>
             <div className="relative">
@@ -166,7 +166,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 h-9 sm:h-10"
                 required
               />
               <button
@@ -180,8 +180,8 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
           </div>
 
           {isSignUp && (
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm font-medium">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="confirmPassword" className="text-xs sm:text-sm font-medium">
                 Confirm Password
               </Label>
               <div className="relative">
@@ -192,7 +192,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-9 sm:h-10"
                   required
                 />
               </div>
@@ -201,7 +201,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full h-9 sm:h-10 mt-4 sm:mt-6"
             disabled={
               isLoading || 
               !email || 
@@ -212,18 +212,18 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                <span className="text-xs sm:text-sm">{isSignUp ? 'Creating Account...' : 'Signing In...'}</span>
               </div>
             ) : (
-              isSignUp ? 'Create Account' : 'Sign In'
+              <span className="text-xs sm:text-sm">{isSignUp ? 'Create Account' : 'Sign In'}</span>
             )}
           </Button>
 
-          <div className="text-center">
+          <div className="text-center pt-2 sm:pt-4">
             <button
               type="button"
               onClick={toggleMode}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {isSignUp ? (
                 <>Already have an account? <span className="font-medium text-primary">Sign In</span></>

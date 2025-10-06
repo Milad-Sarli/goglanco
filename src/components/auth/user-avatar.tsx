@@ -182,43 +182,43 @@ export function UserAvatar({
                 'bg-background/95 backdrop-blur-md border border-border/50',
                 'dark:bg-background/98 dark:border-border/30',
                 'rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30 overflow-hidden',
-                // Mobile optimized positioning and sizing
-                'left-1/2 -translate-x-1/2 w-[280px] max-w-[calc(100vw-1rem)]',
+                // Mobile optimized positioning and sizing - reduced width
+                'left-1/2 -translate-x-1/2 w-[240px] max-w-[calc(100vw-1rem)]',
                 // Tablet and desktop positioning
                 'md:left-auto md:right-0 md:translate-x-0 md:w-64'
               )}
             >
             {/* User Info Header */}
-            <div className="p-4 border-b border-border/50 md:p-4 p-5">
-              <div className="flex items-center gap-3">
-                <Avatar className="w-12 h-12 md:w-10 md:h-10">
+            <div className="p-3 border-b border-border/50 md:p-4">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Avatar className="w-10 h-10 md:w-10 md:h-10">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-base md:text-sm truncate">{user.name}</p>
-                  <p className="text-sm md:text-xs text-muted-foreground truncate">{user.email}</p>
+                  <p className="font-medium text-sm md:text-sm truncate">{user.name}</p>
+                  <p className="text-xs md:text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
               </div>
             </div>
 
             {/* Menu Items */}
-            <div className="p-3 md:p-2">
+            <div className="p-2 md:p-2">
               {menuItems.map((item) => (
                 <Link href={item.href} key={item.label}>
                   <button
                     className={cn(
-                      'w-full flex items-center gap-4 md:gap-3 px-4 md:px-3 py-3 md:py-2 rounded-lg',
-                      'text-base md:text-sm text-left hover:bg-muted/70 dark:hover:bg-muted/50',
-                      'transition-colors duration-200 min-h-[48px] md:min-h-auto'
+                      'w-full flex items-center gap-3 md:gap-3 px-3 md:px-3 py-2.5 md:py-2 rounded-lg',
+                      'text-sm md:text-sm text-left hover:bg-muted/70 dark:hover:bg-muted/50',
+                      'transition-colors duration-200 min-h-[40px] md:min-h-auto'
                     )}
                     onClick={() => {
                       setIsOpen(false);
                     }}
                   >
-                    <item.icon className="w-5 h-5 md:w-4 md:h-4 text-muted-foreground flex-shrink-0" />
+                    <item.icon className="w-4 h-4 md:w-4 md:h-4 text-muted-foreground flex-shrink-0" />
                     <span className="font-medium">{item.label}</span>
                   </button>
                 </Link>
@@ -226,19 +226,19 @@ export function UserAvatar({
             </div>
 
             {/* Sign Out */}
-            <div className="p-3 md:p-2 border-t border-border/50">
+            <div className="p-2 md:p-2 border-t border-border/50">
               <button
                 onClick={() => {
                   setIsOpen(false);
                   signOut();
                 }}
                 className={cn(
-                  'w-full flex items-center gap-4 md:gap-3 px-4 md:px-3 py-3 md:py-2 rounded-lg',
-                  'text-base md:text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30',
-                  'transition-colors duration-200 min-h-[48px] md:min-h-auto'
+                  'w-full flex items-center gap-3 md:gap-3 px-3 md:px-3 py-2.5 md:py-2 rounded-lg',
+                  'text-sm md:text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30',
+                  'transition-colors duration-200 min-h-[40px] md:min-h-auto'
                 )}
               >
-                <LogOut className="w-5 h-5 md:w-4 md:h-4 flex-shrink-0" />
+                <LogOut className="w-4 h-4 md:w-4 md:h-4 flex-shrink-0" />
                 <span className="font-medium">Sign Out</span>
               </button>
             </div>

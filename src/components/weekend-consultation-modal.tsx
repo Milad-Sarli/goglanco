@@ -148,35 +148,35 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
         )}
       </DialogTrigger>
       <DialogOverlay className="backdrop-blur-sm" />
-      <DialogContent className="sm:max-w-[425px] max-w-[95vw] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-2">
-          <DialogTitle className="text-lg sm:text-xl">Schedule Weekend Consultation</DialogTitle>
-          <DialogDescription className="text-sm">
+      <DialogContent className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto mx-4">
+        <DialogHeader className="pb-1.5 sm:pb-2">
+          <DialogTitle className="text-base sm:text-lg">Schedule Weekend Consultation</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Fill out the form below to request a consultation. We&apos;ll contact you to confirm.
           </DialogDescription>
         </DialogHeader>
         {consultationSubmitStatus?.type === 'success' ? (
-          <div className="text-center py-4 sm:py-6">
-            <div className="mb-3 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 sm:h-16 sm:w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="text-center py-3 sm:py-4">
+            <div className="mb-2 sm:mb-3 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold mb-2">Thank You!</h3>
-            <p className="text-muted-foreground mb-4 sm:mb-6 text-sm sm:text-base px-2">{consultationSubmitStatus.message}</p>
-            <Button onClick={() => setIsOpen(false)} className="w-full sm:w-auto">Close</Button>
+            <h3 className="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Thank You!</h3>
+            <p className="text-muted-foreground mb-3 sm:mb-4 text-xs sm:text-sm px-2">{consultationSubmitStatus.message}</p>
+            <Button onClick={() => setIsOpen(false)} className="w-full sm:w-auto h-9 sm:h-10">Close</Button>
           </div>
         ) : (
           <Form {...consultationForm}>
-            <form onSubmit={consultationForm.handleSubmit(onConsultationSubmit)} className="space-y-3 sm:space-y-4 py-2">
+            <form onSubmit={consultationForm.handleSubmit(onConsultationSubmit)} className="space-y-2.5 sm:space-y-3 py-1 sm:py-2">
               <FormField
                 control={consultationForm.control}
                 name="fullname"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Fullname</FormLabel>
+                    <FormLabel className="text-xs sm:text-sm">Fullname</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your full name" className="h-9 sm:h-10" {...field} />
+                      <Input placeholder="Your full name" className="h-8 sm:h-9" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -187,9 +187,9 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Email</FormLabel>
+                    <FormLabel className="text-xs sm:text-sm">Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your email address" className="h-9 sm:h-10" {...field} />
+                      <Input placeholder="Your email address" className="h-8 sm:h-9" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -200,9 +200,9 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Phone (Optional)</FormLabel>
+                    <FormLabel className="text-xs sm:text-sm">Phone (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your phone number" className="h-9 sm:h-10" {...field} />
+                      <Input placeholder="Your phone number" className="h-8 sm:h-9" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -213,14 +213,14 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
                 name="preferred_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm">Preferred Date (Optional)</FormLabel>
+                    <FormLabel className="text-xs sm:text-sm">Preferred Date (Optional)</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full pl-3 text-left font-normal h-9 sm:h-10",
+                              "w-full pl-3 text-left font-normal h-8 sm:h-9",
                               !field.value && "text-muted-foreground"
                             )}
                           >
@@ -254,11 +254,11 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Message / Requirements</FormLabel>
+                    <FormLabel className="text-xs sm:text-sm">Message / Requirements</FormLabel>
                     <FormControl>
                       <Textarea 
                         placeholder="Briefly describe your needs or preferred time slots for Saturday (9 AM - 2 PM)"
-                        className="min-h-[80px] sm:min-h-[100px] text-sm resize-none"
+                        className="min-h-[70px] sm:min-h-[80px] text-xs sm:text-sm resize-none"
                         {...field}
                       />
                     </FormControl>
@@ -267,20 +267,22 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
                 )}
               />
               {consultationSubmitStatus?.type === 'error' && (
-                <div className="p-2 sm:p-3 rounded-md bg-red-100 text-red-700 text-xs sm:text-sm">
+                <div className="p-2 rounded-md bg-red-100 text-red-700 text-xs">
                   {consultationSubmitStatus.message}
                 </div>
               )}
-              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="w-full sm:w-auto order-2 sm:order-1">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 pt-1.5 sm:pt-2">
+                <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="w-full sm:w-auto order-2 sm:order-1 h-8 sm:h-9">
                   Cancel
                 </Button>
                 <Button 
                   type="submit" 
                   disabled={consultationForm.formState.isSubmitting}
-                  className="w-full sm:w-auto order-1 sm:order-2"
+                  className="w-full sm:w-auto order-1 sm:order-2 h-8 sm:h-9"
                 >
-                  {consultationForm.formState.isSubmitting ? 'Submitting...' : 'Request Consultation'}
+                  <span className="text-xs sm:text-sm">
+                    {consultationForm.formState.isSubmitting ? 'Submitting...' : 'Request Consultation'}
+                  </span>
                 </Button>
               </div>
             </form>
