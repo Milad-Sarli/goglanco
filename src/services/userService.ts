@@ -41,11 +41,8 @@ export const getUserProfile = async (): Promise<ApiResponse<User>> => {
 // Update user profile
 export const updateUserProfile = async (userData: FormData): Promise<ApiResponse<User>> => {
   try {
-    const response: AxiosResponse<ApiResponse<User>> = await axios.put('/api/profile', userData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    // Use POST method for FormData and don't set Content-Type header (let browser handle it)
+    const response: AxiosResponse<ApiResponse<User>> = await axios.post('/api/profile', userData);
     return response.data;
   } catch (error: unknown) {
     // Handle validation errors (422) and other API errors

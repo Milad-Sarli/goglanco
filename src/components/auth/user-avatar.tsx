@@ -147,7 +147,7 @@ export function UserAvatar({
     { icon: Settings, label: 'Settings', href: '/profile?tab=settings' },
     { icon: MessageSquare, label: 'Reviews', href: '/profile?tab=reviews' },
     { icon: ClipboardList, label: 'Requests', href: '/profile?tab=requests' },
-    { icon: Bell, label: 'Notifications', href: '/profile?tab=notifications' },
+    // { icon: Bell, label: 'Notifications', href: '/profile?tab=notifications' },
     { icon: HelpCircle, label: 'Help & Support', href: '/profile?tab=support' },
   ];
 

@@ -40,12 +40,15 @@ import {
   Phone, 
   Calendar,
   Trash2,
-  Plus
+  Plus,
+  EyeOff,
+  Eye,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getUserProfile, updateUserProfile, changePassword, User as UserType, ChangePasswordData } from '@/services/userService';
 import { getUserConsultationRequests, ConsultationRequest } from '@/services/consultationService';
 import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
+import { useTheme } from 'next-themes';
 
 // Component that uses useSearchParams
 function ProfileContent() {
@@ -54,7 +57,10 @@ function ProfileContent() {
   const [activeTab, setActiveTab] = useState('profile');
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProfileSubmitting, setIsProfileSubmitting] = useState(false);
+  const [isAddressSubmitting, setIsAddressSubmitting] = useState(false);
+  const [isPasswordSubmitting, setIsPasswordSubmitting] = useState(false);
+  const [isTestimonialSubmitting, setIsTestimonialSubmitting] = useState(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [consultationRequests, setConsultationRequests] = useState<ConsultationRequest[]>([]);
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);
@@ -63,8 +69,21 @@ function ProfileContent() {
   const [showTestimonialForm, setShowTestimonialForm] = useState(false);
   const [testimonialFormData, setTestimonialFormData] = useState<CreateTestimonialData>({
     name: '',
-    text: '',
+    text: '', 
     rating: 5
+  });
+
+  // Profile form state
+  const [profileFormData, setProfileFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    avatar: null as File | null
+  });
+
+  // Address form state
+  const [addressFormData, setAddressFormData] = useState({
+    address: ''
   });
   
   // فرم تغییر رمز عبور
@@ -74,6 +93,20 @@ function ProfileContent() {
     confirm_password: ''
   });
 
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
+  const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
+    setPasswordVisibility((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  // Theme and layout density states
+  const { theme, setTheme } = useTheme();
+  const [compactView, setCompactView] = useState<boolean>(false);
+
   // دریافت اطلاعات کاربر و تنظیم تب از URL
   useEffect(() => {
     const loadUserData = async () => {
@@ -82,6 +115,16 @@ function ProfileContent() {
         const response = await getUserProfile();
         if (response.success && response.data) {
           setUserData(response.data);
+          // Initialize form data with user data
+          setProfileFormData({
+            name: response.data.name || '',
+            email: response.data.email || '',
+            phone: response.data.phone || '',
+            avatar: null
+          });
+          setAddressFormData({
+            address: response.data.address || ''
+          });
         }
       } catch (error) {
         console.error('Error loading user data:', error);
@@ -98,6 +141,18 @@ function ProfileContent() {
 
     loadUserData();
   }, [searchParams]);
+
+  // Restore compact view from localStorage
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('compactView') : null;
+      if (stored) {
+        setCompactView(stored === 'true');
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     if (mounted && containerRef.current) {
@@ -185,40 +240,46 @@ function ProfileContent() {
     e.preventDefault();
     if (!userData) return;
     
-    setIsSubmitting(true);
+    setIsProfileSubmitting(true);
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData();
       
-      // Only append fields that have values to avoid sending empty strings
-      const formEntries = Array.from(formData.entries());
-      const cleanFormData = new FormData();
+      // Add text fields (only if they have values)
+      if (profileFormData.name && profileFormData.name.trim()) {
+        formData.append('name', profileFormData.name.trim());
+      }
       
-      formEntries.forEach(([key, value]) => {
-        if (key === 'avatar') {
-          // For file input, only append if a file is selected
-          const fileInput = value as File;
-          if (fileInput && fileInput.size > 0) {
-            cleanFormData.append(key, value);
-          }
-        } else {
-          // For text inputs, only append if value is not empty
-          const stringValue = value as string;
-          if (stringValue && stringValue.trim() !== '') {
-            cleanFormData.append(key, stringValue.trim());
-          }
-        }
-      });
+      if (profileFormData.email && profileFormData.email.trim()) {
+        formData.append('email', profileFormData.email.trim());
+      }
+      
+      // Phone can be empty
+      if (profileFormData.hasOwnProperty('phone')) {
+        formData.append('phone', profileFormData.phone || '');
+      }
+      
+      // Add avatar file (only if selected)
+      if (profileFormData.avatar && profileFormData.avatar instanceof File) {
+        formData.append('avatar', profileFormData.avatar);
+      }
       
       // Log form data for debugging
-      console.log('Clean form data entries:');
-      for (const [key, value] of cleanFormData.entries()) {
+      console.log('Profile form data entries:');
+      for (const [key, value] of formData.entries()) {
         console.log(key, value);
       }
       
-      const response = await updateUserProfile(cleanFormData);
+      const response = await updateUserProfile(formData);
       
       if (response.success && response.data) {
         setUserData(response.data);
+        // Update form state with new data
+        setProfileFormData({
+          name: response.data.name || '',
+          email: response.data.email || '',
+          phone: response.data.phone || '',
+          avatar: null // Reset file input
+        });
         toast.success('Profile information updated successfully');
       } else {
         toast.error(response.message || 'Failed to update profile');
@@ -236,7 +297,7 @@ function ProfileContent() {
         toast.error('Error updating profile');
       }
     } finally {
-      setIsSubmitting(false);
+      setIsProfileSubmitting(false);
     }
   };
 
@@ -245,28 +306,29 @@ function ProfileContent() {
     e.preventDefault();
     if (!userData) return;
     
-    setIsSubmitting(true);
+    setIsAddressSubmitting(true);
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData();
       
-      // Only append address if it has a value
-      const address = formData.get('address') as string;
-      const cleanFormData = new FormData();
-      
-      if (address && address.trim() !== '') {
-        cleanFormData.append('address', address.trim());
+      // Add address field (can be empty)
+      if (addressFormData.hasOwnProperty('address')) {
+        formData.append('address', addressFormData.address || '');
       }
       
       // Log form data for debugging
       console.log('Address form data entries:');
-      for (const [key, value] of cleanFormData.entries()) {
+      for (const [key, value] of formData.entries()) {
         console.log(key, value);
       }
       
-      const response = await updateUserProfile(cleanFormData);
+      const response = await updateUserProfile(formData);
       
       if (response.success && response.data) {
         setUserData(response.data);
+        // Update form state with new data
+        setAddressFormData({
+          address: response.data.address || ''
+        });
         toast.success('Address updated successfully');
       } else {
         toast.error(response.message || 'Failed to update address');
@@ -284,7 +346,7 @@ function ProfileContent() {
         toast.error('Error updating address');
       }
     } finally {
-      setIsSubmitting(false);
+      setIsAddressSubmitting(false);
     }
   };
   
@@ -297,7 +359,7 @@ function ProfileContent() {
       return;
     }
     
-    setIsSubmitting(true);
+    setIsPasswordSubmitting(true);
     try {
       const response = await changePassword(passwordData);
       
@@ -324,7 +386,7 @@ function ProfileContent() {
         toast.error('Error changing password');
       }
     } finally {
-      setIsSubmitting(false);
+      setIsPasswordSubmitting(false);
     }
   };
 
@@ -332,7 +394,7 @@ function ProfileContent() {
   const handleCreateTestimonial = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    setIsSubmitting(true);
+    setIsTestimonialSubmitting(true);
     try {
       const response = await createTestimonial(testimonialFormData);
       
@@ -351,7 +413,7 @@ function ProfileContent() {
       const errorMessage = error instanceof Error ? error.message : 'Error submitting testimonial';
       toast.error(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setIsTestimonialSubmitting(false);
     }
   };
 
@@ -383,7 +445,14 @@ function ProfileContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div ref={containerRef} className="container mx-auto px-4 py-8 pt-24 max-w-6xl">
+      <div
+        ref={containerRef}
+        className={cn(
+          'container mx-auto px-4',
+          compactView ? 'py-4 pt-20' : 'py-8 pt-24',
+          'max-w-6xl'
+        )}
+      >
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, x: 30 }}
@@ -403,17 +472,17 @@ function ProfileContent() {
                  {userData?.name || "User"}
                 </h1>
                 <p className="text-xl text-muted-foreground">{userData?.email || "Email"}</p>
-                <Badge variant="secondary" className="mt-2">
+                {/* <Badge variant="secondary" className="mt-2">
                  <CheckCircle className="w-3 h-3 mr-1" />
                  Verified Account
-                </Badge>
+                </Badge> */}
             </div>
           </div>
         </motion.div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-8 h-auto p-1 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-5 mb-8 h-auto p-1 bg-muted/50">
             <TabsTrigger 
               value="profile"  
               className={cn(
@@ -470,20 +539,7 @@ function ProfileContent() {
               <ClipboardList className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="hidden xs:block sm:block leading-none">Requests</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="notifications" 
-              className={cn(
-                "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
-                "min-h-[3rem] sm:min-h-[2.5rem] p-1 sm:p-3",
-                "text-[0.65rem] sm:text-sm font-medium",
-                "data-[state=active]:bg-background data-[state=active]:text-foreground",
-                "data-[state=active]:shadow-sm transition-all duration-200",
-                "hover:bg-background/50"
-              )}
-            >
-              <Bell className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="hidden xs:block sm:block leading-none">Notifications</span>
-            </TabsTrigger>
+
             <TabsTrigger 
               value="support" 
               className={cn(
@@ -501,8 +557,8 @@ function ProfileContent() {
           </TabsList>
 
           {/* Profile Tab */}
-          <TabsContent value="profile" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="profile" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
+            <div className={cn('grid grid-cols-1 md:grid-cols-2', compactView ? 'gap-3' : 'gap-6')}>
               <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -518,10 +574,11 @@ function ProfileContent() {
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="name">Name</Label>
-                        <Input 
+                        <Input  
                           id="name" 
                           name="name" 
-                          defaultValue={userData?.name || ""} 
+                          value={profileFormData.name}
+                          onChange={(e) => setProfileFormData(prev => ({ ...prev, name: e.target.value }))}
                         />
                       </div>
                       <div>
@@ -530,7 +587,8 @@ function ProfileContent() {
                           id="email" 
                           name="email" 
                           type="email" 
-                          defaultValue={userData?.email || ""} 
+                          value={profileFormData.email}
+                          onChange={(e) => setProfileFormData(prev => ({ ...prev, email: e.target.value }))}
                         />
                       </div>
                       <div>
@@ -538,7 +596,8 @@ function ProfileContent() {
                         <Input 
                           id="phone" 
                           name="phone" 
-                          defaultValue={userData?.phone || ""} 
+                          value={profileFormData.phone}
+                          onChange={(e) => setProfileFormData(prev => ({ ...prev, phone: e.target.value }))}
                           placeholder="Enter your phone number (optional)"
                         />
                       </div>
@@ -549,7 +608,11 @@ function ProfileContent() {
                           name="avatar" 
                           type="file" 
                           accept="image/jpeg,image/png,image/jpg,image/gif"
-                          className="cursor-pointer" 
+                          className="cursor-pointer"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0] || null;
+                            setProfileFormData(prev => ({ ...prev, avatar: file }));
+                          }}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
                           Supported formats: JPEG, PNG, JPG, GIF (Max: 2MB)
@@ -558,9 +621,9 @@ function ProfileContent() {
                       <Button 
                         type="submit" 
                         className="w-full" 
-                        disabled={isSubmitting}
+                        disabled={isProfileSubmitting}
                       >
-                        {isSubmitting ? (
+                        {isProfileSubmitting ? (
                           <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                         ) : (
                           <Camera className="w-4 h-4 ml-2" />
@@ -590,16 +653,17 @@ function ProfileContent() {
                         <Input 
                           id="address" 
                           name="address" 
-                          defaultValue={userData?.address || ""} 
+                          value={addressFormData.address}
+                          onChange={(e) => setAddressFormData(prev => ({ ...prev, address: e.target.value }))}
                         />
                       </div>
                       <Button 
                         type="submit" 
                         variant="outline" 
                         className="w-full"
-                        disabled={isSubmitting}
+                        disabled={isAddressSubmitting}
                       >
-                        {isSubmitting ? (
+                        {isAddressSubmitting ? (
                           <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                         ) : (
                           <MapPin className="w-4 h-4 ml-2" />
@@ -614,8 +678,8 @@ function ProfileContent() {
           </TabsContent>
 
           {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="settings" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
+            <div className={cn('grid grid-cols-1 md:grid-cols-2', compactView ? 'gap-3' : 'gap-6')}>
               <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -634,7 +698,10 @@ function ProfileContent() {
                         Switch between light and dark themes
                       </p>
                     </div>
-                    <Switch />
+                    <Switch
+                      checked={mounted ? theme === 'dark' : false}
+                      onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                    />
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
@@ -644,7 +711,17 @@ function ProfileContent() {
                         Use a more compact UI layout
                       </p>
                     </div>
-                    <Switch />
+                    <Switch
+                      checked={compactView}
+                      onCheckedChange={(checked) => {
+                        setCompactView(checked);
+                        try {
+                          localStorage.setItem('compactView', String(checked));
+                        } catch (e) {
+                          // ignore
+                        }
+                      }}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -660,7 +737,7 @@ function ProfileContent() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Two-Factor Authentication</Label>
                       <p className="text-sm text-muted-foreground">
@@ -678,45 +755,78 @@ function ProfileContent() {
                       </p>
                     </div>
                     <Switch defaultChecked />
-                  </div>
+                  </div> */}
                   <form onSubmit={handlePasswordChange} className="space-y-4 mt-4">
-                    <div>
+                    <div className="relative">
                       <Label htmlFor="current_password">Current Password</Label>
-                      <Input 
-                        id="current_password" 
-                        type="password" 
-                        value={passwordData.current_password}
-                        onChange={(e) => setPasswordData({...passwordData, current_password: e.target.value})}
-                        required
-                      />
+                      <div className="flex items-center gap-2">
+                        <Input 
+                          id="current_password" 
+                          type={passwordVisibility.current ? 'text' : 'password'}
+                          value={passwordData.current_password}
+                          onChange={(e) => setPasswordData({...passwordData, current_password: e.target.value})}
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => togglePasswordVisibility('current')}
+                          aria-label={passwordVisibility.current ? 'Hide password' : 'Show password'}
+                        >
+                          {passwordVisibility.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                      </div>
                     </div>
-                    <div>
+                    <div className="relative">
                       <Label htmlFor="new_password">New Password</Label>
-                      <Input 
-                        id="new_password" 
-                        type="password" 
-                        value={passwordData.new_password}
-                        onChange={(e) => setPasswordData({...passwordData, new_password: e.target.value})}
-                        required
-                      />
+                      <div className="flex items-center gap-2">
+                        <Input 
+                          id="new_password" 
+                          type={passwordVisibility.new ? 'text' : 'password'}
+                          value={passwordData.new_password}
+                          onChange={(e) => setPasswordData({...passwordData, new_password: e.target.value})}
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => togglePasswordVisibility('new')}
+                          aria-label={passwordVisibility.new ? 'Hide password' : 'Show password'}
+                        >
+                          {passwordVisibility.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                      </div>
                     </div>
-                    <div>
+                    <div className="relative">
                       <Label htmlFor="confirm_password">Confirm New Password</Label>
-                      <Input 
-                        id="confirm_password" 
-                        type="password" 
-                        value={passwordData.confirm_password}
-                        onChange={(e) => setPasswordData({...passwordData, confirm_password: e.target.value})}
-                        required
-                      />
+                      <div className="flex items-center gap-2">
+                        <Input 
+                          id="confirm_password" 
+                          type={passwordVisibility.confirm ? 'text' : 'password'}
+                          value={passwordData.confirm_password}
+                          onChange={(e) => setPasswordData({...passwordData, confirm_password: e.target.value})}
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => togglePasswordVisibility('confirm')}
+                          aria-label={passwordVisibility.confirm ? 'Hide password' : 'Show password'}
+                        >
+                          {passwordVisibility.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                      </div>
                     </div>
                     <Button 
                       type="submit" 
                       variant="outline" 
                       className="w-full"
-                      disabled={isSubmitting}
+                      disabled={isPasswordSubmitting}
                     >
-                      {isSubmitting ? (
+                      {isPasswordSubmitting ? (
                         <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                       ) : (
                         <Lock className="w-4 h-4 ml-2" />
@@ -730,8 +840,8 @@ function ProfileContent() {
           </TabsContent>
 
           {/* Reviews Tab */}
-          <TabsContent value="reviews" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="reviews" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
+            <div className={cn('grid grid-cols-1 md:grid-cols-2', compactView ? 'gap-3' : 'gap-6')}>
               <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -879,11 +989,11 @@ function ProfileContent() {
                         <div className="flex gap-2">
                           <Button 
                             type="submit" 
-                            disabled={isSubmitting}
+                            disabled={isTestimonialSubmitting}
                             className="flex-1"
                           >
-                            {isSubmitting ? (
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            {isTestimonialSubmitting ? (
+                              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                             ) : (
                               <MessageSquare className="w-4 h-4 mr-2" />
                             )}
@@ -910,7 +1020,7 @@ function ProfileContent() {
                 </CardContent>
               </Card>
 
-              <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
+              {/* <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ImageIcon className="w-5 h-5" />
@@ -956,12 +1066,12 @@ function ProfileContent() {
                      Upload New Preview
                    </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           </TabsContent>
 
           {/* Requests Tab */}
-          <TabsContent value="requests" className="space-y-6">
+          <TabsContent value="requests" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
             <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -1037,7 +1147,7 @@ function ProfileContent() {
           </TabsContent>
 
           {/* Notifications Tab */}
-          <TabsContent value="notifications" className="space-y-6">
+          <TabsContent value="notifications" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
             <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -1095,7 +1205,7 @@ function ProfileContent() {
           </TabsContent>
 
           {/* Support Tab */}
-          <TabsContent value="support" className="space-y-6">
+          <TabsContent value="support" className={cn(compactView ? 'space-y-3' : 'space-y-6')}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card ref={addToRefs} className="hover:shadow-lg transition-all duration-300">
                 <CardHeader>
@@ -1108,17 +1218,9 @@ function ProfileContent() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button variant="outline" className="w-full justify-start">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Documentation
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full cursor-pointer justify-start" onClick={() => window.open('/contact', '_self')}>
                     <Mail className="w-4 h-4 mr-2" />
                     Contact Support
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Globe className="w-4 h-4 mr-2" />
-                    Community Forum
                   </Button>
                 </CardContent>
               </Card>
@@ -1135,20 +1237,42 @@ function ProfileContent() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 border rounded-lg">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <div>
-                        <p className="font-medium">Profile Updated</p>
-                        <p className="text-sm text-muted-foreground">2 hours ago</p>
+                    {userData?.updated_at && (
+                      <div className="flex items-center gap-3 p-3 border rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <div>
+                          <p className="font-medium">Profile Updated</p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(userData.updated_at).toLocaleString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: 'numeric',
+                              minute: 'numeric',
+                              hour12: true
+                            })}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 border rounded-lg">
-                      <Mail className="w-5 h-5 text-blue-500" />
-                      <div>
-                        <p className="font-medium">Email Verified</p>
-                        <p className="text-sm text-muted-foreground">1 day ago</p>
+                    )}
+                    {userData?.email_verified_at && (
+                      <div className="flex items-center gap-3 p-3 border rounded-lg">
+                        <Mail className="w-5 h-5 text-blue-500" />
+                        <div>
+                          <p className="font-medium">Email Verified</p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(userData.email_verified_at).toLocaleString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: 'numeric',
+                              minute: 'numeric',
+                              hour12: true
+                            })}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
