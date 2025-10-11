@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
-import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,13 +27,11 @@ import {
   MapPin,
   Shield,
   Palette,
-  Globe,
   Lock,
   FileText,
   Star,
   Clock,
   CheckCircle,
-  ImageIcon,
   ClipboardList,
   Loader2,
   Phone, 
@@ -150,7 +147,7 @@ function ProfileContent() {
       if (stored) {
         setCompactView(stored === 'true');
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, []);
@@ -729,7 +726,7 @@ function ProfileContent() {
                         setCompactView(checked);
                         try {
                           localStorage.setItem('compactView', String(checked));
-                        } catch (e) {
+                        } catch {
                           // ignore
                         }
                       }}

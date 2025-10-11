@@ -9,7 +9,6 @@ import {
   Settings, 
   LogOut, 
   MessageSquare, 
-  Bell,
   HelpCircle,
   ClipboardList
 } from "lucide-react";
