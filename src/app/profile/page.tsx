@@ -45,6 +45,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getAvatarUrl, generateInitialAvatar } from '@/lib/utils';
 import { getUserProfile, updateUserProfile, changePassword, User as UserType, ChangePasswordData } from '@/services/userService';
 import { getUserConsultationRequests, ConsultationRequest } from '@/services/consultationService';
 import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
@@ -462,7 +463,18 @@ function ProfileContent() {
         >
           <div className="flex items-center gap-4 mb-6">
             <Avatar className="w-20 h-20 border-4 border-primary/20">
-              <AvatarImage src={userData?.avatar || "/placeholder-avatar.jpg"} alt={userData?.name || "User"} />
+              <AvatarImage 
+                src={getAvatarUrl(userData?.avatar)} 
+                alt={userData?.name || "User"} 
+                onError={(e) => {
+                  // On error, try to use generated avatar with initials
+                  if (userData?.name) {
+                    e.currentTarget.src = generateInitialAvatar(userData.name);
+                  } else {
+                    e.currentTarget.src = '/default-avatar.svg';
+                  }
+                }}
+              />
               <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
                 {userData?.name ? userData.name.substring(0, 2).toUpperCase() : "U"}
               </AvatarFallback>
