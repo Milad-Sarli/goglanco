@@ -22,7 +22,6 @@ import {
   MessageSquare, 
   Bell, 
   HelpCircle, 
-  Camera,
   Mail,
   MapPin,
   Shield,
@@ -238,6 +237,12 @@ function ProfileContent() {
     e.preventDefault();
     if (!userData) return;
     
+    if (profileFormData.avatar && profileFormData.avatar.size > 2 * 1024 * 1024) {
+      toast.error('Avatar image size should not exceed 2MB.');
+      setIsProfileSubmitting(false);
+      return;
+    }
+
     setIsProfileSubmitting(true);
     try {
       const formData = new FormData();
@@ -635,7 +640,7 @@ function ProfileContent() {
                         {isProfileSubmitting ? (
                           <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                         ) : (
-                          <Camera className="w-4 h-4 ml-2" />
+                          <CheckCircle className="w-4 h-4 ml-2" />
                         )}
                         Update Profile
                       </Button>
