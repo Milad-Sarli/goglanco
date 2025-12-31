@@ -5,6 +5,7 @@ import { motion, useScroll } from "motion/react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ChevronDown } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -103,15 +104,16 @@ export function Header() {
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link href="/services">
-                  <NavigationMenuTrigger className={cn(
-                    'text-base', 'cursor-pointer' , 
-                    getTextColor(),
-                    getDropShadow()
-                  )}>
-                    Services
-                  </NavigationMenuTrigger>
-                </Link>
+                <NavigationMenuTrigger asChild className={cn(
+                   'text-base', 'cursor-pointer' , 
+                   getTextColor(),
+                   getDropShadow()
+                 )}>
+                   <Link href="/services" className="flex items-center">
+                     Services
+                     <ChevronDown className="relative top-[1px] ml-1 size-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true" />
+                   </Link>
+                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-2 lg:w-[500px]">
                     {services.map((service) => (
@@ -130,40 +132,49 @@ export function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link href="/portfolio" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(
-                    navigationMenuTriggerStyle(),
-                    'text-base',
-                    getTextColor(),
-                    getDropShadow()
-                  )}>
+                <NavigationMenuLink asChild>
+                  <Link 
+                    href="/portfolio" 
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      'text-base',
+                      getTextColor(),
+                      getDropShadow()
+                    )}
+                  >
                     Portfolio
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link href="/about" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(
-                    navigationMenuTriggerStyle(),
-                    'text-base',
-                    getTextColor(),
-                    getDropShadow()
-                  )}>
+                <NavigationMenuLink asChild>
+                  <Link 
+                    href="/about" 
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      'text-base',
+                      getTextColor(),
+                      getDropShadow()
+                    )}
+                  >
                     About
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link href="/contact" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(
-                    navigationMenuTriggerStyle(),
-                    'text-base',
-                    getTextColor(),
-                    getDropShadow()
-                  )}>
+                <NavigationMenuLink asChild>
+                  <Link 
+                    href="/contact" 
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      'text-base',
+                      getTextColor(),
+                      getDropShadow()
+                    )}
+                  >
                     Contact
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

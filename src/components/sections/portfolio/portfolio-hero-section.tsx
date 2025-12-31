@@ -186,7 +186,7 @@ export function PortfolioHeroSection() {
               </Button>
             </BoxReveal>
             <BoxReveal duration={0.5} boxColor="#4338ca">
-              <Link href={heroData?.secondaryButtonLink || "/contact"} passHref>
+              <Link href={heroData?.secondaryButtonLink || "/contact"}>
                 <Button size="lg" variant="outline" className="border-2 hover:bg-accent text-lg font-semibold px-8 py-6">
                   {heroData?.secondaryButtonText || "Get a Quote"}
                 </Button>
@@ -208,7 +208,6 @@ export function PortfolioHeroSection() {
           />
         </div>
       </div>
-      
       {/* Decorative elements */}
       <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background to-transparent z-10"></div>
     </section>
