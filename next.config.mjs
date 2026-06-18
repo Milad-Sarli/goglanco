@@ -2,6 +2,7 @@
 const config = {
   output: "export",
   images: {
+    unoptimized: true,
     domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com', 'localhost'],
     remotePatterns: [
       {
