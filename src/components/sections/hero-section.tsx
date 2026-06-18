@@ -62,16 +62,19 @@ export function HeroSection() {
   return (
     <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
       <div className="absolute inset-0 z-0 bg-gray-900">
-        <Image
-          src={`${heroData.mainImage}`}
-          alt="Beautiful Persian Rug"
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-          className="object-cover"
-          priority
-          unoptimized
-          style={{ minHeight: '100vh' }}
-        />
+        {heroData.mainImage ? (
+          <Image
+            src={heroData.mainImage}
+            alt="Beautiful Persian Rug"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+            className="object-cover"
+            priority
+            style={{ minHeight: '100vh' }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
         <BlurFade className="absolute inset-0">
           <div className="w-full h-full" />

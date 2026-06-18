@@ -91,7 +91,6 @@ Experience world-class rug care with a perfect blend of traditional artistry, gl
                     src={feature.image}
                     alt={feature.title}
                     fill
-                    unoptimized
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />

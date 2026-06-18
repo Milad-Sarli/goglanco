@@ -10,7 +10,6 @@ export function TestImage() {
         alt="Test Image"
         fill
         className="object-cover"
-        unoptimized
       />
     </div>
   );

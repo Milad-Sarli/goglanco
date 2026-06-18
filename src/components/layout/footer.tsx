@@ -21,6 +21,7 @@ export function Footer() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const [isLoadingContactInfo, setIsLoadingContactInfo] = useState(true);
   const [contactInfoError, setContactInfoError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     async function fetchContactInfo() {
@@ -37,6 +38,14 @@ export function Footer() {
     }
     fetchContactInfo();
   }, []);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    // For now, show a success message
+    alert(`Thank you for subscribing with: ${email}`);
+    setEmail('');
+  };
 
   return (
     <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 dark:text-slate-400 w-full overflow-x-hidden">
@@ -55,14 +64,17 @@ export function Footer() {
               <p className="mb-6">
                 Stay updated with our latest services and rug care tips
               </p>
-              <div className="flex gap-2">
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
                 <Input
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-slate-800 dark:bg-slate-800 border-slate-700 dark:border-slate-700"
+                  required
                 />
-                <Button>Subscribe</Button>
-              </div>
+                <Button type="submit">Subscribe</Button>
+              </form>
             </motion.div>
           </div>
         </div>
@@ -77,16 +89,16 @@ export function Footer() {
             Expert Rug Restoration Rooted in Craft, Care, and Cultural Heritage Since 1996
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
+              <Link href="#" aria-label="Follow us on Facebook" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Facebook size={20} />
               </Link>
-              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
+              <Link href="#" aria-label="Follow us on Instagram" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Instagram size={20} />
               </Link>
-              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
+              <Link href="#" aria-label="Follow us on Twitter" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Twitter size={20} />
               </Link>
-              <Link href="#" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
+              <Link href="#" aria-label="Follow us on Youtube" className="text-slate-300 dark:text-slate-400 hover:text-white dark:hover:text-white transition-colors">
                 <Youtube size={20} />
               </Link>
             </div>

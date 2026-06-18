@@ -105,7 +105,6 @@ export function ContactHeroSection() {
             alt="Contact our rug restoration experts"
             fill
             className="object-cover"
-            unoptimized
             priority
           />
         </div>

@@ -8,7 +8,7 @@ import { motion } from "motion/react";
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { WeekendConsultationModal } from '@/components/weekend-consultation-modal';
-
+import { Menu } from 'lucide-react';
 
 interface MobileMenuProps {
   isScrolled: boolean;
@@ -31,23 +31,19 @@ const services = [
 ];
 
 export function MobileMenu({ isScrolled }: MobileMenuProps) {
-
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
-    setMounted(true); 
+    setMounted(true);
   }, []);
 
   const getButtonStyle = () => {
-    if (!mounted) return 'text-gray-900 border-gray-900 hover:bg-gray-900/10'; // Default for SSR
-    
-    if (!isScrolled) {
-      return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
-    }
-    return isDark ? 'text-white border-white hover:bg-white/10' : 'text-gray-900 border-gray-900 hover:bg-gray-900/10';
+    if (!mounted) return 'text-white';
+    if (isScrolled) return 'text-foreground hover:bg-muted/80';
+    return 'text-white hover:bg-white/10';
   };
 
   const handleLinkClick = () => {
@@ -58,40 +54,47 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           className={cn(
-            'md:hidden z-50',
-            getButtonStyle() 
+            'lg:hidden h-10 w-10 rounded-full',
+            getButtonStyle()
           )}
-          style={{ position: 'relative', left: '23px' }}
         >
-          <MenuIcon className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0 max-w-[90vw]">
+      <SheetContent side="right" className="w-[320px] sm:w-[380px] p-0">
         <nav className="flex flex-col h-full">
-          <div className="p-6 border-b">
-            <Link href="/" className="font-bold text-2xl" onClick={handleLinkClick}>
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-border/50">
+            <Link href="/" className="text-xl font-bold tracking-tight" onClick={handleLinkClick}>
               Goglanco
             </Link>
           </div>
-          
-          <div className="flex-grow overflow-y-auto py-6">
 
-            <div className="px-6 mb-6">
-              <div className="text-sm font-semibold text-gray-500 mb-2">Main Menu</div>
-              <ul className="space-y-3">
+          {/* Menu Content */}
+          <div className="flex-1 overflow-y-auto py-6">
+            {/* Main Menu */}
+            <div className="px-6 mb-8">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                Menu
+              </p>
+              <ul className="space-y-1">
                 {menuItems.map((item, index) => (
                   <motion.li
                     key={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
                   >
                     <Link
                       href={item.href}
-                      className="block text-lg font-medium hover:text-primary transition-colors"
+                      className={cn(
+                        'flex items-center py-3 text-[17px] font-medium',
+                        'text-foreground hover:text-primary transition-colors duration-200',
+                        'border-b border-border/30'
+                      )}
                       onClick={handleLinkClick}
                     >
                       {item.title}
@@ -101,19 +104,25 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
               </ul>
             </div>
 
+            {/* Services */}
             <div className="px-6">
-              <div className="text-sm font-semibold text-gray-500 mb-2">Our Services</div>
-              <ul className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                Services
+              </p>
+              <ul className="space-y-1">
                 {services.map((service, index) => (
                   <motion.li
                     key={service.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (menuItems.length + index) * 0.1 }}
+                    transition={{ delay: (menuItems.length + index) * 0.05, duration: 0.3 }}
                   >
                     <Link
                       href={service.href}
-                      className="block text-lg font-medium hover:text-primary transition-colors"
+                      className={cn(
+                        'flex items-center py-2.5 text-sm',
+                        'text-muted-foreground hover:text-foreground transition-colors duration-200'
+                      )}
                       onClick={handleLinkClick}
                     >
                       {service.title}
@@ -124,32 +133,12 @@ export function MobileMenu({ isScrolled }: MobileMenuProps) {
             </div>
           </div>
 
-          <div className="p-6 border-t">
+          {/* Footer */}
+          <div className="p-6 border-t border-border/50">
             <WeekendConsultationModal className="w-full" />
           </div>
         </nav>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function MenuIcon(props: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
   );
 }

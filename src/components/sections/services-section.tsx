@@ -114,13 +114,16 @@ export function ServicesSection() {
               >
                 <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden bg-card dark:bg-slate-800">
                   <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={`${service.image}`}
-                      alt={service.title}
-                      fill
-                      unoptimized
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
+                    {service.image ? (
+                      <Image
+                        src={service.image}
+                        alt={service.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800" />
+                    )}
                   </div>
                   <CardHeader className="flex flex-row items-center gap-2 pt-6">
                     <span className="text-2xl">{service.icon}</span>

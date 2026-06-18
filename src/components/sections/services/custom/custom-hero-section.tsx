@@ -56,6 +56,7 @@ export function CustomHeroSection() {
               alt="Custom Rug Services"
               fill
               className="object-cover"
+              priority
             />
           </motion.div>
         </div>

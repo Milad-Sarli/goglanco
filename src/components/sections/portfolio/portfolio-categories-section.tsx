@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // Imports for gallery items
 import { ImageComparison, ImageComparisonImage, ImageComparisonSlider } from "@/components/motion-primitives/image-comparison";
 import { Badge } from "@/components/ui/badge";
+import axios from "@/lib/axios";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -94,11 +95,8 @@ export function PortfolioCategoriesSection({
   useEffect(() => {
     async function fetchCategoriesAndItems() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/categories`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const responseJson: ApiCategoryResponse = await response.json();
+        const response = await axios.get('/api/portfolio/categories');
+        const responseJson: ApiCategoryResponse = response.data;
         const rawDataArray: RawApiCategory[] = responseJson.data;
 
         const transformedCategories: Category[] = rawDataArray.map(rawCat => {

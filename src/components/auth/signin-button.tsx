@@ -17,28 +17,15 @@ interface SigninButtonProps {
 export function SigninButton({ className, isScrolled, onClick, variant = 'default' }: SigninButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const iconRef = useRef<SVGSVGElement>(null);
-
-  const getDropShadow = () => {
-    return !isScrolled ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : '';
-  };
 
   useEffect(() => {
     const button = buttonRef.current;
-    const icon = iconRef.current;
-
-    if (!button || !icon) return;
+    if (!button) return;
 
     const handleMouseEnter = () => {
       gsap.to(button, {
-        scale: 1.05,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-      
-      gsap.to(icon, {
-        x: 2,
-        duration: 0.3,
+        scale: 1.03,
+        duration: 0.2,
         ease: "power2.out"
       });
     };
@@ -46,71 +33,19 @@ export function SigninButton({ className, isScrolled, onClick, variant = 'defaul
     const handleMouseLeave = () => {
       gsap.to(button, {
         scale: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-      
-      gsap.to(icon, {
-        x: 0,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    };
-
-    const handleMouseDown = () => {
-      gsap.to(button, {
-        scale: 0.95,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-    };
-
-    const handleMouseUp = () => {
-      gsap.to(button, {
-        scale: 1.05,
-        duration: 0.1,
+        duration: 0.2,
         ease: "power2.out"
       });
     };
 
     button.addEventListener('mouseenter', handleMouseEnter);
     button.addEventListener('mouseleave', handleMouseLeave);
-    button.addEventListener('mousedown', handleMouseDown);
-    button.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       button.removeEventListener('mouseenter', handleMouseEnter);
       button.removeEventListener('mouseleave', handleMouseLeave);
-      button.removeEventListener('mousedown', handleMouseDown);
-      button.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
-
-  const getButtonStyles = () => {
-    const baseStyles = [
-      'flex items-center gap-2 rounded-full',
-      'border border-border/50 bg-background/80 backdrop-blur-sm',
-      'hover:bg-primary hover:text-primary-foreground hover:border-primary',
-      'dark:border-border/30 dark:bg-background/90',
-      'dark:hover:bg-primary dark:hover:text-primary-foreground',
-      'transition-all duration-300 ease-in-out',
-      'font-medium shadow-sm',
-      getDropShadow()
-    ];
-
-    if (variant === 'mobile') {
-      return [
-        ...baseStyles,
-        'px-3 py-2 text-xs',
-        'w-full justify-center'
-      ];
-    }
-
-    return [
-      ...baseStyles,
-      'px-4 py-2 text-sm'
-    ];
-  };
 
   const handleClick = () => {
     setIsModalOpen(true);
@@ -123,20 +58,23 @@ export function SigninButton({ className, isScrolled, onClick, variant = 'defaul
     <>
       <Button
         ref={buttonRef}
-        variant="outline"
-        size={variant === 'mobile' ? 'sm' : 'sm'}
+        variant="ghost"
+        size={variant === 'mobile' ? 'default' : 'default'}
         onClick={handleClick}
         className={cn(
-          getButtonStyles(),
+          'h-10 px-4 rounded-full font-medium text-[15px]',
+          isScrolled ? 'text-foreground hover:bg-muted/80' : 'text-white hover:bg-white/10',
+          'transition-all duration-300',
+          variant === 'mobile' && 'w-full justify-start',
           className
         )}
       >
-        <LogIn ref={iconRef} className="w-4 h-4" />
+        <LogIn className="w-4 h-4 mr-2" />
         <span>Sign In</span>
       </Button>
-      
-      <SigninModal 
-        isOpen={isModalOpen} 
+
+      <SigninModal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </>

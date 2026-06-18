@@ -6,29 +6,28 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
 
-export function ThemeToggle() {
+interface ThemeToggleProps {
+  isScrolled?: boolean;
+}
+
+export function ThemeToggle({ isScrolled = false }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Only run client-side effects after component is mounted
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Don't render anything until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
       <Button
         variant="ghost"
         size="icon"
-        className="relative h-9 w-9 rounded-full text-gray-900"
+        className="relative h-10 w-10 rounded-full text-white"
       >
-        <div className="relative h-full w-full">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Sun className="h-5 w-5 text-amber-500" />
-          </div>
-        </div>
+        <Sun className="h-[18px] w-[18px]" />
         <span className="sr-only">Toggle theme</span>
       </Button>
     )
@@ -39,33 +38,37 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="relative h-9 w-9 rounded-full text-white"
+      className={cn(
+        "relative h-10 w-10 rounded-full",
+        isScrolled ? "text-foreground hover:bg-muted/80" : "text-white hover:bg-white/10",
+        "transition-all duration-300"
+      )}
     >
       <div className="relative h-full w-full">
         <motion.div
           initial={{ scale: 0, rotate: 0 }}
-          animate={{ 
+          animate={{
             scale: theme === "light" ? 1 : 0,
-            rotate: theme === "light" ? 0 : 180 
+            rotate: theme === "light" ? 0 : 180
           }}
           transition={{ duration: 0.2 }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <Sun className="h-5 w-5 text-amber-500" />
+          <Sun className="h-[18px] w-[18px]" />
         </motion.div>
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
-          animate={{ 
+          animate={{
             scale: theme === "dark" ? 1 : 0,
-            rotate: theme === "dark" ? 0 : -180 
+            rotate: theme === "dark" ? 0 : -180
           }}
           transition={{ duration: 0.2 }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <Moon className="h-5 w-5" />
+          <Moon className="h-[18px] w-[18px]" />
         </motion.div>
       </div>
       <span className="sr-only">Toggle theme</span>
     </Button>
   )
-} 
+}

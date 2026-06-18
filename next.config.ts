@@ -4,7 +4,7 @@ import type { NextConfig } from 'next'
 const config: NextConfig = {
   output: "standalone",
   images: {
-    domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com'],
+    domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com', 'localhost'],
     remotePatterns: [
       {
         protocol: 'https',

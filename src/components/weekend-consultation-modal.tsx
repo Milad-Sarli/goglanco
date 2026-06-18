@@ -30,7 +30,6 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axiosInstance from "../lib/axios";
-import { useTheme } from 'next-themes';
 
 // Schema for the Weekend Consultation form
 const consultationFormSchema = z.object({
@@ -62,8 +61,6 @@ interface WeekendConsultationModalProps {
 export function WeekendConsultationModal({ children, className }: WeekendConsultationModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [consultationSubmitStatus, setConsultationSubmitStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  useTheme(); // استفاده از useTheme بدون دریافت مقدار
-
   const consultationForm = useForm<ConsultationFormValues>({
     resolver: zodResolver(consultationFormSchema),
     defaultValues: {
@@ -92,14 +89,13 @@ export function WeekendConsultationModal({ children, className }: WeekendConsult
           : undefined,
       };
 
-      // اضافه کردن پارامتر send_email برای اطمینان از ارسال ایمیل
+      // Add send_email parameter to ensure email delivery
       const requestData = {
         ...submissionData,
         send_email: true
       }; 
       
       const response = await axiosInstance.post<ConsultationSuccessResponse>('/api/consultation-requests', requestData);
-      console.log('Consultation request successful:', response.data);
       setConsultationSubmitStatus({ type: 'success', message: response.data.message || 'Consultation request sent successfully!' });
       consultationForm.reset();
     } catch (error: unknown) {

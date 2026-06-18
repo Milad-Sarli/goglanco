@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
+import axios from "@/lib/axios";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,11 +55,9 @@ export function PortfolioTestimonialsSection() {
   useEffect(() => {
     async function fetchTestimonials() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/testimonials`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: Testimonial[] = await response.json();
+        const response = await axios.get('/api/portfolio/testimonials');
+        const responseData = response.data;
+        const data: Testimonial[] = responseData.data || [];
         setTestimonials(data.length > 0 ? data : defaultTestimonials);
       } catch (e: unknown) {
         console.error("Failed to fetch testimonials:", e);

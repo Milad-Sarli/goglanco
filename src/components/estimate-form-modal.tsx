@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { submitEstimate } from '@/services/estimateService';
 
@@ -27,7 +26,6 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  useTheme(); // استفاده از useTheme بدون دریافت مقدار
   const [apiError, setApiError] = useState<string | null>(null);
  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,6 +58,10 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
       newErrors.address = 'Address is required';
     }
     
+    if (formData.description.trim() && formData.description.trim().length < 10) {
+      newErrors.description = 'Please provide more details (at least 10 characters)';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -75,34 +77,27 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
     setApiError(null);
     
     try {
-      // ارسال داده‌ها به API با استفاده از سرویس
-      console.log('Submitting form data:', formData);
       await submitEstimate(formData);
       setIsSubmitted(true);
       
-      // بازنشانی فرم پس از ارسال موفق
       setTimeout(() => {
         setOpen(false);
-        // بازنشانی فرم پس از بسته شدن مودال
-        setTimeout(() => {
-          setFormData({
-            fullname: '',
-            phone: '',
-            email: '',
-            address: '',
-            description: ''
-          });
-          setIsSubmitted(false);
-        }, 300);
+        setFormData({
+          fullname: '',
+          phone: '',
+          email: '',
+          address: '',
+          description: ''
+        });
+        setIsSubmitted(false);
       }, 2000);
     } catch (error: unknown) {
       console.error('Error submitting form:', error);
       
-      // مدیریت خطاهای اعتبارسنجی از سمت سرور
       if (error && typeof error === 'object' && 'errors' in error) {
         const serverErrors: Record<string, string> = {};
         
-        // تبدیل خطاهای سرور به فرمت مورد نیاز کامپوننت
+        // Map server errors to component format
         Object.entries((error as {errors: Record<string, string[]>}).errors).forEach(([field, messages]) => {
           if (Array.isArray(messages) && messages.length > 0) {
             serverErrors[field] = messages[0];
@@ -111,11 +106,10 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
         
         setErrors(serverErrors);
       } else if (error && typeof error === 'object' && 'message' in error) {
-        // نمایش پیام خطای عمومی
+        // Show general error message
         setApiError((error as {message: string}).message);
       } else {
-        // اگر هیچ پیام خطایی وجود نداشت
-        setApiError('خطا در ارتباط با سرور. لطفاً بعداً دوباره امتحان کنید.');
+        setApiError('Connection error. Please try again later.');
       }
     } finally {
       setIsSubmitting(false);
@@ -218,9 +212,10 @@ export function EstimateFormModal({ trigger, className }: EstimateFormModalProps
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="min-h-[100px]"
-                  placeholder="Tell us about your project"
+                  className={errors.description ? 'border-red-500 min-h-[100px]' : 'min-h-[100px]'}
+                  placeholder="Describe your rug and the service you need (e.g., type of rug, damage, size)"
                 />
+                {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
               </div>
               
               {apiError && (

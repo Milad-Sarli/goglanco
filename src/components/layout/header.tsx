@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, useScroll } from "motion/react";
+import { motion, useScroll, AnimatePresence } from "motion/react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ChevronDown } from 'lucide-react';
+
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -23,12 +23,12 @@ import { UserAvatar } from '@/components/auth/user-avatar';
 import { useAuth } from '@/components/auth/auth-context';
 
 const services = [
-  { title: 'Rug Repair', href: '/services/repair' },
-  { title: 'Deep Cleaning', href: '/services/cleaning' },
-  { title: 'Restoration', href: '/services/restoration' },
-  { title: 'Color Restoration', href: '/services/color-restoration' },
-  { title: 'Fringe Repair', href: '/services/fringe-repair' },
-  { title: 'Custom Rugs', href: '/services/custom' },
+  { title: 'Rug Repair', href: '/services/repair', description: 'Expert repair for all rug types' },
+  { title: 'Deep Cleaning', href: '/services/cleaning', description: 'Professional deep cleaning services' },
+  { title: 'Restoration', href: '/services/restoration', description: 'Restore beauty to old rugs' },
+  { title: 'Color Restoration', href: '/services/color-restoration', description: 'Revive faded colors' },
+  { title: 'Fringe Repair', href: '/services/fringe-repair', description: 'Precision fringe work' },
+  { title: 'Custom Rugs', href: '/services/custom', description: 'Bespoke rug designs' },
 ];
 
 export function Header() {
@@ -37,7 +37,6 @@ export function Header() {
   const { scrollY } = useScroll();
   const { isLoggedIn } = useAuth();
 
-  // Only run client-side effects after component is mounted
   useEffect(() => {
     setMounted(true);
     const unsubscribe = scrollY.on('change', (latest) => {
@@ -46,171 +45,136 @@ export function Header() {
     return () => unsubscribe();
   }, [scrollY]);
 
-  const getTextColor = () => {
-    if (!mounted) return 'text-foreground'; // Default for SSR
-    
-    if (isScrolled) {
-      return 'text-foreground';
-    }
-    // When not scrolled, use white text for dark mode and dark text for light mode
-    return 'text-foreground';
-  };
-
-  // تابع getButtonStyle حذف شد چون استفاده نمی‌شود
-
   const getHeaderBg = () => {
-    if (!mounted) return 'bg-transparent'; // Default for SSR
-    
+    if (!mounted) return 'bg-transparent';
     if (isScrolled) {
-      return 'bg-background/80 backdrop-blur-md shadow-sm';
+      return 'bg-background/80 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)]';
     }
     return 'bg-transparent';
-  }
+  };
 
-  const getLogoTextColor = () => {
-    if (!mounted) return 'text-foreground'; // Default for SSR
-    
-    return 'text-foreground';
-  }
-
-  const getDropShadow = () => {
-    if (!mounted) return ''; // Default for SSR
-    
-    return !isScrolled ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : '';
-  }
+  const getTextColor = () => {
+    if (!mounted) return 'text-white';
+    if (isScrolled) return 'text-foreground';
+    return 'text-white';
+  };
 
   return (
     <motion.header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out',
         getHeaderBg()
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="container mx-auto px-4 max-w-full">
-        <div className="flex items-center justify-between h-20 w-full">
-          <Link href="/" className="font-bold text-2xl bg-background/40 rounded-full px-2">
-            <span className={cn(
-              'transition-colors duration-300',
-              getLogoTextColor(),
-              getDropShadow()
-            )}>
-              Goglanco
-            </span> 
+      <div className="container mx-auto px-6 max-w-[1400px]">
+        <div className="flex items-center justify-between h-[72px]">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <motion.div
+              className="relative"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              <span className={cn(
+                'text-2xl font-bold tracking-tight transition-colors duration-300',
+                getTextColor()
+              )}>
+                Goglanco
+              </span>
+              <motion.div
+                className="absolute -bottom-1 left-0 h-[2px] bg-white"
+                initial={{ width: 0 }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.div>
           </Link>
 
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
+          {/* Desktop Navigation */}
+          <NavigationMenu className="hidden lg:flex">
+            <NavigationMenuList className="gap-1">
               <NavigationMenuItem>
-                <NavigationMenuTrigger asChild className={cn(
-                   'text-base', 'cursor-pointer' , 
-                   getTextColor(),
-                   getDropShadow()
-                 )}>
-                   <Link href="/services" className="flex items-center">
-                     Services
-                     <ChevronDown className="relative top-[1px] ml-1 size-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true" />
-                   </Link>
-                 </NavigationMenuTrigger>
+                <NavigationMenuTrigger
+                  className={cn(
+                    'h-10 px-4 text-[15px] font-medium rounded-full transition-all duration-300',
+                    'hover:bg-muted/80',
+                    getTextColor()
+                  )}
+                >
+                  Services
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-2 lg:w-[500px]">
-                    {services.map((service) => (
-                      <li key={service.href}>
-                        <NavigationMenuLink asChild>
+                  <div className="w-[520px] p-5">
+                    <div className="grid grid-cols-2 gap-2">
+                      {services.map((service) => (
+                        <NavigationMenuLink key={service.href} asChild>
                           <Link
                             href={service.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            className="block rounded-xl p-4 transition-all duration-200 hover:bg-muted/80 group/link"
                           >
-                            <div className="text-sm font-medium leading-none">{service.title}</div>
+                            <div className="font-medium text-[15px] mb-1 group-hover/link:text-primary transition-colors">
+                              {service.title}
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {service.description}
+                            </p>
                           </Link>
                         </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
+                      ))}
+                    </div>
+                  </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link 
-                    href="/portfolio" 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      'text-base',
-                      getTextColor(),
-                      getDropShadow()
-                    )}
-                  >
-                    Portfolio
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link 
-                    href="/about" 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      'text-base',
-                      getTextColor(),
-                      getDropShadow()
-                    )}
-                  >
-                    About
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link 
-                    href="/contact" 
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      'text-base',
-                      getTextColor(),
-                      getDropShadow()
-                    )}
-                  >
-                    Contact
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+
+              {['Portfolio', 'About', 'Contact'].map((item) => (
+                <NavigationMenuItem key={item}>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={`/${item.toLowerCase()}`}
+                      className={cn(
+                        'inline-flex h-10 items-center rounded-full px-4 text-[15px] font-medium transition-all duration-300',
+                        'hover:bg-muted/80',
+                        getTextColor()
+                      )}
+                    >
+                      {item}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
 
-          <div className="flex items-center gap-4">
+          {/* Right Section */}
+          <div className="flex items-center gap-2">
             <WeekendConsultationModal>
               <Button
                 variant="default"
                 className={cn(
-                  'hidden md:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground',
-                  getDropShadow() 
+                  'hidden sm:inline-flex h-10 px-6 rounded-full font-medium text-[15px]',
+                  'bg-white text-black hover:bg-white/90',
+                  'transition-all duration-300 shadow-sm hover:shadow-md'
                 )}
               >
-                Get Free Estimate 
+                Get Free Estimate
               </Button>
             </WeekendConsultationModal>
-            
-            {/* Authentication Components */}
-            <div className="flex items-center">
+
+            <div className="flex items-center gap-1">
               {isLoggedIn ? (
                 <UserAvatar isScrolled={isScrolled} />
               ) : (
                 <SigninButton isScrolled={isScrolled} />
               )}
             </div>
-            
-            <div className={cn(
-              getDropShadow() , 
-              'relative left-4'
-            )}>
-              <ThemeToggle />
-            </div>
-            <div className="relative right-5">
-              <MobileMenu isScrolled={isScrolled} />
-            </div>
-          </div> 
+
+            <ThemeToggle isScrolled={isScrolled} />
+
+            <MobileMenu isScrolled={isScrolled} />
+          </div>
         </div>
       </div>
     </motion.header>

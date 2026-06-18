@@ -1,0 +1,60 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [main]
+
+env:
+  DEPLOY_HOST: goglanco.com
+  DEPLOY_USER: rashagos
+  DEPLOY_PORT: "2222"
+  DEPLOY_DIR: /home/rashagos/goglancoapp
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy/.next/static
+          cp -r .next/standalone/* deploy/
+          cp -r .next/static/* deploy/.next/static/
+          cp -r public deploy/public
+
+      - name: Deploy via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          source: "deploy/*"
+          target: ${{ env.DEPLOY_DIR }}
+          strip_components: 1
+
+      - name: Restart app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          script: |
+            cd ${{ env.DEPLOY_DIR }}
+            if command -v nvm &> /dev/null; then
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+              nvm use 20
+            fi
+            npm install --production 2>/dev/null || true
+            touch tmp/restart.txt

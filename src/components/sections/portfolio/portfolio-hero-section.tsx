@@ -9,6 +9,7 @@ import { TextRoll } from "@/components/motion-primitives/text-roll";
 import { BoxReveal } from "@/components/magicui/box-reveal";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import axios from "@/lib/axios";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,11 +36,8 @@ export function PortfolioHeroSection() {
   useEffect(() => {
     async function fetchHeroData() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/hero`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const responseData = await response.json();
+        const response = await axios.get('/api/portfolio/hero');
+        const responseData = response.data;
         // Ensure that responseData.data exists and matches the HeroData interface
         if (responseData && responseData.data) {
           setHeroData(responseData.data);
@@ -203,7 +201,6 @@ export function PortfolioHeroSection() {
             alt="Rug restoration portfolio showcase"
             fill
             className="object-cover"
-            unoptimized
             priority
           />
         </div>

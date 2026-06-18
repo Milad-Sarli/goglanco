@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ImageComparison, ImageComparisonImage, ImageComparisonSlider } from "@/components/motion-primitives/image-comparison";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import axios from "@/lib/axios";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,11 +48,8 @@ export function PortfolioGallerySection() {
   useEffect(() => {
     async function fetchGalleryItems() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/gallery`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const responseData = await response.json();
+        const response = await axios.get('/api/portfolio/gallery');
+        const responseData = response.data;
         const data: PortfolioGalleryItem[] = responseData.data;
         setAllItems(data);
       } catch (e: unknown) {

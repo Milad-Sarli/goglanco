@@ -50,6 +50,7 @@ export function RestorationHeroSection() {
               alt="Rug Restoration Services"
               fill
               className="object-cover"
+              priority
             />
           </motion.div>
         </div>

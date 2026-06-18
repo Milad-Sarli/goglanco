@@ -1,5 +1,7 @@
 'use client';
 
+'use client';
+
 import Link from 'next/link';
 import { 
   LayoutDashboard, 
@@ -10,6 +12,7 @@ import {
   Users, 
   LogOut
 } from 'lucide-react';
+import { useAuth } from '@/components/auth/auth-context';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -21,6 +24,13 @@ const navItems = [
 ];
 
 export function AdminSidebar() {
+  const { signOut } = useAuth();
+
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    await signOut();
+  };
+
   return (
     <aside className="w-64 bg-gray-800 text-white h-screen flex-shrink-0 hidden md:block">
       <div className="p-6">
@@ -42,13 +52,13 @@ export function AdminSidebar() {
             </li>
           ))}
           <li className="pt-6">
-            <Link 
-              href="/api/auth/signout"
-              className="flex items-center p-2 rounded-lg hover:bg-gray-700 transition-colors text-red-400"
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center p-2 rounded-lg hover:bg-gray-700 transition-colors text-red-400"
             >
               <LogOut className="w-5 h-5 mr-3" />
               <span>Logout</span>
-            </Link>
+            </button>
           </li>
         </ul>
       </nav>

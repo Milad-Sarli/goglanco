@@ -9,8 +9,9 @@ export interface EstimateData {
 }
 
 export interface EstimateResponse {
+  success: boolean;
   message: string;
-  data: {
+  data?: {
     id: number;
     fullname: string;
     address: string;
@@ -27,14 +28,8 @@ export interface ValidationError {
   errors: Record<string, string[]>;
 }
 
-/**
- * ارسال درخواست تخمین به API
- * @param estimateData اطلاعات فرم تخمین
- * @returns پاسخ API در صورت موفقیت
- */
 export async function submitEstimate(estimateData: EstimateData): Promise<EstimateResponse> {
   try {
-    console.log('Sending estimate data:', estimateData);
     const response = await axios.post('/api/estimates', estimateData, {
       headers: {
         'Accept': 'application/json',
@@ -42,21 +37,16 @@ export async function submitEstimate(estimateData: EstimateData): Promise<Estima
       }
     });
 
-    console.log('Response received:', response.data);
-    return response.data;
+    return { success: true, ...response.data };
   } catch (error) {
-    console.error('Error details:', error);
-
     if (axios.isAxiosError(error) && error.response) {
-      console.error('Response error:', error.response.status, error.response.data);
-      throw error.response.data || { message: `Error ${error.response.status}: Server error` };
+      throw error.response.data || { message: `Server error (${error.response.status})`, errors: {} };
     }
 
     if (axios.isAxiosError(error) && error.request) {
-      console.error('Request error - no response received');
-      throw { message: 'No response from server. Please check your connection.' };
+      throw { message: 'No response from server. Please check your connection.', errors: {} };
     }
 
-    throw { message: error instanceof Error ? error.message : 'خطا در ارسال درخواست' };
+    throw { message: 'Failed to submit estimate. Please try again.', errors: {} };
   }
 }

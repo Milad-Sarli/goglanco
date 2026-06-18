@@ -82,7 +82,6 @@ export function AboutStorySection({ items = [] }: AboutStorySectionProps) {
             alt="Rug patterns background"
             fill
             className="object-cover"
-            unoptimized
           />
         </div>
       </div>

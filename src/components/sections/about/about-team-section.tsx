@@ -146,13 +146,16 @@ export function AboutTeamSection({ team = [] }: AboutTeamSectionProps) {
             >
               <div className="relative h-64 overflow-hidden">
                 <div className="team-image absolute inset-0">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800" />
+                  )}
                 </div>
               </div>
               <div className="p-6">

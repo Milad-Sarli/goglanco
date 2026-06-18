@@ -27,35 +27,35 @@ const services = [
     title: 'Repair and Restoration',
     icon: <FaBolt className="text-amber-500" />,
     description: 'We specialize in expert rug repair, dye work, stretching, and full redesign — restoring both beauty and structure with care and tradition.',
-    image: '/public/photo_rug_reweaving.jpg',
+    image: '/photo_rug_reweaving.jpg',
     link: '/services/repair'
   },
   {
     title: 'Cleaning',
     icon: <FaWater className="text-blue-500" />,
     description: 'Our deep cleaning process includes gentle hand washing, mothproofing, and optional Scotchgard protection to preserve and refresh your rugs.',
-    image: '/public/rug-repair-cost.jpg',
+    image: '/rug-repair-cost.jpg',
     link: '/services/cleaning'
   },
   {
     title: 'Restoration',
     icon: <FaPalette className="text-yellow-500" />,
     description: 'Our expert restoration services revive damaged and worn rugs, carefully repairing tears, fraying, and structural issues while preserving the original craftsmanship and design integrity.',
-    image: '/public/portfolio.jpg',
+    image: '/portfolio.jpg',
     link: '/services/restoration' 
   },
   {
     title: 'Color Restoration',
     icon: <FaPalette className="text-purple-500" />,
     description: 'Our color restoration services bring faded rugs back to life, carefully matching original colors and patterns with expert precision.',
-    image: '/public/features/e1510230-60ed-47d2-9c8a-f420e6261080.jpg',
+    image: '/features/e1510230-60ed-47d2-9c8a-f420e6261080.jpg',
     link: '/services/color-restoration'
   },
   {
     title: 'Custom Rugs',
     icon: <FaPencilRuler className="text-green-500" />,
     description: 'Design your perfect rug with our custom rug creation service. From concept to completion, we bring your vision to life.',
-    image: '/public/features/476f1896-9593-4a4a-8b68-7b5e6b55e8fb.jpg',
+    image: '/features/476f1896-9593-4a4a-8b68-7b5e6b55e8fb.jpg',
     link: '/services/custom'
   }
 ];
@@ -104,7 +104,7 @@ export function ServicesPageView() {
                     <Card className="group h-full hover:shadow-xl transition-all duration-300 overflow-hidden bg-card dark:bg-slate-800 border border-border dark:border-slate-700">
                       <div className="relative h-48 overflow-hidden">
                         <Image
-                          src={service.image.replace('/public', '')}
+                          src={service.image}
                           alt={service.title}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -113,7 +113,7 @@ export function ServicesPageView() {
                       <CardContent className="p-6">
                         <div className="flex items-center gap-3 mb-3">
                           <span className="text-2xl">{service.icon}</span>
-                          <h3 className="text-xl font-semibold text-foreground dark:text-white">{service.title}</h3>
+                          <h2 className="text-xl font-semibold text-foreground dark:text-white">{service.title}</h2>
                         </div>
                         <p className="text-muted-foreground dark:text-slate-300">{service.description}</p>
                       </CardContent>

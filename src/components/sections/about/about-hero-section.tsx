@@ -120,16 +120,19 @@ export function AboutHeroSection({
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div ref={imageRef} className="relative w-full h-full">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${image}`}
-            alt="About us hero image"
-            fill
-            unoptimized
-            className="object-cover"
-            priority
-            sizes="100vw"
-            quality={90}
-          />
+          {image ? (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${image}`}
+              alt="About us hero image"
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+              quality={90}
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background/95" />
         </div>
       </div>

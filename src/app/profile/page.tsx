@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,8 +46,8 @@ import { getUserProfile, updateUserProfile, changePassword, User as UserType, Ch
 import { getUserConsultationRequests, ConsultationRequest } from '@/services/consultationService';
 import { getUserTestimonials, createTestimonial, deleteTestimonial, Testimonial, CreateTestimonialData } from '@/services/testimonialsService';
 import { useTheme } from 'next-themes';
+import { useAuth } from '@/components/auth/auth-context';
 
-// Component that uses useSearchParams
 function ProfileContent() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
@@ -83,7 +83,7 @@ function ProfileContent() {
     address: ''
   });
   
-  // فرم تغییر رمز عبور
+  // Change password form
   const [passwordData, setPasswordData] = useState<ChangePasswordData>({
     current_password: '',
     new_password: '',
@@ -104,11 +104,11 @@ function ProfileContent() {
   const { theme, setTheme } = useTheme();
   const [compactView, setCompactView] = useState<boolean>(false);
 
-  // دریافت اطلاعات کاربر و تنظیم تب از URL
+  // Load user data and set tab from URL
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        // دریافت اطلاعات کاربر
+        // Load user profile
         const response = await getUserProfile();
         if (response.success && response.data) {
           setUserData(response.data);
@@ -130,7 +130,7 @@ function ProfileContent() {
       }
     };
 
-    // تنظیم تب فعال از URL parameter
+    // Set active tab from URL parameter
     const tabParam = searchParams.get('tab');
     if (tabParam && ['profile', 'settings', 'reviews', 'requests', 'notifications', 'support'].includes(tabParam)) {
       setActiveTab(tabParam);
@@ -265,13 +265,7 @@ function ProfileContent() {
       if (profileFormData.avatar && profileFormData.avatar instanceof File) {
         formData.append('avatar', profileFormData.avatar);
       }
-      
-      // Log form data for debugging
-      console.log('Profile form data entries:');
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      
+
       const response = await updateUserProfile(formData);
       
       if (response.success && response.data) {
@@ -317,13 +311,7 @@ function ProfileContent() {
       if (addressFormData.hasOwnProperty('address')) {
         formData.append('address', addressFormData.address || '');
       }
-      
-      // Log form data for debugging
-      console.log('Address form data entries:');
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      
+
       const response = await updateUserProfile(formData);
       
       if (response.success && response.data) {
@@ -916,6 +904,7 @@ function ProfileContent() {
                               size="sm"
                               onClick={() => handleDeleteTestimonial(testimonial.id)}
                               className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                              aria-label="Delete testimonial"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -1300,6 +1289,34 @@ function ProfileContent() {
 
 // Main component wrapped with Suspense
 export default function ProfilePage() {
+  return <AuthGuard><ProfileContentInner /></AuthGuard>;
+}
+
+function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { isLoggedIn, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isLoggedIn) {
+      router.push('/login');
+    }
+  }, [isLoading, isLoggedIn, router]);
+
+  if (isLoading || !isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>Loading profile...</span>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
+function ProfileContentInner() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">

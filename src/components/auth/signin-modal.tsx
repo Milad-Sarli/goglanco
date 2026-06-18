@@ -22,6 +22,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
   const { signIn, signUp, isLoading } = useAuth();
   
   const formRef = useRef<HTMLFormElement>(null);
@@ -35,6 +36,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
       setPassword('');
       setConfirmPassword('');
       setShowPassword(false);
+      setPasswordError('');
     }
   }, [isOpen]);
 
@@ -71,7 +73,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
     if (isSignUp) {
       if (!name || !email || !password || !confirmPassword) return;
       if (password !== confirmPassword) {
-        // Handle password mismatch
+        setPasswordError('Passwords do not match');
         return;
       }
       
@@ -104,6 +106,7 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setPasswordError('');
   };
 
   return ( 
@@ -165,8 +168,11 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10 h-9 sm:h-10"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError('');
+                  }}
+                  className="pl-10 pr-10 h-9 sm:h-10"
                 required
               />
               <button
@@ -191,11 +197,17 @@ export function SigninModal({ isOpen, onClose }: SigninModalProps) {
                   type={showPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="pl-10 h-9 sm:h-10"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setPasswordError('');
+                  }}
+                  className={`pl-10 h-9 sm:h-10 ${passwordError ? 'border-red-500' : ''}`}
                   required
                 />
               </div>
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
             </div>
           )}
 
