@@ -138,7 +138,6 @@ export function ContactSection() {
       };
 
       const response = await axiosInstance.post<MessageSuccessResponse>('/api/contact-messages', values);
-      console.log('Message sent successfully:', response.data);
       setMainFormSubmitStatus({ type: 'success', message: response.data.message || 'Message sent successfully!' });
       form.reset(); 
     } catch (error: unknown) {
@@ -182,7 +181,6 @@ export function ContactSection() {
       };
 
       const response = await axiosInstance.post<ConsultationSuccessResponse>('/api/consultation-requests', submissionData);
-      console.log('Consultation request successful:', response.data);
       setConsultationSubmitStatus({ type: 'success', message: response.data.message || 'Consultation request sent successfully!' });
       consultationForm.reset();
     } catch (error: unknown) {
