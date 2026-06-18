@@ -4,3 +4,4 @@ deployment:
     - export DEPLOYPATH=/home/rashagos/goglancoapp
     - /usr/local/bin/npm install --legacy-peer-deps --prefix $DEPLOYPATH
     - /usr/local/bin/npm run build --prefix $DEPLOYPATH
+    - cd $DEPLOYPATH && touch tmp/restart.txt

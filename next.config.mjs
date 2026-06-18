@@ -1,7 +1,5 @@
-import type { NextConfig } from 'next'
-
 /** @type {import('next').NextConfig} */
-const config: NextConfig = {
+const config = {
   images: {
     domains: ['images.pexels.com', 'images.unsplash.com', 'source.unsplash.com', 'goglanco-admin.test', 'admin.goglanco.com', 'localhost'],
     remotePatterns: [
