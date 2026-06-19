@@ -90,11 +90,45 @@ export function ServiceJsonLd({ name, description, image, url }: { name: string;
     "@type": "Service",
     name,
     description,
-    image,
+    image: `https://goglanco.com${image}`,
     url,
-    provider: { "@type": "LocalBusiness", "@id": "https://goglanco.com" },
-    areaServed: { "@type": "City", name: "San Jose" },
+    provider: {
+      "@type": "LocalBusiness",
+      "@id": "https://goglanco.com",
+      name: "Goglanco",
+      telephone: "+1-408-123-4567",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "123 Rug Restoration Lane",
+        addressLocality: "San Jose",
+        addressRegion: "CA",
+        postalCode: "10001",
+        addressCountry: "US",
+      },
+    },
+    areaServed: [
+      { "@type": "City", name: "San Jose" },
+      { "@type": "City", name: "Sunnyvale" },
+      { "@type": "City", name: "Santa Clara" },
+      { "@type": "City", name: "Mountain View" },
+      { "@type": "City", name: "Palo Alto" },
+      { "@type": "City", name: "Milpitas" },
+    ],
     serviceType: name,
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: name,
+      itemListElement: [{
+        "@type": "Offer",
+        priceCurrency: "USD",
+        priceRange: "$$",
+        itemOffered: {
+          "@type": "Service",
+          name: name,
+          description: description,
+        },
+      }],
+    },
   };
 
   return (

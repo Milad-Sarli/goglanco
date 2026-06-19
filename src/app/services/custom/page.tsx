@@ -3,20 +3,20 @@ import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/json-ld";
 import { CustomPageView } from "@/components/page-views/services/custom-page-view";
 
 export const metadata: Metadata = {
-  title: "Custom Rug Services",
-  description: "Tailored rug services designed to meet your specific needs and requirements.",
+  title: "Custom Rug Services in San Jose, CA | Bespoke Rug Design & Repair",
+  description: "Custom rug services in San Jose, CA. Bespoke rug design, custom sizing, fringe work, and tailored rug solutions for your home or business. Expert craftsmanship since 1996. Free estimates.",
   alternates: {
     canonical: "/services/custom",
   },
   openGraph: {
-    title: "Custom Rug Services | Goglanco",
-    description: "Tailored rug services designed to meet your specific needs and requirements.",
+    title: "Custom Rug Services in San Jose, CA | Goglanco",
+    description: "Custom rug services in San Jose. Bespoke design, custom sizing, and tailored rug solutions.",
     images: ["/og-custom-service.svg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Custom Rug Services | Goglanco",
-    description: "Tailored rug services designed to meet your specific needs.",
+    title: "Custom Rug Services in San Jose, CA | Goglanco",
+    description: "Custom rug services in San Jose, CA.",
     images: ["/og-custom-service.svg"],
   },
 };
@@ -31,7 +31,7 @@ export default function CustomPage() {
       ]} />
       <ServiceJsonLd
         name="Custom Rugs"
-        description="Tailored rug services designed to meet your specific needs and requirements."
+        description="Custom rug services in San Jose, CA. Bespoke rug design, custom sizing, fringe work, and tailored rug solutions with expert craftsmanship since 1996."
         image="/og-custom-service.svg"
         url="https://goglanco.com/services/custom"
       />

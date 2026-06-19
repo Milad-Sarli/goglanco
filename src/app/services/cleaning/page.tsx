@@ -3,20 +3,20 @@ import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/json-ld";
 import { CleaningServiceView } from "@/components/page-views/cleaning-service-view";
 
 export const metadata: Metadata = {
-  title: "Deep Cleaning Services",
-  description: "Professional deep cleaning services for all types of rugs. Our expert cleaning process removes dirt, stains, odors, and allergens while preserving your rug's beauty and integrity.",
+  title: "Rug Cleaning in San Jose, CA | Professional Deep Cleaning",
+  description: "Professional rug deep cleaning services in San Jose, CA. Removes dirt, stains, odors, and allergens from oriental, Persian, and handmade rugs. Safe, eco-friendly methods. Free estimates.",
   alternates: {
     canonical: "/services/cleaning",
   },
   openGraph: {
-    title: "Deep Cleaning Services | Goglanco",
-    description: "Professional deep cleaning for all types of rugs. Stain removal, odor elimination, and expert care.",
+    title: "Rug Cleaning Services in San Jose, CA | Goglanco",
+    description: "Professional rug deep cleaning in San Jose. Stain removal, odor elimination, and expert care for all rug types.",
     images: ["/og-cleaning-service.svg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Deep Cleaning Services | Goglanco",
-    description: "Professional deep cleaning for all types of rugs.",
+    title: "Rug Cleaning in San Jose, CA | Goglanco",
+    description: "Professional rug deep cleaning services in San Jose, CA.",
     images: ["/og-cleaning-service.svg"],
   },
 };
@@ -31,7 +31,7 @@ export default function CleaningServicePage() {
       ]} />
       <ServiceJsonLd
         name="Rug Cleaning"
-        description="Professional deep cleaning services for all types of rugs. Our expert cleaning process removes dirt, stains, odors, and allergens while preserving your rug's beauty and integrity."
+        description="Professional rug deep cleaning services in San Jose, CA. Removes dirt, stains, odors, and allergens while preserving your rug's beauty and integrity."
         image="/og-cleaning-service.svg"
         url="https://goglanco.com/services/cleaning"
       />
