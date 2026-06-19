@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Redirect /services/ to /services.html
+RewriteRule ^services/?$ /services.html [L]
+
+# If the requested file or directory doesn't exist, try adding .html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ $1.html [L]

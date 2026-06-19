@@ -46,16 +46,10 @@ export function Header() {
   }, [scrollY]);
 
   const getHeaderBg = () => {
-    if (!mounted) return 'bg-transparent';
-    if (isScrolled) {
-      return 'bg-background/80 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)]';
-    }
-    return 'bg-transparent';
+    return 'bg-gray-950/90 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.3)]';
   };
 
   const getTextColor = () => {
-    if (!mounted) return 'text-white';
-    if (isScrolled) return 'text-foreground';
     return 'text-white';
   };
 
@@ -99,9 +93,9 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger
                   className={cn(
-                    'h-10 px-4 text-[15px] font-medium rounded-full transition-all duration-300',
-                    'hover:bg-muted/80',
-                    getTextColor()
+                    '!bg-transparent !text-white hover:!bg-white/10',
+                    'data-[state=open]:!bg-white/10 data-[state=open]:!text-white',
+                    'focus:!bg-white/10 focus:!text-white'
                   )}
                 >
                   Services
@@ -165,15 +159,15 @@ export function Header() {
 
             <div className="flex items-center gap-1">
               {isLoggedIn ? (
-                <UserAvatar isScrolled={isScrolled} />
+                <UserAvatar isScrolled={false} />
               ) : (
-                <SigninButton isScrolled={isScrolled} />
+                <SigninButton isScrolled={false} />
               )}
             </div>
 
-            <ThemeToggle isScrolled={isScrolled} />
+            <ThemeToggle isScrolled={false} />
 
-            <MobileMenu isScrolled={isScrolled} />
+            <MobileMenu isScrolled={false} />
           </div>
         </div>
       </div>
